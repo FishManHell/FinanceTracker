@@ -15,12 +15,12 @@ const GET_HELLO = gql`
 function fetchHello() {
   console.log("Button clicked!");
   apolloClient
-    .query({
+    .query<{ hello: string }>({
       query: GET_HELLO,
       fetchPolicy: "network-only",
     })
     .then(({ data }) => {
-      message.value = data?.hello;
+      message.value = data?.hello ?? "Hello";
     })
     .catch((err) => console.error(err));
 }
