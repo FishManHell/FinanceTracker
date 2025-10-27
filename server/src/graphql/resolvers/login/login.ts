@@ -3,16 +3,16 @@ import { generateToken, verifyPassword } from '@/utils/auth.js'
 import { getUserWithPassword } from '@/services/user/user.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 
+const throwLoginError = (message: string) => {
+  return throwError({
+    message,
+    status: HttpStatus.NOT_FOUND,
+    code: GraphQLErrorCode.NOT_FOUND
+  })
+}
+
 export const login = async (_: undefined, { username, password }: LoginArgs) => {
   console.log("Login called with:", username, password);
-
-  const throwLoginError = (message: string) => {
-    return throwError({
-      message,
-      status: HttpStatus.NOT_FOUND,
-      code: GraphQLErrorCode.NOT_FOUND
-    })
-  }
 
   const user = await getUserWithPassword(username, true);
   if (!user) return throwLoginError("User not found")

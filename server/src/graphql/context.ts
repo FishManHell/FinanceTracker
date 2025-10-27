@@ -1,6 +1,6 @@
-import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
 import { IncomingMessage } from 'http';
+import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 
 type UserPayload = {
   username: string;
@@ -11,6 +11,14 @@ export interface GraphQLContext {
   user: UserPayload | null;
 }
 
+const throwContextError = (message: string) => {
+  return throwError({
+    message,
+    code: GraphQLErrorCode.UNAUTHORIZED,
+    status: HttpStatus.UNAUTHORIZED
+  })
+}
+
 export const context = async ({ req }: { req: IncomingMessage }): Promise<GraphQLContext> => {
   if (!req) return { user: null };
 
@@ -18,9 +26,7 @@ export const context = async ({ req }: { req: IncomingMessage }): Promise<GraphQ
   if (!authHeader) return { user: null };
 
   if (!authHeader.startsWith("Bearer ")) {
-    throw new GraphQLError("Missing or malformed Authorization header", {
-      extensions: { code: "UNAUTHORIZED", http: { status: 401 } },
-    });
+    return throwContextError("Missing or malformed Authorization header")
   }
 
   const token = authHeader.replace("Bearer ", "").trim();
@@ -31,8 +37,6 @@ export const context = async ({ req }: { req: IncomingMessage }): Promise<GraphQ
     const user = jwt.verify(token, secret) as UserPayload;
     return { user };
   } catch (err) {
-    throw new GraphQLError("Invalid or expired token", {
-      extensions: { code: "UNAUTHORIZED", http: { status: 401 } },
-    });
+    return throwContextError("Invalid or expired token")
   }
 };

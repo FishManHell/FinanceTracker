@@ -31,7 +31,7 @@ interface ThrowError {
   status: HttpStatus;
 }
 
-export function throwError({message, status, code}: ThrowError) {
+export function throwError({message, status, code}: ThrowError): never {
   throw new GraphQLError(message, {
     extensions: { code, http: { status } },
   });
