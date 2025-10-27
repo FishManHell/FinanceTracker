@@ -10,12 +10,16 @@ import { expressMiddleware } from '@as-integrations/express4'
 import dotenv from "dotenv";
 
 dotenv.config();
+console.log("✅ dotenv loaded");
 await connectDB();
+console.log("✅ MongoDB connected");
+
 
 const app = express();
 const server = new ApolloServer({ ...schema });
 
 await server.start();
+console.log("✅ Apollo Server started");
 
 app.use(
   "/graphql",
