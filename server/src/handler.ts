@@ -31,12 +31,20 @@
 // export const handler = serverless(app);
 
 import express from "express";
-import serverless from "serverless-http";
+import { ApolloServer } from "@apollo/server";
+import cors from "cors";
+import { json } from "body-parser";
+import { schema } from "./graphql/schema.js";
+import { context } from "./graphql/context.js";
+import { expressMiddleware } from '@as-integrations/express4'
 
 const app = express();
+app.use(cors());
+app.use(json());
 
-app.get("/graphql", (_req, res) => {
-  res.send("Hello from GraphQL!");
-});
+const server = new ApolloServer(schema);
+await server.start();
 
-export const handler = serverless(app);
+app.use("/graphql", expressMiddleware(server, { context }));
+
+export default app;
