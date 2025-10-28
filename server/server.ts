@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {RequestHandler} from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
@@ -11,18 +11,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Лог запросов
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
 
-// Главный GET маршрут
 app.get('/', (req, res) => {
   res.json({ message: '✅ Express работает на Vercel!' });
 });
 
-// POST /log
 app.post('/log', (req, res) => {
   console.log('📩 Получен POST:', req.body);
   res.json({ status: 'ok', received: req.body });
@@ -45,14 +42,23 @@ const resolvers = {
 
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
 
-// Подключаем Apollo middleware
-app.use(
-  '/graphql',
-  expressMiddleware(apolloServer, {
-    context: async ({ req }) => ({
-      token: req.headers.authorization || null,
-    }),
-  })
-);
+let apolloMiddleware: RequestHandler;
+
+// обёртка lazy init
+async function getApolloMiddleware() {
+  if (!apolloMiddleware) {
+    await apolloServer.start(); // safe lazy start
+    apolloMiddleware = expressMiddleware(apolloServer, {
+      context: async ({ req }) => ({ token: req.headers.authorization || null }),
+    });
+  }
+  return apolloMiddleware;
+}
+
+// прокси для serverless
+app.use('/graphql', async (req, res, next) => {
+  const middleware = await getApolloMiddleware();
+  return middleware(req, res, next);
+});
 
 export default app;
