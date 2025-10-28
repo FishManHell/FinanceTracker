@@ -5,7 +5,6 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
 import { typeDefs } from '@/graphql/typeDefs/typeDefs.js'
 import { resolvers } from '@/graphql/resolvers/index.js'
-import { context } from '@/graphql/context.js'
 
 dotenv.config();
 
@@ -52,7 +51,7 @@ async function getApolloMiddleware() {
   if (!apolloMiddleware) {
     await apolloServer.start(); // safe lazy start
     apolloMiddleware = expressMiddleware(apolloServer, {
-      context,
+      context: async ({ req }) => ({ token: req.headers.authorization || null }),
     });
   }
   return apolloMiddleware;
