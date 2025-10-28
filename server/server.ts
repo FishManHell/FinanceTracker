@@ -101,7 +101,8 @@ async function getApolloMiddleware() {
         try {
           const user = jwt.verify(token, secret) as UserPayload;
           return { user };
-        } catch {
+        } catch (err) {
+          console.warn("Ошибка верификации токена:", err);
           return { user: null };
         }
       }
