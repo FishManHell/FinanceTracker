@@ -13,7 +13,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// лог запросов
+// Лог всех запросов
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
@@ -33,11 +33,16 @@ let apolloMiddleware: RequestHandler;
 async function getApolloMiddleware() {
   if (!apolloMiddleware) {
     await apolloServer.start();
-    apolloMiddleware = expressMiddleware(apolloServer, { context });
+
+    // Важно: context — функция, вызываемая с req для каждого запроса
+    apolloMiddleware = expressMiddleware(apolloServer, {
+      context: async ({ req }) => context({ req }),
+    });
   }
   return apolloMiddleware;
 }
 
+// Прокси для GraphQL
 app.use('/graphql', async (req, res, next) => {
   const middleware = await getApolloMiddleware();
   return middleware(req, res, next);
@@ -47,17 +52,23 @@ app.use('/graphql', async (req, res, next) => {
 // Подключение к Mongo и запуск сервера локально
 // -----------------------------
 async function startServer() {
-  await connectDB();
+  try {
+    await connectDB();
+    console.log('✅ MongoDB подключена');
 
-  // для локальной разработки
-  if (process.env.NODE_ENV !== 'production') {
-    const port = process.env.PORT || 8000;
-    app.listen(port, () => {
-      console.log(`🚀 Server ready at http://localhost:${port}`);
-    });
+    // Локальный запуск для разработки
+    if (process.env.NODE_ENV !== 'production') {
+      const port = process.env.PORT || 8000;
+      app.listen(port, () => {
+        console.log(`🚀 Server ready at http://localhost:${port}`);
+      });
+    }
+  } catch (err) {
+    console.error('❌ Ошибка при запуске сервера:', err);
   }
 }
 
 startServer();
 
-export default app; // для Vercel
+// Экспорт для Vercel serverless
+export default app;
