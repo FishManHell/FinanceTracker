@@ -1,4 +1,4 @@
-import express from "express";
+import express, {Request, Response} from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { json } from "body-parser";
@@ -11,21 +11,19 @@ const app = express();
 app.use(cors());
 app.use(json());
 
-async function initApollo() {
-  const server = new ApolloServer({
-    typeDefs: `type Query { hello: String }`,
-    resolvers: { Query: { hello: () => "world" } },
-  });
+const server = new ApolloServer({
+  typeDefs: `type Query { hello: String }`,
+  resolvers: { Query: { hello: () => "world" } },
+});
 
-  await server.start();
-
+const ready = server.start().then(() => {
   app.use("/graphql", expressMiddleware(server));
-
   app.get("/", (req, res) => {
     res.json({ message: "Hello from Apollo Server on Vercel!" });
   });
+});
+
+export default async function handler(req: Request, res: Response) {
+  await ready;
+  return app(req, res);
 }
-
-initApollo();
-
-export default app;
