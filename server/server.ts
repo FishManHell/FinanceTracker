@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
-import { hello } from '@/graphql/resolvers/hello/hello.js'
 import { login } from '@/graphql/resolvers/login/login.js'
 import { register } from '@/graphql/resolvers/register/register.js'
 import jwt from 'jsonwebtoken'
@@ -39,6 +38,10 @@ app.post('/log', (req, res) => {
   console.log('📩 Получен POST:', req.body);
   res.json({ status: 'ok', received: req.body });
 });
+
+const hello = (_parent: any, _args: any, context: any) => {
+  return `Debug: ${JSON.stringify(context)}`;
+};
 
 // -----------------------------
 // Apollo GraphQL
@@ -87,8 +90,8 @@ async function getApolloMiddleware() {
   if (!apolloMiddleware) {
     await apolloServer.start(); // safe lazy start
     apolloMiddleware = expressMiddleware(apolloServer, {
-      context: async ({ req }): Promise<GraphQLContext> => {
-        const authHeader = req?.headers?.authorization || "";
+      context: async ({ req }) => {
+        const authHeader = req.headers.authorization || "";
         if (!authHeader.startsWith("Bearer ")) return { user: null };
 
         const token = authHeader.replace("Bearer ", "").trim();
@@ -102,7 +105,7 @@ async function getApolloMiddleware() {
           const user = jwt.verify(token, secret) as UserPayload;
           return { user };
         } catch (err) {
-          console.warn("Ошибка верификации токена:", err);
+          console.warn("Ошибка JWT:", err);
           return { user: null };
         }
       }
