@@ -6,6 +6,7 @@ import { expressMiddleware } from '@as-integrations/express4';
 import { hello } from '@/graphql/resolvers/hello/hello.js'
 import { login } from '@/graphql/resolvers/login/login.js'
 import { register } from '@/graphql/resolvers/register/register.js'
+import { context } from '@/graphql/context.js'
 
 dotenv.config();
 
@@ -74,8 +75,18 @@ let apolloMiddleware: RequestHandler;
 async function getApolloMiddleware() {
   if (!apolloMiddleware) {
     await apolloServer.start(); // safe lazy start
+    // apolloMiddleware = expressMiddleware(apolloServer, {
+    //   context: async ({ req }) => ({ token: req.headers.authorization || null }),
+    // });
     apolloMiddleware = expressMiddleware(apolloServer, {
-      context: async ({ req }) => ({ token: req.headers.authorization || null }),
+      context: async ({ req }) => {
+        try {
+          return await context({ req });
+        } catch (err) {
+          // ApolloServer ожидает GraphQLContext, даже если пользователь не авторизован
+          return { user: null };
+        }
+      }
     });
   }
   return apolloMiddleware;
