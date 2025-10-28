@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
+import { hello } from '@/graphql/resolvers/hello/hello.js'
+import { login } from '@/graphql/resolvers/login/login.js'
+import { register } from '@/graphql/resolvers/register/register.js'
 
 dotenv.config();
 
@@ -50,9 +53,17 @@ const typeDefs = `#graphql
 `;
 //
 const resolvers = {
+  // Query: {
+  //   hello: () => 'Hello from Apollo + Express + Vercel!',
+  // },
+
   Query: {
-    hello: () => 'Hello from Apollo + Express + Vercel!',
+    hello
   },
+  // Mutation: {
+  //   login,
+  //   register
+  // },
 };
 
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
