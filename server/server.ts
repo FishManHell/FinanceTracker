@@ -1,38 +1,35 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
 import cors from 'cors';
 import { json } from 'body-parser';
 
-dotenv.config();
-
-const app = express();
-app.use(cors());
-app.use(json());
-
-// 1️⃣ Определяем типы и резолверы
+// Простой GraphQL schema
 const typeDefs = `#graphql
   type Query {
     hello: String
   }
 `;
 
+// Простой resolver
 const resolvers = {
   Query: {
-    hello: () => 'world',
+    hello: () => 'Hello from Apollo + Express + Vercel!',
   },
 };
 
-// 2️⃣ Создаём Apollo сервер
+// Создаём сервер Apollo
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 
-// ⚠️ В Apollo v5 НЕ нужно вызывать server.start() — он делает это сам.
+// Создаём Express app
+const app = express();
+app.use(cors());
+app.use(json());
 
-// 3️⃣ Подключаем middleware
+// Подключаем Apollo middleware
 app.use(
   '/graphql',
   expressMiddleware(server, {
@@ -42,9 +39,10 @@ app.use(
   })
 );
 
-// 4️⃣ Обычный эндпоинт для проверки
+// Тестовый GET маршрут
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello from Express + Apollo v5 + Vercel!' });
+  res.json({ message: '✅ Express + Apollo v5 working on Vercel!' });
 });
 
+// Экспортируем app (для Vercel важно!)
 export default app;
