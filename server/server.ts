@@ -1,10 +1,12 @@
 import express from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const app = express();
 
-// Define your routes
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello from Express on Vercel!' });
+  res.json({ message: 'Hello from Express on Vercel!', env: process.env.NODE_ENV });
 });
 
-// Export the Express app
 export default app;
