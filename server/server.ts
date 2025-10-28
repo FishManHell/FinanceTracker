@@ -88,12 +88,15 @@ async function getApolloMiddleware() {
     await apolloServer.start(); // safe lazy start
     apolloMiddleware = expressMiddleware(apolloServer, {
       context: async ({ req }): Promise<GraphQLContext> => {
-        const authHeader = req.headers["authorization"] || "";
+        const authHeader = req?.headers?.authorization || "";
         if (!authHeader.startsWith("Bearer ")) return { user: null };
 
         const token = authHeader.replace("Bearer ", "").trim();
         const secret = process.env.JWT_SECRET;
-        if (!secret) throw new Error("JWT_SECRET is not defined");
+        if (!secret) {
+          console.warn("JWT_SECRET не найден!");
+          return { user: null };
+        }
 
         try {
           const user = jwt.verify(token, secret) as UserPayload;
@@ -101,7 +104,7 @@ async function getApolloMiddleware() {
         } catch {
           return { user: null };
         }
-      },
+      }
     });
   }
   return apolloMiddleware;
