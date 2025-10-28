@@ -1,50 +1,63 @@
-// import express from "express";
-// import { ApolloServer } from "@apollo/server";
-// import serverless from "serverless-http";
-// import cors from "cors";
-// import bodyParser from "body-parser";
-// import { schema } from "./graphql/schema.js";
-// import { context } from "./graphql/context.js";
-// import { connectDB } from "./mongo.js";
-// import { expressMiddleware } from '@as-integrations/express4'
-// import dotenv from "dotenv";
-//
-// dotenv.config();
-// console.log("✅ dotenv loaded");
-// await connectDB();
-// console.log("✅ MongoDB connected");
-//
-//
-// const app = express();
-// const server = new ApolloServer({ ...schema });
-//
-// await server.start();
-// console.log("✅ Apollo Server started");
-//
-// app.use(
-//   "/graphql",
-//   cors(),
-//   bodyParser.json(),
-//   expressMiddleware(server, { context })
-// );
-//
-// export const handler = serverless(app);
+import express, { RequestHandler } from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@as-integrations/express4';
+import { connectDB } from './mongo.js';
+import { schema } from './graphql/schema.js';
+import { context } from './graphql/context.js';
 
-import express from "express";
-import { ApolloServer } from "@apollo/server";
-import cors from "cors";
-import { json } from "body-parser";
-import { schema } from "./graphql/schema.js";
-import { context } from "./graphql/context.js";
-import { expressMiddleware } from '@as-integrations/express4'
+dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(json());
+app.use(express.json());
 
-const server = new ApolloServer(schema);
-await server.start();
+// лог запросов
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
-app.use("/graphql", expressMiddleware(server, { context }));
+app.get('/', (req, res) => {
+  res.json({ message: '✅ Express работает!' });
+});
 
-export default app;
+// -----------------------------
+// Apollo GraphQL через ленивый middleware
+// -----------------------------
+const apolloServer = new ApolloServer(schema);
+
+let apolloMiddleware: RequestHandler;
+
+async function getApolloMiddleware() {
+  if (!apolloMiddleware) {
+    await apolloServer.start();
+    apolloMiddleware = expressMiddleware(apolloServer, { context });
+  }
+  return apolloMiddleware;
+}
+
+app.use('/graphql', async (req, res, next) => {
+  const middleware = await getApolloMiddleware();
+  return middleware(req, res, next);
+});
+
+// -----------------------------
+// Подключение к Mongo и запуск сервера локально
+// -----------------------------
+async function startServer() {
+  await connectDB();
+
+  // для локальной разработки
+  if (process.env.NODE_ENV !== 'production') {
+    const port = process.env.PORT || 8000;
+    app.listen(port, () => {
+      console.log(`🚀 Server ready at http://localhost:${port}`);
+    });
+  }
+}
+
+startServer();
+
+export default app; // для Vercel
