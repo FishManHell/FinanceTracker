@@ -6,9 +6,20 @@ import { expressMiddleware } from '@as-integrations/express4';
 import { hello } from '@/graphql/resolvers/hello/hello.js'
 import { login } from '@/graphql/resolvers/login/login.js'
 import { register } from '@/graphql/resolvers/register/register.js'
-import { context } from '@/graphql/context.js'
+import jwt from 'jsonwebtoken'
+
+
 
 dotenv.config();
+
+type UserPayload = {
+  username: string;
+  email: string;
+};
+
+export interface GraphQLContext {
+  user: UserPayload | null;
+}
 
 const app = express();
 
@@ -75,18 +86,22 @@ let apolloMiddleware: RequestHandler;
 async function getApolloMiddleware() {
   if (!apolloMiddleware) {
     await apolloServer.start(); // safe lazy start
-    // apolloMiddleware = expressMiddleware(apolloServer, {
-    //   context: async ({ req }) => ({ token: req.headers.authorization || null }),
-    // });
     apolloMiddleware = expressMiddleware(apolloServer, {
-      context: async ({ req }) => {
+      context: async ({ req }): Promise<GraphQLContext> => {
+        const authHeader = req.headers["authorization"] || "";
+        if (!authHeader.startsWith("Bearer ")) return { user: null };
+
+        const token = authHeader.replace("Bearer ", "").trim();
+        const secret = process.env.JWT_SECRET;
+        if (!secret) throw new Error("JWT_SECRET is not defined");
+
         try {
-          return await context({ req });
-        } catch (err) {
-          // ApolloServer ожидает GraphQLContext, даже если пользователь не авторизован
+          const user = jwt.verify(token, secret) as UserPayload;
+          return { user };
+        } catch {
           return { user: null };
         }
-      }
+      },
     });
   }
   return apolloMiddleware;
