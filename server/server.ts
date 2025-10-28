@@ -1,14 +1,10 @@
-// @ts-ignore
 import express, { Request, Response } from "express";
-const app = express();
+import serverless from "serverless-http";
 
-const port = process.env.PORT || 8000;
+const app = express();
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to the server");
-})
+});
 
-
-app.listen(port, () => {
-  `Server started on port ${port}`
-})
+export const handler = serverless(app);
