@@ -1,10 +1,10 @@
-import express, { Request, Response } from "express";
-import serverless from "serverless-http";
-
+import express from 'express';
 const app = express();
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to the server");
+// Define your routes
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello from Express on Vercel!' });
 });
 
-export const handler = serverless(app);
+// Export the Express app
+export default app;
