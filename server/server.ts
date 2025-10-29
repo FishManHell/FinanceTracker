@@ -4,17 +4,12 @@ import dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
 import jwt from 'jsonwebtoken'
-// import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
-// import { GraphQLError } from 'graphql'
-// import { User } from '@/models/User/User.js'
-// import bcrypt from 'bcryptjs'
 import client from './src/mongodb.js'
 import {CollectionInfo} from 'mongodb'
-import { GraphQLError } from 'graphql'
-import bcrypt from 'bcryptjs'
 import { verifyPassword, generateToken } from './src/utils/auth.js'
 import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from './src/utils/errors.js'
+import { login } from './src/graphql/resolvers/login/login.js'
 
 dotenv.config();
 
@@ -58,18 +53,18 @@ const throwLoginError = (message: string) => {
   })
 }
 
-export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
-  const users = context.db.collection('users');
-
-  const user = await users.findOne({ username });
-  if (!user) return throwLoginError('User not found')
-
-  const valid = await verifyPassword(password, user.password);
-  if (!valid) return throwLoginError('Invalid password')
-
-  const token = generateToken({id: user._id, username: user.username})
-  return { token };
-}
+// export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
+//   const users = context.db.collection('users');
+//
+//   const user = await users.findOne({ username });
+//   if (!user) return throwLoginError('User not found')
+//
+//   const valid = await verifyPassword(password, user.password);
+//   if (!valid) return throwLoginError('Invalid password')
+//
+//   const token = generateToken({id: user._id, username: user.username})
+//   return { token };
+// }
 
 // -----------------------------
 // Apollo GraphQL
