@@ -79,7 +79,7 @@ async function connectDB (){
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    const MONGO_URI = process.env.MONGO_URI;
+    const MONGO_URI = process.env.MONGODB_URI;
     if (!MONGO_URI) throw new Error('MONGO_URI is missing');
     cached.promise = mongoose.connect(MONGO_URI).then(m => m);
   }
