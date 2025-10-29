@@ -12,7 +12,7 @@ import client from './src/mongodb.js'
 import {CollectionInfo} from 'mongodb'
 import { GraphQLError } from 'graphql'
 import bcrypt from 'bcryptjs'
-import { verifyPassword } from './src/utils/auth.js'
+import { verifyPassword, generateToken } from './src/utils/auth.js'
 import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
 
 dotenv.config();
@@ -47,19 +47,6 @@ const testMongo = async (_: any, __: any, context: any) => {
 
 const hello = async (_parent: any, _args: any, context: any) => {
   return "HELLO WORD!";
-  // try {
-  //   if (!context.user) {
-  //     const err = new Error("Unauthorized");
-  //     (err as any).extensions = { code: "UNAUTHORIZED" };
-  //     throw err;
-  //   }
-  //   return `Hello ${context.user.username}!`;
-  // } catch (err) {
-  //   console.error("Ошибка в hello:", err);
-  //   // вместо throw — возвращаем null или валидный объект ошибки
-  //   // чтобы serverless не падал
-  //   throw err; // Apollo поймает и вернёт клиенту
-  // }
 };
 
 // const throwLoginError = (message: string) => {
@@ -69,14 +56,6 @@ const hello = async (_parent: any, _args: any, context: any) => {
 //     code: GraphQLErrorCode.NOT_FOUND
 //   })
 // }
-
-// const verifyPassword = (plain: string, hash: string) => bcrypt.compare(plain, hash);
-
-const generateToken = (payload: object) => {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) throw new Error('JWT_SECRET is not defined');
-  return jwt.sign(payload, secret, { expiresIn: '5m' });
-};
 
 export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
   const users = context.db.collection('users');
