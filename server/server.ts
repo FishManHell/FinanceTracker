@@ -9,9 +9,7 @@ import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 import { GraphQLError } from 'graphql'
 import { User } from '@/models/User/User.js'
 import bcrypt from 'bcryptjs'
-import mongoose from 'mongoose';
-
-
+import client from './mongodb.js'
 
 
 dotenv.config();
@@ -68,26 +66,6 @@ interface LoginArgs {
 interface AuthPayload {
   token: string;
 }
-/////////
-let cached: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null } = (global as any).mongoose;
-
-if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
-}
-
-async function connectDB (){
-  if (cached.conn) return cached.conn;
-
-  if (!cached.promise) {
-    const MONGO_URI = process.env.MONGODB_URI;
-    if (!MONGO_URI) throw new Error('MONGO_URI is missing');
-    cached.promise = mongoose.connect(MONGO_URI).then(m => m);
-  }
-
-  cached.conn = await cached.promise;
-  return cached.conn;
-}
-///////////
 
 const generateToken = (payload: object) => {
   const secret = process.env.JWT_SECRET;
@@ -117,6 +95,7 @@ const login = async (_: undefined, { username, password }: LoginArgs): Promise<A
 
   return { token };
 };
+
 
 // -----------------------------
 // Apollo GraphQL
@@ -166,23 +145,23 @@ async function getApolloMiddleware() {
     await apolloServer.start(); // safe lazy start
     apolloMiddleware = expressMiddleware(apolloServer, {
       context: async ({ req }) => {
-        await connectDB() // mongoDB
+        const db = client.db('FinanceTacker');
         const authHeader = req.headers.authorization || "";
-        if (!authHeader.startsWith("Bearer ")) return { user: null };
+        if (!authHeader.startsWith("Bearer ")) return { user: null, db };
 
         const token = authHeader.replace("Bearer ", "").trim();
         const secret = process.env.JWT_SECRET;
         if (!secret) {
           console.warn("JWT_SECRET не найден!");
-          return { user: null };
+          return { user: null, db };
         }
 
         try {
           const user = jwt.verify(token, secret) as UserPayload;
-          return { user };
+          return { user, db };
         } catch (err) {
           console.warn("Ошибка JWT:", err);
-          return { user: null };
+          return { user: null, db };
         }
       }
     });
