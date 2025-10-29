@@ -6,6 +6,7 @@ import { expressMiddleware } from '@as-integrations/express4';
 import { login } from '@/graphql/resolvers/login/login.js'
 import { register } from '@/graphql/resolvers/register/register.js'
 import jwt from 'jsonwebtoken'
+import { hello } from '@/graphql/resolvers/hello/hello.js'
 
 
 
@@ -34,9 +35,9 @@ app.get('/', (req, res) => {
   res.json({ message: '✅ Express работает на Vercel!' });
 });
 
-const hello = (_parent: any, _args: any, context: any) => {
-  return `Debug: ${JSON.stringify(context)}`;
-};
+// const hello = (_parent: any, _args: any, context: any) => {
+//   return `Debug: ${JSON.stringify(context)}`;
+// };
 
 // -----------------------------
 // Apollo GraphQL
