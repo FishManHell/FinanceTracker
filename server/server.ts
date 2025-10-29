@@ -16,7 +16,7 @@ import bcrypt from 'bcryptjs'
 import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
 import { getUserWithPassword } from '@/services/user/user.js'
-import { generateToken, verifyPassword } from '@/utils/auth.js'
+import { verifyPassword } from '@/utils/auth.js'
 
 
 dotenv.config();
@@ -74,19 +74,46 @@ const throwLoginError = (message: string) => {
   })
 }
 
-export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
-  console.log("Login called with:", username, password);
+// export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
+//   console.log("Login called with:", username, password);
+//   const users = context.db.collection('users');
+//
+//   const user = await users.findOne({ username });
+//   if (!user) return throwLoginError("User not found")
+//
+//   const valid = verifyPassword(password, user.password);
+//   if (!valid) return throwLoginError("Invalid password")
+//
+//   const token = generateToken({id: user._id, username: user.username})
+//   return { token };
+// }
+
+const generateToken = (payload: object) => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET is not defined');
+  return jwt.sign(payload, secret, { expiresIn: '5m' });
+};
+
+const login = async (_: undefined, { username, password }: { username: string; password: string }, context: any) => {
   const users = context.db.collection('users');
 
+  // Найти пользователя
   const user = await users.findOne({ username });
-  if (!user) return throwLoginError("User not found")
+  if (!user) {
+    throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND', http: { status: 404 }} });
+  }
 
-  const valid = verifyPassword(password, user.password);
-  if (!valid) return throwLoginError("Invalid password")
+  // Проверить пароль
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) {
+    throw new GraphQLError('Invalid password', { extensions: { code: 'BAD_REQUEST' } });
+  }
 
-  const token = generateToken({id: user._id, username: user.username})
+  // Создать JWT
+  const token = generateToken({ id: user._id, username: user.username });
+
   return { token };
-}
+};
 
 // -----------------------------
 // Apollo GraphQL
