@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken'
 // import { User } from '@/models/User/User.js'
 // import bcrypt from 'bcryptjs'
 import client from './mongodb.js'
+import {CollectionInfo} from 'mongodb'
 
 
 dotenv.config();
@@ -36,6 +37,11 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.json({ message: '✅ Express работает на Vercel!' });
 });
+
+const testMongo = async (_: any, __: any, context: any) => {
+  const collections = await context.db.listCollections().toArray();
+  return collections.map((c: CollectionInfo) => c.name);
+};
 
 const hello = async (_parent: any, _args: any, context: any) => {
   return "HELLO WORD!";
@@ -106,6 +112,8 @@ const typeDefs = `#graphql
     hello: String
   }
   
+  testMongo: [String!]!
+  
   type User { 
     id: ID!
     username: String!
@@ -120,7 +128,8 @@ const typeDefs = `#graphql
 //
 const resolvers = {
   Query: {
-    hello
+    hello,
+    testMongo
   },
   Mutation: {
     // login,
