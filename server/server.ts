@@ -38,19 +38,20 @@ app.get('/', (req, res) => {
 });
 
 const hello = async (_parent: any, _args: any, context: any) => {
-  try {
-    if (!context.user) {
-      const err = new Error("Unauthorized");
-      (err as any).extensions = { code: "UNAUTHORIZED" };
-      throw err;
-    }
-    return `Hello ${context.user.username}!`;
-  } catch (err) {
-    console.error("Ошибка в hello:", err);
-    // вместо throw — возвращаем null или валидный объект ошибки
-    // чтобы serverless не падал
-    throw err; // Apollo поймает и вернёт клиенту
-  }
+  return "HELLO WORD!";
+  // try {
+  //   if (!context.user) {
+  //     const err = new Error("Unauthorized");
+  //     (err as any).extensions = { code: "UNAUTHORIZED" };
+  //     throw err;
+  //   }
+  //   return `Hello ${context.user.username}!`;
+  // } catch (err) {
+  //   console.error("Ошибка в hello:", err);
+  //   // вместо throw — возвращаем null или валидный объект ошибки
+  //   // чтобы serverless не падал
+  //   throw err; // Apollo поймает и вернёт клиенту
+  // }
 };
 // с этим вариантом работает
 
