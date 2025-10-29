@@ -146,7 +146,7 @@ const resolvers = {
     testMongo
   },
   Mutation: {
-    // login,
+    login,
   //   register
   },
 };
