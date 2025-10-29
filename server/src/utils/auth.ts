@@ -5,9 +5,9 @@ export const hashPassword = (password: string)  => {
   return bcrypt.hashSync(password, 10);
 }
 
-export const verifyPassword = (plain: string, hash: string)  => {
+export const verifyPassword = async (plain: string, hash: string)  => {
   // return bcrypt.compareSync(plain, hash);
-  return bcrypt.compare(plain, hash);
+  return await bcrypt.compare(plain, hash);
 }
 
 export const generateToken = (payload: object)  => {
