@@ -16,10 +16,10 @@ export const login = async (_: undefined, { username, password }: LoginArgs, con
 
   // const user = await getUserWithPassword(username, true);
   const user = await users.findOne({ username });
-  if (!user) return throwLoginError("User not found")
+  if (!user) return throwLoginError('User not found')
 
   const valid = await verifyPassword(password, user.password);
-  if (!valid) return throwLoginError("Invalid password")
+  if (!valid) return throwLoginError('Invalid password')
 
   const token = generateToken({id: user.id, username: user.username})
   return { token };

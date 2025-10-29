@@ -45,13 +45,13 @@ const hello = async (_parent: any, _args: any, context: any) => {
   return "HELLO WORD!";
 };
 
-const throwLoginError = (message: string) => {
-  return throwError({
-    message,
-    status: HttpStatus.NOT_FOUND,
-    code: GraphQLErrorCode.NOT_FOUND
-  })
-}
+// const throwLoginError = (message: string) => {
+//   return throwError({
+//     message,
+//     status: HttpStatus.NOT_FOUND,
+//     code: GraphQLErrorCode.NOT_FOUND
+//   })
+// }
 
 // export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
 //   const users = context.db.collection('users');
