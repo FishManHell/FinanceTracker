@@ -6,7 +6,8 @@ export const hashPassword = (password: string)  => {
 }
 
 export const verifyPassword = (plain: string, hash: string)  => {
-  return bcrypt.compareSync(plain, hash);
+  // return bcrypt.compareSync(plain, hash);
+  return bcrypt.compare(plain, hash);
 }
 
 export const generateToken = (payload: object)  => {

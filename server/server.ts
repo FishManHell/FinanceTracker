@@ -75,7 +75,6 @@ const hello = async (_parent: any, _args: any, context: any) => {
 // }
 
 export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
-  console.log("Login called with:", username, password);
   const users = context.db.collection('users');
 
   const user = await users.findOne({ username });
