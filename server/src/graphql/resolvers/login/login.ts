@@ -1,7 +1,7 @@
 import { LoginArgs } from './types/loginArgs.js'
-import { generateToken, verifyPassword } from '@/utils/auth.js'
+import { generateToken, verifyPassword } from '../../../utils/auth.js'
 import { getUserWithPassword } from '@/services/user/user.js'
-import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
+import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 
 const throwLoginError = (message: string) => {
   return throwError({
