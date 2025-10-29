@@ -74,24 +74,29 @@ const hello = async (_parent: any, _args: any, context: any) => {
 //   })
 // }
 
-export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
-  const users = context.db.collection('users');
-
-  const user = await users.findOne({ username });
-  if (!user) throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND', http: { status: 404 } } });
-
-  const valid = verifyPassword(password, user.password);
-  if (!valid) throw new GraphQLError('Invalid password', { extensions: { code: 'BAD_REQUEST', http: { status: 500 } } });
-
-  const token = generateToken({id: user._id, username: user.username})
-  return { token };
-}
-
 const generateToken = (payload: object) => {
   const secret = process.env.JWT_SECRET;
   if (!secret) throw new Error('JWT_SECRET is not defined');
   return jwt.sign(payload, secret, { expiresIn: '5m' });
 };
+
+export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
+  const users = context.db.collection('users');
+
+  const user = await users.findOne({ username });
+  if (!user) {
+    throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND', http: { status: 404 } } });
+  }
+
+  const valid = verifyPassword(password, user.password);
+  if (!valid) {
+    throw new GraphQLError('Invalid password', { extensions: { code: 'BAD_REQUEST', http: { status: 500 } } });
+  }
+
+  const token = generateToken({id: user._id, username: user.username})
+  return { token };
+}
+
 
 // const login = async (_: undefined, { username, password }: { username: string; password: string }, context: any) => {
 //   const users = context.db.collection('users');
