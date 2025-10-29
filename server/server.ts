@@ -10,13 +10,13 @@ import jwt from 'jsonwebtoken'
 // import { User } from '@/models/User/User.js'
 // import bcrypt from 'bcryptjs'
 import client from './mongodb.js'
-import {CollectionInfo} from 'mongodb'
+import type {CollectionInfo} from 'mongodb'
 import { GraphQLError } from 'graphql'
 import bcrypt from 'bcryptjs'
 import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
 import { getUserWithPassword } from '@/services/user/user.js'
-import verifyPassword from "@/auth.js"
+import { verifyPassword } from '@/utils/auth.js'
 
 dotenv.config();
 
@@ -97,28 +97,6 @@ export const login = async (_: undefined, { username, password }: LoginArgs, con
   const token = generateToken({id: user._id, username: user.username})
   return { token };
 }
-
-
-// const login = async (_: undefined, { username, password }: { username: string; password: string }, context: any) => {
-//   const users = context.db.collection('users');
-//
-//   // Найти пользователя
-//   const user = await users.findOne({ username });
-//   if (!user) {
-//     throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND', http: { status: 404 } } });
-//   }
-//
-//   // Проверить пароль
-//   const valid = await bcrypt.compare(password, user.password);
-//   if (!valid) {
-//     throw new GraphQLError('Invalid password', { extensions: { code: 'BAD_REQUEST', http: { status: 500 } } });
-//   }
-//
-//   // Создать JWT
-//   const token = generateToken({ id: user._id, username: user.username });
-//
-//   return { token };
-// };
 
 // -----------------------------
 // Apollo GraphQL
