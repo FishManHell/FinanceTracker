@@ -16,6 +16,7 @@ import bcrypt from 'bcryptjs'
 import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
 import { getUserWithPassword } from '@/services/user/user.js'
+import { verifyPassword } from '@/utils/auth.js'
 
 
 dotenv.config();
@@ -73,7 +74,7 @@ const hello = async (_parent: any, _args: any, context: any) => {
 //   })
 // }
 
-const verifyPassword = (plain: string, hash: string) => bcrypt.compare(plain, hash);
+// const verifyPassword = (plain: string, hash: string) => bcrypt.compare(plain, hash);
 
 const generateToken = (payload: object) => {
   const secret = process.env.JWT_SECRET;
