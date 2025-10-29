@@ -13,9 +13,10 @@
     "types": ["node"],
     "baseUrl": ".",
     "paths": {
-//      "@/*": ["./src/*"],
-      "@root/*": ["./*"]
+      "@/*": ["./src/*"],
     }
   },
-  "include": ["src/**/*", "server.ts"],
+  "include": ["src/**/*",
+    "src/server.ts"
+  ],
 }

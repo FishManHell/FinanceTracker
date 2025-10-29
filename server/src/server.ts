@@ -3,20 +3,20 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
-// import { register } from '@/graphql/resolvers/register/register.js'
+import { register } from '@/graphql/resolvers/register/register.js'
 import jwt from 'jsonwebtoken'
 // import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 // import { GraphQLError } from 'graphql'
 // import { User } from '@/models/User/User.js'
 // import bcrypt from 'bcryptjs'
 import client from './mongodb.js'
-import type {CollectionInfo} from 'mongodb'
+import {CollectionInfo} from 'mongodb'
 import { GraphQLError } from 'graphql'
 import bcrypt from 'bcryptjs'
-// import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
-import { LoginArgs } from '@root/src/graphql/resolvers/login/types/loginArgs.js'
-// import { getUserWithPassword } from '@/services/user/user.js'
-import {verifyPassword} from '@root/src/utils/auth.js'
+import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
+import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
+import { getUserWithPassword } from '@/services/user/user.js'
+import { verifyPassword } from '@/utils/auth.js'
 
 dotenv.config();
 
