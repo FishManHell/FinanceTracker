@@ -137,23 +137,23 @@ async function getApolloMiddleware() {
     await apolloServer.start(); // safe lazy start
     apolloMiddleware = expressMiddleware(apolloServer, {
       context: async ({ req }) => {
-        const db = client.db('FinanceTacker');
+        // const db = client.db('FinanceTacker');
         const authHeader = req.headers.authorization || "";
-        if (!authHeader.startsWith("Bearer ")) return { user: null, db };
+        if (!authHeader.startsWith("Bearer ")) return { user: null };
 
         const token = authHeader.replace("Bearer ", "").trim();
         const secret = process.env.JWT_SECRET;
         if (!secret) {
           console.warn("JWT_SECRET не найден!");
-          return { user: null, db };
+          return { user: null };
         }
 
         try {
           const user = jwt.verify(token, secret) as UserPayload;
-          return { user, db };
+          return { user };
         } catch (err) {
           console.warn("Ошибка JWT:", err);
-          return { user: null, db };
+          return { user: null };
         }
       }
     });
@@ -163,15 +163,8 @@ async function getApolloMiddleware() {
 
 // прокси для serverless
 app.use('/graphql', async (req, res, next) => {
-  // const middleware = await getApolloMiddleware();
-  // return middleware(req, res, next);
-  try {
-    const middleware = await getApolloMiddleware();
-    return middleware(req, res, next);
-  } catch (err) {
-    console.error('Ошибка Apollo middleware:', err);
-    res.status(500).send({ error: 'Server error' });
-  }
+  const middleware = await getApolloMiddleware();
+  return middleware(req, res, next);
 });
 
 export default app;
