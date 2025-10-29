@@ -5,8 +5,13 @@ const options: MongoClientOptions = {
   appName: "devrel.vercel.integration",
   maxIdleTimeMS: 5000
 };
-// @ts-ignore
-const client = new MongoClient(process.env.MONGODB_URI, options);
+
+const uri = process.env.MONGODB_URI
+if (!uri) {
+  throw new Error('MongoDB URI is missing');
+}
+
+const client = new MongoClient(uri, options);
 
 // Attach the client to ensure proper cleanup on function suspension
 attachDatabasePool(client);

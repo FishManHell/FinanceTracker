@@ -37,10 +37,6 @@ app.get('/', (req, res) => {
   res.json({ message: '✅ Express работает на Vercel!' });
 });
 
-// const hello = (_parent: any, _args: any, context: any) => {
-//   return `Debug: ${JSON.stringify(context)}`;
-// };
-
 const hello = async (_parent: any, _args: any, context: any) => {
   try {
     if (!context.user) {
@@ -122,10 +118,6 @@ const typeDefs = `#graphql
 `;
 //
 const resolvers = {
-  // Query: {
-  //   hello: () => 'Hello from Apollo + Express + Vercel!',
-  // },
-
   Query: {
     hello
   },
@@ -171,8 +163,15 @@ async function getApolloMiddleware() {
 
 // прокси для serverless
 app.use('/graphql', async (req, res, next) => {
-  const middleware = await getApolloMiddleware();
-  return middleware(req, res, next);
+  // const middleware = await getApolloMiddleware();
+  // return middleware(req, res, next);
+  try {
+    const middleware = await getApolloMiddleware();
+    return middleware(req, res, next);
+  } catch (err) {
+    console.error('Ошибка Apollo middleware:', err);
+    res.status(500).send({ error: 'Server error' });
+  }
 });
 
 export default app;
