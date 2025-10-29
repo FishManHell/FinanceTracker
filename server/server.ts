@@ -8,11 +8,11 @@ import jwt from 'jsonwebtoken'
 // import { GraphQLError } from 'graphql'
 // import { User } from '@/models/User/User.js'
 // import bcrypt from 'bcryptjs'
-import client from '@/mongodb.js'
+import client from './mongodb.js'
 import {CollectionInfo} from 'mongodb'
 import { GraphQLError } from 'graphql'
 import bcrypt from 'bcryptjs'
-import { verifyPassword } from './utils/auth.js'
+import { verifyPassword } from './src/utils/auth.js'
 import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
 
 dotenv.config();
