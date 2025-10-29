@@ -84,7 +84,7 @@ export const login = async (_: undefined, { username, password }: LoginArgs, con
   const valid = verifyPassword(password, user.password);
   if (!valid) return throwLoginError("Invalid password")
 
-  const token = generateToken({id: user.id, username: user.username})
+  const token = generateToken({id: user._id, username: user.username})
   return { token };
 }
 
