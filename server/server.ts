@@ -6,7 +6,6 @@ import { expressMiddleware } from '@as-integrations/express4';
 import { login } from '@/graphql/resolvers/login/login.js'
 import { register } from '@/graphql/resolvers/register/register.js'
 import jwt from 'jsonwebtoken'
-import { hello } from '@/graphql/resolvers/hello/hello.js'
 
 
 
@@ -38,6 +37,22 @@ app.get('/', (req, res) => {
 // const hello = (_parent: any, _args: any, context: any) => {
 //   return `Debug: ${JSON.stringify(context)}`;
 // };
+
+const hello = async (_parent: any, _args: any, context: any) => {
+  try {
+    if (!context.user) {
+      const err = new Error("Unauthorized");
+      (err as any).extensions = { code: "UNAUTHORIZED" };
+      throw err;
+    }
+    return `Hello ${context.user.username}!`;
+  } catch (err) {
+    console.error("Ошибка в hello:", err);
+    // вместо throw — возвращаем null или валидный объект ошибки
+    // чтобы serverless не падал
+    throw err; // Apollo поймает и вернёт клиенту
+  }
+};
 
 // -----------------------------
 // Apollo GraphQL
