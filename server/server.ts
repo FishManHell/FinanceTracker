@@ -34,11 +34,6 @@ app.get('/', (req, res) => {
   res.json({ message: '✅ Express работает на Vercel!' });
 });
 
-app.post('/log', (req, res) => {
-  console.log('📩 Получен POST:', req.body);
-  res.json({ status: 'ok', received: req.body });
-});
-
 const hello = (_parent: any, _args: any, context: any) => {
   return `Debug: ${JSON.stringify(context)}`;
 };
@@ -76,7 +71,7 @@ const resolvers = {
     hello
   },
   Mutation: {
-    login,
+  //   login,
   //   register
   },
 };
