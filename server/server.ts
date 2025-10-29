@@ -110,9 +110,8 @@ const typeDefs = `#graphql
 
   type Query {
     hello: String
+    testMongo: [String!]!
   }
-  
-  testMongo: [String!]!
   
   type User { 
     id: ID!
