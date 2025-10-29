@@ -3,9 +3,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
-import { login } from '@/graphql/resolvers/login/login.js'
 import { register } from '@/graphql/resolvers/register/register.js'
 import jwt from 'jsonwebtoken'
+import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
+import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
+import { getUserWithPassword } from '@/services/user/user.js'
+import { generateToken, verifyPassword } from '@/utils/auth.js'
 
 
 
@@ -54,6 +57,27 @@ const hello = async (_parent: any, _args: any, context: any) => {
   }
 };
 // с этим вариантом работает
+
+const throwLoginError = (message: string) => {
+  return throwError({
+    message,
+    status: HttpStatus.NOT_FOUND,
+    code: GraphQLErrorCode.NOT_FOUND
+  })
+}
+
+export const login = async (_: undefined, { username, password }: LoginArgs) => {
+  console.log("Login called with:", username, password);
+
+  const user = await getUserWithPassword(username, true);
+  if (!user) return throwLoginError("User not found")
+
+  const valid = await verifyPassword(password, user.password);
+  if (!valid) return throwLoginError("Invalid password")
+
+  const token = generateToken({id: user.id, username: user.username})
+  return { token };
+}
 
 // -----------------------------
 // Apollo GraphQL
