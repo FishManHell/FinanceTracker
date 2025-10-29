@@ -88,7 +88,7 @@ export const login = async (_: undefined, { username, password }: LoginArgs, con
     throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND', http: { status: 404 } } });
   }
 
-  const valid = await verifyPassword(password, user.password);
+  const valid = await bcrypt.compare(password, user.password);
   if (!valid) {
     throw new GraphQLError('Invalid password', { extensions: { code: 'BAD_REQUEST', http: { status: 500 } } });
   }
