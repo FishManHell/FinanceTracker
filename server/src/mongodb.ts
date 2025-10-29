@@ -1,4 +1,4 @@
-import { MongoClient, MongoClientOptions } from '@/mongodb.js';
+import { MongoClient, MongoClientOptions } from 'mongodb';
 import { attachDatabasePool } from '@vercel/functions';
 
 const options: MongoClientOptions = {
