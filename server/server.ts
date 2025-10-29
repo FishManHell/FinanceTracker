@@ -75,10 +75,10 @@ const resolvers = {
   Query: {
     hello
   },
-  // Mutation: {
-  //   login,
+  Mutation: {
+    login,
   //   register
-  // },
+  },
 };
 
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
