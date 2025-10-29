@@ -16,7 +16,7 @@ import bcrypt from 'bcryptjs'
 import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
 import { getUserWithPassword } from '@/services/user/user.js'
-import { verifyPassword } from '@/utils/auth.js'
+import { verifyPassword } from './src/utils/auth.js'
 
 dotenv.config();
 
