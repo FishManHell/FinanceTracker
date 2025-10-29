@@ -14,6 +14,7 @@ import { GraphQLError } from 'graphql'
 import bcrypt from 'bcryptjs'
 import { verifyPassword, generateToken } from './src/utils/auth.js'
 import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
+import { GraphQLErrorCode, HttpStatus, throwError } from './src/utils/errors.js'
 
 dotenv.config();
 
@@ -49,26 +50,22 @@ const hello = async (_parent: any, _args: any, context: any) => {
   return "HELLO WORD!";
 };
 
-// const throwLoginError = (message: string) => {
-//   return throwError({
-//     message,
-//     status: HttpStatus.NOT_FOUND,
-//     code: GraphQLErrorCode.NOT_FOUND
-//   })
-// }
+const throwLoginError = (message: string) => {
+  return throwError({
+    message,
+    status: HttpStatus.NOT_FOUND,
+    code: GraphQLErrorCode.NOT_FOUND
+  })
+}
 
 export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
   const users = context.db.collection('users');
 
   const user = await users.findOne({ username });
-  if (!user) {
-    throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND', http: { status: 404 } } });
-  }
+  if (!user) return throwLoginError('User not found')
 
   const valid = await verifyPassword(password, user.password);
-  if (!valid) {
-    throw new GraphQLError('Invalid password', { extensions: { code: 'BAD_REQUEST', http: { status: 500 } } });
-  }
+  if (!valid) return throwLoginError('Invalid password')
 
   const token = generateToken({id: user._id, username: user.username})
   return { token };
