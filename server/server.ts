@@ -66,13 +66,13 @@ const hello = async (_parent: any, _args: any, context: any) => {
   // }
 };
 
-const throwLoginError = (message: string) => {
-  return throwError({
-    message,
-    status: HttpStatus.NOT_FOUND,
-    code: GraphQLErrorCode.NOT_FOUND
-  })
-}
+// const throwLoginError = (message: string) => {
+//   return throwError({
+//     message,
+//     status: HttpStatus.NOT_FOUND,
+//     code: GraphQLErrorCode.NOT_FOUND
+//   })
+// }
 
 // export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
 //   console.log("Login called with:", username, password);
@@ -146,7 +146,7 @@ const resolvers = {
     testMongo
   },
   Mutation: {
-    login,
+    // login,
   //   register
   },
 };
