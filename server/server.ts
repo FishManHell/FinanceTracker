@@ -53,6 +53,7 @@ const hello = async (_parent: any, _args: any, context: any) => {
     throw err; // Apollo поймает и вернёт клиенту
   }
 };
+// с этим вариантом работает
 
 // -----------------------------
 // Apollo GraphQL
@@ -87,7 +88,7 @@ const resolvers = {
     hello
   },
   Mutation: {
-  //   login,
+    login,
   //   register
   },
 };
