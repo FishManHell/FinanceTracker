@@ -13,13 +13,12 @@ const throwLoginError = (message: string) => {
 
 export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
   const users = context.db.collection('users');
-  console.log("Login called with:", username, password);
 
   // const user = await getUserWithPassword(username, true);
   const user = await users.findOne({ username });
   if (!user) return throwLoginError("User not found")
 
-  const valid = verifyPassword(password, user.password);
+  const valid = await verifyPassword(password, user.password);
   if (!valid) return throwLoginError("Invalid password")
 
   const token = generateToken({id: user.id, username: user.username})
