@@ -16,7 +16,6 @@ import bcrypt from 'bcryptjs'
 import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 import { LoginArgs } from '@/graphql/resolvers/login/types/loginArgs.js'
 import { getUserWithPassword } from '@/services/user/user.js'
-import { verifyPassword } from '@/utils/auth.js'
 
 
 dotenv.config();
@@ -74,6 +73,8 @@ const hello = async (_parent: any, _args: any, context: any) => {
 //   })
 // }
 
+const verifyPassword = (plain: string, hash: string) => bcrypt.compare(plain, hash);
+
 const generateToken = (payload: object) => {
   const secret = process.env.JWT_SECRET;
   if (!secret) throw new Error('JWT_SECRET is not defined');
@@ -88,7 +89,7 @@ export const login = async (_: undefined, { username, password }: LoginArgs, con
     throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND', http: { status: 404 } } });
   }
 
-  const valid = await bcrypt.compare(password, user.password);
+  const valid = await verifyPassword(password, user.password);
   if (!valid) {
     throw new GraphQLError('Invalid password', { extensions: { code: 'BAD_REQUEST', http: { status: 500 } } });
   }
