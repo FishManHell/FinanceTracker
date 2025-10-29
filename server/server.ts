@@ -9,10 +9,12 @@ import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
 import { GraphQLError } from 'graphql'
 import { User } from '@/models/User/User.js'
 import bcrypt from 'bcryptjs'
+import { connectDB } from '@/mongo.js'
 
 
 
 dotenv.config();
+connectDB();
 
 type UserPayload = {
   username: string;
@@ -130,7 +132,7 @@ const resolvers = {
     hello
   },
   Mutation: {
-    login,
+    // login,
   //   register
   },
 };
