@@ -94,13 +94,13 @@ const generateToken = (payload: object) => {
   return jwt.sign(payload, secret, { expiresIn: '5m' });
 };
 
-const login = async (_: undefined, { username, password }: { username: string; password: string }, context: any) => {
+const login = async (_: any, { username, password }: { username: string; password: string }, context: any) => {
   const users = context.db.collection('users');
 
   // Найти пользователя
   const user = await users.findOne({ username });
   if (!user) {
-    throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND'} });
+    throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND' } });
   }
 
   // Проверить пароль
