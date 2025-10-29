@@ -100,7 +100,7 @@ const login = async (_: undefined, { username, password }: { username: string; p
   // Найти пользователя
   const user = await users.findOne({ username });
   if (!user) {
-    throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND', http: { status: 404 }} });
+    throw new GraphQLError('User not found', { extensions: { code: 'NOT_FOUND'} });
   }
 
   // Проверить пароль
