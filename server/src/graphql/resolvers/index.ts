@@ -8,6 +8,6 @@ export const resolvers = {
   },
   Mutation: {
     login,
-    register
+    // register
   },
 }
