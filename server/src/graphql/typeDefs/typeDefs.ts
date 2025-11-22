@@ -5,7 +5,6 @@ export const typeDefs: string = `#graphql
 
   type Query {
     hello: String
-    testMongo: [String!]!
   }
   
   type User { 

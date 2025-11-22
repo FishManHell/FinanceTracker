@@ -5,9 +5,9 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
 import jwt from 'jsonwebtoken'
 import client from './src/mongodb.js'
-import {CollectionInfo} from 'mongodb'
 import { login } from './src/graphql/resolvers/login/login.js'
 import { typeDefs } from './src/graphql/typeDefs/typeDefs.js'
+import { hello } from './src/graphql/resolvers/hello/hello.js'
 
 dotenv.config();
 
@@ -30,43 +30,14 @@ app.get('/', (req, res) => {
   res.json({ message: '✅ Express работает на Vercel!' });
 });
 
-const testMongo = async (_: any, __: any, context: any) => {
-  const collections = await context.db.listCollections().toArray();
-  return collections.map((c: CollectionInfo) => c.name);
-};
+// const hello = async (_parent: any, _args: any, context: any) => {
+//   return "HELLO WORD!";
+// };
 
-const hello = async (_parent: any, _args: any, context: any) => {
-  return "HELLO WORD!";
-};
-// -----------------------------
-// Apollo GraphQL
-// -----------------------------
-// const typeDefs = `#graphql
-//   type AuthPayload {
-//     token: String!
-//   }
-//
-//   type Query {
-//     hello: String
-//     testMongo: [String!]!
-//   }
-//
-//   type User {
-//     id: ID!
-//     username: String!
-//     email: String!
-//   }
-//
-//   type Mutation {
-//     login(username: String!, password: String!): AuthPayload!
-//     register(username: String!, email: String!, password: String!): AuthPayload!
-//   }
-// `;
-//
+
 const resolvers = {
   Query: {
-    hello,
-    testMongo
+    hello
   },
   Mutation: {
     login,
