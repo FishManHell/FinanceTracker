@@ -5,9 +5,8 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express4';
 import jwt from 'jsonwebtoken'
 import client from './src/mongodb.js'
-import { login } from './src/graphql/resolvers/login/login.js'
 import { typeDefs } from './src/graphql/typeDefs/typeDefs.js'
-import { hello } from './src/graphql/resolvers/hello/hello.js'
+import { resolvers } from './src/graphql/resolvers/index.js'
 
 dotenv.config();
 
@@ -30,20 +29,15 @@ app.get('/', (req, res) => {
   res.json({ message: '✅ Express работает на Vercel!' });
 });
 
-// const hello = async (_parent: any, _args: any, context: any) => {
-//   return "HELLO WORD!";
+// const resolvers = {
+//   Query: {
+//     hello
+//   },
+//   Mutation: {
+//     login,
+//   //   register
+//   },
 // };
-
-
-const resolvers = {
-  Query: {
-    hello
-  },
-  Mutation: {
-    login,
-  //   register
-  },
-};
 
 const apolloServer = new ApolloServer({ typeDefs, resolvers });
 
