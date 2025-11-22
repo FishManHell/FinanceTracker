@@ -1,10 +1,11 @@
-export const typeDefs: string = `
+export const typeDefs: string = `#graphql
   type AuthPayload {
     token: String!
   }
 
   type Query {
     hello: String
+    testMongo: [String!]!
   }
   
   type User { 
