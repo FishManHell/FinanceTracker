@@ -6,7 +6,7 @@ const options: MongoClientOptions = {
   maxIdleTimeMS: 5000
 };
 
-const uri = process.env.MONGODB_URI
+const uri = "mongodb+srv://Vercel-Admin-financeTracker:XgD8MUiWTwxJtjer@financetracker.zuhnavw.mongodb.net/?retryWrites=true&w=majority"
 if (!uri) {
   throw new Error('MongoDB URI is missing');
 }
