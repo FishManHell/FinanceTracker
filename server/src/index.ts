@@ -24,11 +24,5 @@ app.use('/graphql', async (req, res, next) => {
   return middleware(req, res, next);
 });
 
-// if (process.env.NODE_ENV !== 'production') {
-//   const PORT = process.env.PORT || 8000;
-//   app.listen(PORT, () => {
-//     console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
-//   });
-// }
 
 export default app;

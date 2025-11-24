@@ -26,3 +26,4 @@ client/cypress/screenshots/
 server/dist
 server/node_modules
 server/.env
+server/server.ts

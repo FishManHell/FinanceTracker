@@ -16,7 +16,5 @@
       "@/*": ["./src/*"],
     }
   },
-  "include": ["src/**/*",
-    "src/server.ts"
-  ],
+  "include": ["src/**/*", "src/index.ts"],
 }

@@ -3,7 +3,7 @@ import { typeDefs } from './graphql/typeDefs/typeDefs.js'
 import { resolvers } from './graphql/resolvers/index.js'
 import { RequestHandler } from 'express'
 import { expressMiddleware } from '@as-integrations/express4';
-import client from './mongodb.js'
+import {getClient} from './mongodb.js'
 import jwt from 'jsonwebtoken'
 
 type UserPayload = {
@@ -20,7 +20,7 @@ export async function getApolloMiddleware() {
     await apolloServer.start(); // safe lazy start
     apolloMiddleware = expressMiddleware(apolloServer, {
       context: async ({ req }) => {
-        const db = client.db("FinanceTacker");
+        const db = getClient().db("FinanceTacker");
         const authHeader = req.headers.authorization || "";
         if (!authHeader.startsWith("Bearer ")) return { user: null, db };
 
