@@ -1,12 +1,12 @@
 {
   "name": "finance-server",
-  "version": "0.1.64",
+  "version": "0.1.65",
   "private": true,
   "type": "module",
   "scripts": {
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js",
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch server.ts",
     "build": "tsc"
   },
   "dependencies": {
