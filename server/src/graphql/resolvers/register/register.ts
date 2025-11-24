@@ -1,7 +1,7 @@
-import { User } from '../../../models/User/User.js'
+// import { User } from '../../../models/User/User.js'
 import { IUser } from '../../../models/User/User.types.js'
 import { generateToken, hashPassword } from '../../../utils/auth.js'
-import { getUserWithPassword } from '../../../services/user/user.js'
+// import { getUserWithPassword } from '../../../services/user/user.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 
 export const register = async (_: undefined, { username, email, password }: IUser, context: any )=> {
@@ -19,7 +19,6 @@ export const register = async (_: undefined, { username, email, password }: IUse
   const newUser = { username, email, password: hashedPassword };
   const result = await users.insertOne(newUser);
 
-  console.log(result.insertedId, "result.insertedId")
   const token = generateToken({id: result.insertedId, username: newUser.username})
 
   return { token };

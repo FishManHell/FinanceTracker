@@ -1,4 +1,4 @@
-import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
+import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 
 export const hello =  (_parent: any, _args: any, context: any) => {
   console.log("👤 context.user:", context.user);
