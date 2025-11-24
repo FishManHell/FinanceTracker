@@ -1,11 +1,12 @@
-// import { User } from '../../../models/User/User.js'
-import { IUser } from '../../../models/User/User.types.js'
-import { generateToken, hashPassword } from '../../../utils/auth.js'
-// import { getUserWithPassword } from '../../../services/user/user.js'
-import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
+import { IUser } from '../../../models/User/User.types.js';
+import { generateToken, hashPassword } from '../../../utils/auth.js';
+import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
+import { GraphQLContext } from '../../types/context.js';
 
-export const register = async (_: undefined, { username, email, password }: IUser, context: any )=> {
-  const users = context.db.collection('users');
+export const register = async (_: undefined, regParams: IUser, context: GraphQLContext )=> {
+  const { username, email, password } = regParams;
+
+  const users = context.db.collection("users");
   const query = await users.findOne({ username });
 
   if (query) throwError({

@@ -1,6 +1,6 @@
 {
   "name": "finance-server",
-  "version": "0.1.69",
+  "version": "0.1.79",
   "private": true,
   "type": "module",
   "scripts": {
@@ -20,7 +20,7 @@
     "express": "^4.21.2",
     "graphql": "^16.11.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.8.7",
+    "mongodb": "^7.0.0",
     "serverless-http": "^4.0.0"
   },
   "devDependencies": {

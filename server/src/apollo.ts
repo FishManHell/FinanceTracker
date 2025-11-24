@@ -1,17 +1,12 @@
 import { ApolloServer } from '@apollo/server';
-import { typeDefs } from './graphql/typeDefs/typeDefs.js'
-import { resolvers } from './graphql/resolvers/index.js'
 import { RequestHandler } from 'express'
 import { expressMiddleware } from '@as-integrations/express4';
 import {getClient} from './mongodb.js'
 import jwt from 'jsonwebtoken'
+import { schema } from './graphql/schema.js'
+import { UserPayload } from './graphql/types/userPayload.js'
 
-type UserPayload = {
-  username: string;
-  email: string;
-};
-
-const apolloServer = new ApolloServer({ typeDefs, resolvers });
+const apolloServer = new ApolloServer(schema);
 
 let apolloMiddleware: RequestHandler;
 
@@ -32,8 +27,7 @@ export async function getApolloMiddleware() {
         }
 
         try {
-          const user = jwt.verify(token, secret) as UserPayload;
-          return { user, db };
+          return { user: jwt.verify(token, secret) as UserPayload, db };
         } catch (err) {
           console.warn("Error JWT:", err);
           return { user: null, db };

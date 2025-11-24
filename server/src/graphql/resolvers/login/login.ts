@@ -1,7 +1,8 @@
-import { LoginArgs } from './types/loginArgs.js'
-import { generateToken, verifyPassword } from '../../../utils/auth.js'
-import { getUserWithPassword } from '@/services/user/user.js'
-import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
+import { LoginArgs } from './types/loginArgs.js';
+import { generateToken, verifyPassword } from '../../../utils/auth.js';
+import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
+import { GraphQLContext } from '../../types/context.js';
+import { getUser } from '../../../services/user/user.js';
 
 const throwLoginError = (message: string) => {
   return throwError({
@@ -11,15 +12,14 @@ const throwLoginError = (message: string) => {
   })
 }
 
-export const login = async (_: undefined, { username, password }: LoginArgs, context: any) => {
-  const users = context.db.collection('users');
+export const login = async (_: undefined, params: LoginArgs, context: GraphQLContext) => {
+  const { username, password } = params;
+  const user = await getUser(context, username);
 
-  // const user = await getUserWithPassword(username, true);
-  const user = await users.findOne({ username });
   if (!user) return throwLoginError('User not found')
 
   const valid = await verifyPassword(password, user.password);
-  if (!valid) return throwLoginError('Invalid password')
+  if (!valid) return throwLoginError('Invalid password');
 
   const token = generateToken({id: user.id, username: user.username})
   return { token };
