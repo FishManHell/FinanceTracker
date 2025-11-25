@@ -1,6 +1,9 @@
 export const typeDefs: string = `#graphql
   type AuthPayload {
     token: String!
+    username: String!
+    email: String!
+    role: String!
   }
 
   type Query {

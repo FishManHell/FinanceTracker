@@ -1,11 +1,10 @@
 import { apolloClient } from '@/shared/api/apollo.ts'
-import { LOGIN_MUTATION } from "@/entities/auth/graphql/Login.ts"
+import { LOGIN_MUTATION } from "../graphql/Login.ts"
+import type { IAuthPayload } from '../types/authPayload.ts'
 
-type LoginMutationResponse = {
-  login: {
-    token: string;
-  };
-};
+interface LoginMutationResponse {
+  login: IAuthPayload
+}
 
 export const login = async (user: {username: string, password: string}): Promise<string> => {
   const { data } = await apolloClient.mutate<LoginMutationResponse>({

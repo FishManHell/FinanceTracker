@@ -1,3 +1,4 @@
-import {useLoginMutation} from "./composables/useLoginMutation.ts"
+import {useLoginMutation} from "./model/composables/useLoginMutation.ts"
+import {useRegisterMutation} from "./model/composables/useRegisterMutation.ts"
 
-export {useLoginMutation}
+export {useLoginMutation, useRegisterMutation}

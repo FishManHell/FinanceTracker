@@ -4,7 +4,7 @@ import { expressMiddleware } from '@as-integrations/express4';
 import {getClient} from './mongodb.js'
 import jwt from 'jsonwebtoken'
 import { schema } from './graphql/schema.js'
-import { UserPayload } from './graphql/types/userPayload.js'
+import type { UserPayload } from './graphql/types/userPayload.js'
 
 const apolloServer = new ApolloServer(schema);
 

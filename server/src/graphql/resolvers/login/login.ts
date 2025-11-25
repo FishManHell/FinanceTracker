@@ -1,8 +1,12 @@
-import { LoginArgs } from './types/loginArgs.js';
 import { generateToken, verifyPassword } from '../../../utils/auth.js';
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
 import { GraphQLContext } from '../../types/context.js';
 import { getUser } from '../../../services/user/user.js';
+
+interface LoginArgs {
+  username: string;
+  password: string;
+}
 
 const throwLoginError = (message: string) => {
   return throwError({
@@ -21,6 +25,7 @@ export const login = async (_: undefined, params: LoginArgs, context: GraphQLCon
   const valid = await verifyPassword(password, user.password);
   if (!valid) return throwLoginError('Invalid password');
 
-  const token = generateToken({id: user.id, username: user.username})
-  return { token };
+  const token = generateToken({id: user.id, username: user.username});
+
+  return { token, username, email: user.email, role: user.role };
 }
