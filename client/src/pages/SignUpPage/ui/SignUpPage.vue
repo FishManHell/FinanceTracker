@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import cls from "./SignUpPage.module.scss"
-import { useAuthStore } from '@/stores/useAuthStore.ts'
+import { useAuthStore } from '@/stores/useAuthStore/useAuthStore.ts'
 import { useRegisterMutation } from '@/entities/auth'
 import { AppRouters, router } from '@/shared/config/router'
 import classNames from 'classnames'

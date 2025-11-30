@@ -1,0 +1,22 @@
+.navbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 200px;
+  height: calc(100vh - 30px);
+  padding: 10px 5px;
+
+  :global(.p-menu-list) {
+    flex: 1;
+  }
+}
+
+.navbar_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.navbar_header_footer {
+  margin-top: auto;
+}

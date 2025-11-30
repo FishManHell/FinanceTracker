@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import classNames from 'classnames'
 import cls from "./SignInPage.module.scss"
-import { useAuthStore } from '@/stores/useAuthStore'
+import { useAuthStore } from '@/stores/useAuthStore/useAuthStore.ts'
 import { useLoginMutation } from '@/entities/auth'
 import { AppRouters, router } from '@/shared/config/router'
 

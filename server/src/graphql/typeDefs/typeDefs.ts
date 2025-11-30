@@ -1,6 +1,5 @@
 export const typeDefs: string = `#graphql
   type AuthPayload {
-    token: String!
     username: String!
     email: String!
     role: String!
@@ -8,12 +7,14 @@ export const typeDefs: string = `#graphql
 
   type Query {
     hello: String
+    refresh: AuthPayload
   }
   
   type User { 
     id: ID!
     username: String!
     email: String!
+    role: String!
   }
 
   type Mutation {

@@ -1,7 +1,3 @@
-import type { UserCredentials } from './user.ts'
+import type { User } from '@/shared/types'
 
-export interface IAuthPayload extends Omit<UserCredentials, "password"> {
-  email: string;
-  role: string;
-  token: string
-}
+export type IAuthPayload = User;

@@ -1,8 +1,8 @@
 import { login } from '../api/login.ts'
 import { useAuthMutation } from '@/shared/lib/vue-query/useAuthMutation.ts'
-import type { UserCredentials } from '../types/user.ts'
+import type { Credentials } from '@/shared/types'
 
-type LoginInputs = UserCredentials
+type LoginInputs = Credentials
 
 export function useLoginMutation() {
   return useAuthMutation<LoginInputs>(async (user) => await login(user))

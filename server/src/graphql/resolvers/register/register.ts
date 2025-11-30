@@ -1,5 +1,5 @@
 import { IUser, Role, Roles } from '../../../models/User/User.types.js'
-import { generateToken, hashPassword } from '../../../utils/auth.js';
+import { generateToken, hashPassword, setAuthCookie } from '../../../utils/auth.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
 import { GraphQLContext } from '../../types/context.js';
 
@@ -18,13 +18,14 @@ export const register = async (_: undefined, regArgs: RegisterArgs, context: Gra
   })
 
   const hashedPassword = hashPassword(password);
-
   const role = regArgs.role ?? Roles.USER;
 
   const newUser: IUser = { username, email, password: hashedPassword, role};
   const result = await users.insertOne(newUser);
 
-  const token = generateToken({id: result.insertedId, username: newUser.username})
+  const token = generateToken({id: result.insertedId.toString(), username: newUser.username});
 
-  return { token, username, email, role };
+  setAuthCookie(context, token);
+
+  return { username, email, role };
 };

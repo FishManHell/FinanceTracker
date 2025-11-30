@@ -14,23 +14,22 @@ export async function getApolloMiddleware() {
   if (!apolloMiddleware) {
     await apolloServer.start(); // safe lazy start
     apolloMiddleware = expressMiddleware(apolloServer, {
-      context: async ({ req }) => {
+      context: async ({ req, res }) => {
         const db = getClient().db("FinanceTacker");
-        const authHeader = req.headers.authorization || "";
-        if (!authHeader.startsWith("Bearer ")) return { user: null, db };
+        const token = req.cookies?.token;
+        if (!token) return { user: null, db, req, res };
 
-        const token = authHeader.replace("Bearer ", "").trim();
         const secret = process.env.JWT_SECRET;
         if (!secret) {
           console.warn("Didn't find JWT_SECRET");
-          return { user: null, db };
+          return { user: null, db,  req, res};
         }
 
         try {
-          return { user: jwt.verify(token, secret) as UserPayload, db };
+          return { user: jwt.verify(token, secret) as UserPayload, db,  req, res};
         } catch (err) {
           console.warn("Error JWT:", err);
-          return { user: null, db };
+          return { user: null, db,  req, res};
         }
       }
     });

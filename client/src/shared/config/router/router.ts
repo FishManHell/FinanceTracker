@@ -1,34 +1,26 @@
-import { createWebHistory, createRouter, type RouteRecordRaw } from 'vue-router'
-import { useAuthStore } from '@/stores/useAuthStore.ts'
+import { createWebHistory, createRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/useAuthStore/useAuthStore.ts'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { LoginPage } from '@/pages/SignInPage'
 import { RegisterPage } from '@/pages/SignUpPage'
+import { AppLayout } from '@/app'
+import { AdministrationPage } from '@/pages/AdministrationPage'
+import { ADMIN_ROLES, ALL_ROLES, Roles } from '@/shared/config/roles'
+import { AppRouters, RoutePaths, type RoutesType } from './types.ts'
+
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth?: boolean;
+    roles?: Roles[];
+  }
+};
 
 function isAuthenticated(): boolean {
   const authStore = useAuthStore();
   return authStore.isAuthenticated;
-}
-
-export enum AppRouters {
-  SIGN_IN = 'sign_in',
-  SIGN_UP = 'sign_up',
-  DASHBOARD = 'dashboard',
-  REDIRECT = "redirect",
-}
-
-export const RoutePaths = {
-  [AppRouters.SIGN_IN]: '/sign_in',
-  [AppRouters.SIGN_UP]: '/sign_up',
-  [AppRouters.DASHBOARD]: '/dashboard',
-  [AppRouters.REDIRECT]: "/:pathMatch(.*)*"
-} as const
-
-type AppRouteRecord<K extends AppRouters> = RouteRecordRaw & {
-  name: K;
-  path: (typeof RoutePaths)[K];
 };
 
-const routes:AppRouteRecord<AppRouters>[] = [
+const routes: RoutesType = [
   {
     path: RoutePaths[AppRouters.SIGN_IN],
     name: AppRouters.SIGN_IN,
@@ -42,11 +34,26 @@ const routes:AppRouteRecord<AppRouters>[] = [
     meta: { requiresAuth: false },
   },
   {
-    path: RoutePaths[AppRouters.DASHBOARD],
-    name: AppRouters.DASHBOARD,
-    component: DashboardPage,
-    meta: { requiresAuth: true },
+    path: RoutePaths[AppRouters.APP_ROUTE],
+    name: AppRouters.APP_ROUTE,
+    component: AppLayout,
+    meta: { requiresAuth: true},
+    children: [
+      {
+        path: RoutePaths[AppRouters.DASHBOARD],
+        name: AppRouters.DASHBOARD,
+        component: DashboardPage,
+        meta: {roles: ALL_ROLES}
+      },
+      {
+        path: RoutePaths[AppRouters.ADMINISTRATION],
+        name: AppRouters.ADMINISTRATION,
+        component: AdministrationPage,
+        meta: {roles: ADMIN_ROLES}
+      },
+    ]
   },
+
   {
     path: RoutePaths[AppRouters.REDIRECT],
     name: AppRouters.REDIRECT,
@@ -66,14 +73,25 @@ export const router = createRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+  const user = authStore.user;
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: AppRouters.SIGN_IN });
-  } else if (to.name === AppRouters.SIGN_IN && authStore.isAuthenticated) {
-    next({ name: AppRouters.DASHBOARD });
-  } else {
-    next();
+  if (to.meta.requiresAuth) {
+    if (!authStore.isAuthenticated) {
+      await authStore.restoreSession();
+    }
+
+    if (!authStore.isAuthenticated) {
+      next({ name: AppRouters.SIGN_IN });
+    }
   }
+  if (to.meta.roles && user?.role && !to.meta.roles.includes(user.role)) {
+    next({ name: AppRouters.DASHBOARD });
+  }
+
+  if (to.name === AppRouters.SIGN_IN && authStore.isAuthenticated) {
+    next({ name: AppRouters.DASHBOARD });
+  }
+  next();
 });
