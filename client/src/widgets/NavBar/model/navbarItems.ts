@@ -25,5 +25,5 @@ export const navbarItems: NavbarItemProps[] = [
   {
     label: 'Logout',
     icon: 'pi pi-sign-out',
-  },
+  }
 ]

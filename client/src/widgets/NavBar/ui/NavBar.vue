@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import cls from './NavBar.module.scss'
 import FinanceIcon from '@/shared/assets/icons/finance.svg'
-import Menu from 'primevue/menu'
+import { Avatar, Menu} from 'primevue'
 import { computed } from 'vue'
 import { useAuthStore } from '@/stores/useAuthStore/useAuthStore.ts'
 import { navbarItems } from '../model/navbarItems.ts'
 import { AppRouters, RoutePaths } from '@/shared/config/router'
 import { useRouter } from 'vue-router'
+import { ThemeSwitcher } from '@/widgets/ThemeSwitcher'
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -56,11 +57,22 @@ const filteredItems = computed(() => {
       </a>
     </template>
     <template #end>
-      <div :class="cls.navbar_header_footer">
-        <router-link :class="cls.avatar_wrapper" :to="RoutePaths[AppRouters.PROFILE]">
-          <img v-if="authStore?.user && authStore?.user.avatar" :src="authStore?.user.avatar" alt="avatar"/>
-          <i v-else class="pi pi-user" style="font-size: 2.5rem"/>
-        </router-link>
+      <div :class="cls.navbar_footer">
+        <div :class="cls.avatar_wrapper">
+          <router-link :class="cls.avatar_link" :to="RoutePaths[AppRouters.PROFILE]">
+            <Avatar
+              :icon="authStore?.user && !authStore?.user.avatar ? 'pi pi-user' : undefined"
+              :image="authStore?.user && authStore?.user.avatar ? authStore?.user.avatar : undefined"
+              shape="circle"
+              size="large"
+            />
+          </router-link>
+          <div :class="cls.user_meta">
+            <span>{{authStore.user?.username}}</span>
+            <span>{{authStore.user?.role}}</span>
+          </div>
+        </div>
+        <ThemeSwitcher/>
       </div>
     </template>
   </Menu>

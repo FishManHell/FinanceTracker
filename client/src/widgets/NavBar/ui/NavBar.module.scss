@@ -17,31 +17,42 @@
   justify-content: space-evenly;
 }
 
-.navbar_header_footer {
+
+.btn_logout {
+  margin-top: auto;
+}
+
+.navbar_footer {
   margin-top: auto;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  flex-direction: column;
+  padding: 0.5rem 1rem;
 
   .avatar_wrapper {
-    color: #fff;
-    text-decoration: none;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+    display: flex;
+    align-items: center;
 
-    img {
-      width: 100%;
-      border-radius: inherit;
+    .avatar_link {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .user_meta {
+      display: flex;
+      flex-direction: column;
+      margin-left: 5px;
+
+      span {
+        &:first-child {
+          font-weight: 600;
+        }
+        &:last-child {
+          font-size: 0.9rem;
+        }
+      }
     }
   }
 
-  .avatar_wrapper:has(i) {
-    width: 40px;
-    height: 40px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 }

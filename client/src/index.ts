@@ -13,7 +13,10 @@ const app = createApp(App);
 app.use(PrimeVue, {
   ripple: true,
   theme: {
-    preset: Aura
+    preset: Aura,
+    options: {
+      darkModeSelector: '.my-app-dark',
+    }
   }
 });
 app.directive('ripple', Ripple);
