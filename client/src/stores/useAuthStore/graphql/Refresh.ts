@@ -5,7 +5,8 @@ export const REFRESH_QUERY = gql`
     refresh {
       username
       email
-      role
+      role,
+      avatar
     }
   }
 `;

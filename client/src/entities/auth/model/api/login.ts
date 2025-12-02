@@ -18,6 +18,7 @@ export const login = async (user: {username: string, password: string}): Promise
   return {
     username: data.login.username,
     email: data.login.email,
-    role: data.login.role
+    role: data.login.role,
+    avatar: data.login.avatar,
   };
 };

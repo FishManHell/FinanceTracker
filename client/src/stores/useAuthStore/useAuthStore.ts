@@ -23,7 +23,6 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = false;
     },
     async restoreSession() {
-
       try {
         const { data } = await apolloClient.query<RefreshResponse>({
           query: REFRESH_QUERY,

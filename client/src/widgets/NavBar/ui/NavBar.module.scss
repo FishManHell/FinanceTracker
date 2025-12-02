@@ -19,4 +19,29 @@
 
 .navbar_header_footer {
   margin-top: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .avatar_wrapper {
+    color: #fff;
+    text-decoration: none;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+
+    img {
+      width: 100%;
+      border-radius: inherit;
+    }
+  }
+
+  .avatar_wrapper:has(i) {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

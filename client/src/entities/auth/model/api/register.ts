@@ -20,5 +20,6 @@ export const register = async (newUser: {username: string, email: string, passwo
     username: reg.username,
     email: reg.email,
     role: reg.role,
+    avatar: reg.avatar,
   };
 };

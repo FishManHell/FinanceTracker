@@ -1,9 +1,7 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
-tttttttt
+  ProfilePage
 </template>
 
 <style scoped></style>

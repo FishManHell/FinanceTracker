@@ -2,58 +2,27 @@
 import cls from './NavBar.module.scss'
 import FinanceIcon from '@/shared/assets/icons/finance.svg'
 import Menu from 'primevue/menu'
-import type { MenuItem } from 'primevue/menuitem'
-import { computed, ref } from 'vue'
-import { AppRouters, RoutePaths } from '@/shared/config/router'
-import { Roles, ALL_ROLES, ADMIN_ROLES } from '@/shared/config/roles'
+import { computed } from 'vue'
 import { useAuthStore } from '@/stores/useAuthStore/useAuthStore.ts'
-import { useRouter } from "vue-router"
-
-interface ItemProps extends MenuItem {
-  route?: string;
-  roles?: Roles[];
-}
+import { navbarItems } from '../model/navbarItems.ts'
+import { AppRouters, RoutePaths } from '@/shared/config/router'
+import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore();
 const router = useRouter();
 
-const items = ref<ItemProps[]>([
-  { separator: true },
-  {
-    label: 'Dashboard',
-    icon: 'pi pi-home',
-    route: RoutePaths[AppRouters.DASHBOARD],
-    roles: ALL_ROLES,
-  },
-  {
-    label: 'Administration',
-    icon: 'pi pi-user',
-    route: RoutePaths[AppRouters.ADMINISTRATION],
-    roles: ADMIN_ROLES,
-  },
-  {
-    label: 'Settings',
-    icon: 'pi pi-cog',
-    route: '/',
-    roles: ADMIN_ROLES,
-  },
-  {
-    label: 'Logout',
-    icon: 'pi pi-sign-out',
-    command: () => {
-      authStore.logout()
-      router.push(RoutePaths[AppRouters.SIGN_IN]);
-    }
-  },
-])
+const onLogout = () => {
+  authStore.logout()
+  router.push(RoutePaths[AppRouters.SIGN_IN])
+}
 
 const filteredItems = computed(() => {
-  return items.value.filter((item) => {
+  return navbarItems.filter((item) => {
     if (item.separator) return true
     if (!item.roles || item.roles.length === 0) return true
     return authStore.user && item.roles.includes(authStore.user.role)
   })
-})
+});
 
 </script>
 
@@ -77,10 +46,10 @@ const filteredItems = computed(() => {
       </router-link>
 
       <a
-        v-else-if="item.command"
+        v-else
         v-ripple
         v-bind="props.action"
-        @click="(e) => item.command?.({ originalEvent: e, item })"
+        @click="item.label === 'Logout' ? onLogout() : null"
       >
         <span :class="item.icon" />
         <span class="ml-2">{{ item.label }}</span>
@@ -88,8 +57,10 @@ const filteredItems = computed(() => {
     </template>
     <template #end>
       <div :class="cls.navbar_header_footer">
-        <span> avatar </span>
-        <span>name</span>
+        <router-link :class="cls.avatar_wrapper" :to="RoutePaths[AppRouters.PROFILE]">
+          <img v-if="authStore?.user && authStore?.user.avatar" :src="authStore?.user.avatar" alt="avatar"/>
+          <i v-else class="pi pi-user" style="font-size: 2.5rem"/>
+        </router-link>
       </div>
     </template>
   </Menu>

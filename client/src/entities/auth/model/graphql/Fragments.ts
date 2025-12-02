@@ -4,6 +4,7 @@ export const AUTH_PAYLOAD_FRAGMENT = gql`
   fragment AuthPayloadFields on AuthPayload {
     username
     email
-    role
+    role,
+    avatar
   }
 `;

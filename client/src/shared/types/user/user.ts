@@ -9,4 +9,5 @@ export interface User {
   email: string;
   role: Roles;
   username: string;
+  avatar: string | null;
 }
