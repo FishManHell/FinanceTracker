@@ -15,7 +15,8 @@ export const refresh = async (_: undefined, __: undefined, context: GraphQLConte
     return {
       username: user.username,
       email: user.email,
-      role: user.role
+      role: user.role,
+      avatar: user.avatar
     };
   } catch {
     return null;

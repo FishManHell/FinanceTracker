@@ -19,13 +19,14 @@ export const register = async (_: undefined, regArgs: RegisterArgs, context: Gra
 
   const hashedPassword = hashPassword(password);
   const role = regArgs.role ?? Roles.USER;
+  const avatar = null
 
-  const newUser: IUser = { username, email, password: hashedPassword, role};
+  const newUser: IUser = { username, email, password: hashedPassword, role, avatar};
   const result = await users.insertOne(newUser);
 
   const token = generateToken({id: result.insertedId.toString(), username: newUser.username});
 
   setAuthCookie(context, token);
 
-  return { username, email, role };
+  return { username, email, role, avatar };
 };

@@ -6,6 +6,7 @@ import { GraphQLContext } from './types/context.js'
 const schema: ApolloServerOptions<GraphQLContext> = {
   resolvers,
   typeDefs,
+  csrfPrevention: false,
 }
 
 export {schema}

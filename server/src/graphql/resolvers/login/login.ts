@@ -29,5 +29,5 @@ export const login = async (_: undefined, params: LoginArgs, context: GraphQLCon
 
   setAuthCookie(context, token);
 
-  return { username, email: user.email, role: user.role };
+  return { username, email: user.email, role: user.role, avatar: user.avatar };
 }
