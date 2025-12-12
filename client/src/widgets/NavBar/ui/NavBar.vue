@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import cls from './NavBar.module.scss'
 import FinanceIcon from '@/shared/assets/icons/finance.svg'
-import { Avatar, Menu} from 'primevue'
+import { Menu } from 'primevue'
 import { computed } from 'vue'
-import { useAuthStore } from '@/stores/useAuthStore/useAuthStore.ts'
+import { sessionStore } from '@/entities/auth'
+import { userStore } from "@/entities/user"
 import { navbarItems } from '../model/navbarItems.ts'
 import { AppRouters, RoutePaths } from '@/shared/config/router'
 import { useRouter } from 'vue-router'
 import { ThemeSwitcher } from '@/widgets/ThemeSwitcher'
+import { UserAvatar } from '@/shared/ui/UserAvatar'
 
-const authStore = useAuthStore();
+const user_store = userStore();
+const session_store = sessionStore();
 const router = useRouter();
 
 const onLogout = () => {
-  authStore.logout()
+  user_store.clearUser()
+  session_store.logout()
   router.push(RoutePaths[AppRouters.SIGN_IN])
 }
 
@@ -21,7 +25,7 @@ const filteredItems = computed(() => {
   return navbarItems.filter((item) => {
     if (item.separator) return true
     if (!item.roles || item.roles.length === 0) return true
-    return authStore.user && item.roles.includes(authStore.user.role)
+    return user_store.user && item.roles.includes(user_store.user.role)
   })
 });
 
@@ -60,16 +64,11 @@ const filteredItems = computed(() => {
       <div :class="cls.navbar_footer">
         <div :class="cls.avatar_wrapper">
           <router-link :class="cls.avatar_link" :to="RoutePaths[AppRouters.PROFILE]">
-            <Avatar
-              :icon="authStore?.user && !authStore?.user.avatar ? 'pi pi-user' : undefined"
-              :image="authStore?.user && authStore?.user.avatar ? authStore?.user.avatar : undefined"
-              shape="circle"
-              size="large"
-            />
+            <UserAvatar :image="user_store.user?.avatar"/>
           </router-link>
           <div :class="cls.user_meta">
-            <span>{{authStore.user?.username}}</span>
-            <span>{{authStore.user?.role}}</span>
+            <span>{{user_store.user?.username}}</span>
+            <span>{{user_store.user?.role}}</span>
           </div>
         </div>
         <ThemeSwitcher/>

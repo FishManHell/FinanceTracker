@@ -1,4 +1,4 @@
-import { apolloClient } from '@/shared/api/apollo.ts'
+import { apolloClient } from '@/shared/api/apollo'
 import { REGISTER_MUTATION } from '../graphql/Register.ts'
 import type { IAuthPayload } from '../types/authPayload.ts'
 import type { User } from '@/shared/types'

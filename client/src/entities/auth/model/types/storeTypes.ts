@@ -9,3 +9,8 @@ export interface AuthState {
   user: User | null;
   error: string
 }
+
+export interface SessionState {
+  isAuthenticated: boolean;
+  error: string
+}

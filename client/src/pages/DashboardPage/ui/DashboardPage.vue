@@ -1,66 +1,76 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { apolloClient } from "@/shared/api/apollo";
-import { gql } from "@apollo/client/core";
+import { Budget } from '@/widgets/Budget';
+import Button from 'primevue/button';
+import { useDialog } from 'primevue/usedialog';
+import { TransactionForm } from '@/shared/ui/TransactionForm';
+import { gql } from '@apollo/client/core';
+import { apolloClient } from '@/shared/api/apollo';
+import { type Transaction, useSetTransaction } from '@/entities/transaction';
 
-// --- hello query ---
-const message = ref<string>("");
-
-const GET_HELLO = gql`
-  query {
-    hello
+const GET_BUDGET = gql`
+  query GetBudget($year: Int!, $month: Int!) {
+    getBudget(year: $year, month: $month) {
+      year
+      month
+      budget
+      spent
+      remaining
+    }
   }
-`;
+`
 
-function fetchHello() {
-  console.log("Button clicked!");
-  apolloClient
-    .query<{ hello: string }>({
-      query: GET_HELLO,
-      fetchPolicy: "network-only",
-    })
-    .then(({ data }) => {
-      message.value = data?.hello ?? "Hello";
-    })
-    .catch((err) => console.error(err));
+const dialog = useDialog()
+
+const { mutate } = useSetTransaction();
+
+const onSetTransaction = (transaction: Transaction) => mutate(transaction);
+
+function openTransactionDialog() {
+  dialog.open(TransactionForm, {
+    props: {
+      header: 'Add Transaction',
+      style: {
+        width: '100%',
+        maxWidth: '800px',
+        textAlign: 'center',
+      },
+      modal: true,
+    },
+    data: {
+      onSubmit: onSetTransaction,
+      initialData: null,
+      mode: 'add',
+    },
+  })
 }
 
-onMounted(() => {
-  fetchHello();
-});
+const getBudget = async () => {
+  try {
+    const { data } = await apolloClient.query({
+      query: GET_BUDGET,
+      variables: { year: 2025, month: 12 },
+      fetchPolicy: 'network-only',
+    })
+
+    return data
+  } catch (error) {
+    console.error('Error in onSetTransaction:', error)
+  }
+}
 
 </script>
 
 <template>
   <div class="dashboard-page">
-    <h1>Dashboard</h1>
-    <p>Server says: {{ message }}</p>
-    <button @click="fetchHello">Обновить</button>
+    <Budget />
+    <Button label="Add Transaction" @click="openTransactionDialog" />
+    <Button label="Get Budget" @click="getBudget" />
   </div>
 </template>
-
 
 <style scoped>
 .dashboard-page {
   padding: 2rem;
   font-family: Arial, sans-serif;
-}
-
-h1 {
-  color: #333;
-}
-
-button {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-}
-
-input {
-  display: block;
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-  width: 100%;
-  max-width: 300px;
 }
 </style>

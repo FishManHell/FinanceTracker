@@ -6,6 +6,7 @@ import PrimeVue from 'primevue/config';
 import App from './app/App.vue';
 import Aura from '@primeuix/themes/aura';
 import Ripple from 'primevue/ripple';
+import DialogService from 'primevue/dialogservice';
 import 'primeicons/primeicons.css';
 import '@/app/styles/index.scss';
 
@@ -20,6 +21,7 @@ app.use(PrimeVue, {
   }
 });
 app.directive('ripple', Ripple);
+app.use(DialogService);
 
 const pinia = createPinia();
 app.use(pinia);

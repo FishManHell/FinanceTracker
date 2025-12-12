@@ -2,7 +2,7 @@
 
 import { gql } from '@apollo/client'
 import { ref } from 'vue'
-import { apolloClient } from '@/shared/api/apollo.ts'
+import { apolloClient } from '@/shared/api/apollo'
 
 const UPLOAD_AVATAR = gql`
   mutation UploadAvatar($file: Upload!) {

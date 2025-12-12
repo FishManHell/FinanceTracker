@@ -1,0 +1,18 @@
+.transaction_form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.input_field {
+  width: 70%;
+  input {
+    width: 100%;
+    &::placeholder {
+      text-align: center;
+    }
+  }
+  &::placeholder {
+    text-align: center;
+  }
+}

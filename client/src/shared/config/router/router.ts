@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/useAuthStore/useAuthStore.ts'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { LoginPage } from '@/pages/SignInPage'
 import { RegisterPage } from '@/pages/SignUpPage'
@@ -8,6 +7,9 @@ import { AdministrationPage } from '@/pages/AdministrationPage'
 import { ADMIN_ROLES, ALL_ROLES, Roles } from '@/shared/config/roles'
 import { AppRouters, RoutePaths, type RoutesType } from './types.ts'
 import { ProfilePage } from '@/pages/ProfilePage'
+import { refresh } from '@/entities/auth'
+import { userStore } from "@/entities/user";
+import { sessionStore } from "@/entities/auth"
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -17,8 +19,8 @@ declare module 'vue-router' {
 }
 
 function isAuthenticated(): boolean {
-  const authStore = useAuthStore()
-  return authStore.isAuthenticated
+  const session_store = sessionStore();
+  return session_store.isAuthenticated
 }
 
 const routes: RoutesType = [
@@ -80,15 +82,17 @@ export const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
-  const user = authStore.user
+  const session_store = sessionStore();
+  const user_store = userStore();
+  const isAuth = session_store.isAuthenticated
+  const user = user_store.user
 
   if (to.meta.requiresAuth) {
-    if (!authStore.isAuthenticated) {
-      await authStore.restoreSession()
+    if (!isAuth) {
+      await refresh()
     }
 
-    if (!authStore.isAuthenticated) {
+    if (!isAuth) {
       next({ name: AppRouters.SIGN_IN })
     }
   }
@@ -96,7 +100,7 @@ router.beforeEach(async (to, from, next) => {
     next({ name: AppRouters.DASHBOARD })
   }
 
-  if (to.name === AppRouters.SIGN_IN && authStore.isAuthenticated) {
+  if (to.name === AppRouters.SIGN_IN && isAuth) {
     next({ name: AppRouters.DASHBOARD })
   }
   next()
