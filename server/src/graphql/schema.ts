@@ -1,6 +1,6 @@
 import { ApolloServerOptions } from '@apollo/server'
 import { resolvers } from './resolvers/index.js'
-import { typeDefs } from './typeDefs/typeDefs.js'
+import { typeDefs } from './typeDefs/index.js'
 import { GraphQLContext } from './types/context.js'
 
 const schema: ApolloServerOptions<GraphQLContext> = {
