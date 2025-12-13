@@ -1,6 +1,7 @@
 import { GraphQLContext } from '../../types/context.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { ObjectId } from 'mongodb'
+import { Transaction } from '../../../models/Transaction/transaction.type.js'
 
 export const getTransactions = async (
   _: undefined,
@@ -16,7 +17,7 @@ export const getTransactions = async (
   }
 
   try {
-    const transactions = context.db.collection('transactions');
+    const transactions = context.db.collection<Transaction>('transactions');
     const userId = new ObjectId(context.user?.id);
     const userTransactionsList = await transactions
       .find({ userId })

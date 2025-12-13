@@ -1,14 +1,10 @@
 import { GraphQLContext } from '../../types/context.js';
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
-import { ObjectId } from 'mongodb';
+import { ObjectId, OptionalId } from 'mongodb';
+import { Account } from '../../../models/Account/account.type.js'
+import { Transaction, DefAccount } from '../../../models/Transaction/transaction.type.js'
 
-interface TransactionParams {
-  date: Date;
-  amount: number;
-  category: string;
-  description: string;
-  type: string;
-  currency: string;
+interface TransactionParams extends DefAccount {
   account: {type: string, description: string}
 }
 
@@ -26,8 +22,8 @@ export const setTransaction = async (
   }
 
   try {
-    const transactions = context.db.collection('transactions');
-    const accounts = context.db.collection("accounts");
+    const transactions = context.db.collection<OptionalId<Transaction>>('transactions');
+    const accounts = context.db.collection<Account>("accounts");
 
     const userId = new ObjectId(context.user?.id);
     const userAccount = await accounts.findOne({
@@ -44,7 +40,7 @@ export const setTransaction = async (
       })
     }
 
-    const result = await transactions.insertOne({
+    const insertNewTransaction = await transactions.insertOne({
       ...rest,
       userId,
       date: new Date(rest.date),
@@ -54,7 +50,7 @@ export const setTransaction = async (
 
     return {
       ...rest,
-      id: result.insertedId.toString(),
+      id: insertNewTransaction.insertedId.toString(),
     };
   } catch (error) {
     console.error("Error inserting transaction:", error);

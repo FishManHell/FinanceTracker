@@ -2,7 +2,11 @@ import { ObjectId } from 'mongodb'
 import cloudinary from '../../../cloudinary.js'
 import { GraphQLContext } from '../../../graphql/types/context.js'
 
-export const uploadAvatar = async (_: undefined, { file }: any, context: GraphQLContext) => {
+export const uploadAvatar = async (
+  _: undefined,
+  { file }: any,
+  context: GraphQLContext
+) => {
   const upload = await file;
   const { createReadStream } = upload;
 

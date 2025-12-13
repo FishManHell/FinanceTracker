@@ -1,32 +1,48 @@
 import jwt from 'jsonwebtoken'
-import { ObjectId } from "mongodb";
+import { ObjectId } from 'mongodb'
 import { GraphQLContext } from '../../types/context.js'
 import { UserPayload } from '../../types/userPayload.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
+import { UserDTO } from '../../../models/User/user.types.js'
+import { getUser } from '../../../services/user/user.js'
+import { assertUser } from '../../utils/assertions.js'
 
-export const refresh = async (_: undefined, __: undefined, context: GraphQLContext) => {
+const unauthorizeError = () => {
+  throwError({
+    message: "UNAUTHORIZED",
+    code: GraphQLErrorCode.UNAUTHORIZED,
+    status: HttpStatus.UNAUTHORIZED
+  })
+}
+
+export const refresh = async (
+  _: undefined,
+  __: undefined,
+  context: GraphQLContext
+) => {
   const token = context.req.cookies?.token;
-  if (!token) return null;
+  if (!token) unauthorizeError()
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as UserPayload;
-    const user = await context.db.collection("users").findOne({ _id: new ObjectId(payload.id) });
+    const user = await getUser(context, {_id: new ObjectId(payload.id)});
 
-    if (!user) {
-      throwError({
-        message: "UNAUTHORIZED",
-        code: GraphQLErrorCode.UNAUTHORIZED,
-        status: HttpStatus.UNAUTHORIZED
-      })
-    }
+    assertUser(user);
 
-    return {
+    const result: UserDTO = {
       username: user.username,
       email: user.email,
       role: user.role,
       avatar: user.avatar
-    };
-  } catch {
-    return null;
+    }
+
+    return result;
+
+  } catch (error) {
+    throwError({
+      message: "INTERNAL_SERVER_ERROR",
+      code: GraphQLErrorCode.INTERNAL_SERVER_ERROR,
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+    })
   }
 }

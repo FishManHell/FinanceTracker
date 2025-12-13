@@ -1,6 +1,8 @@
 import { GraphQLContext } from '../../types/context.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { ObjectId } from 'mongodb'
+import { Transaction } from '../../../models/Transaction/transaction.type.js'
+import { Budget } from '../../../models/Budget/budget.type.js'
 
 interface BudgetParams {
   year: number;
@@ -21,8 +23,8 @@ export const getBudget = async (
   }
 
   try {
-    const budgets = context.db.collection("budgets");
-    const transactions = context.db.collection("transactions");
+    const budgets = context.db.collection<Budget>("budgets");
+    const transactions = context.db.collection<Transaction>("transactions");
     const userId = new ObjectId(context.user?.id);
     const budget = await budgets.findOne({ userId, year, month });
 
@@ -66,7 +68,7 @@ export const getBudget = async (
   } catch (error) {
     console.error("Error budget:", error);
     throwError({
-      message: "Error in getBudget",
+      message: "INTERNAL_SERVER_ERROR",
       status: HttpStatus.INTERNAL_SERVER_ERROR,
       code: GraphQLErrorCode.INTERNAL_SERVER_ERROR
     })

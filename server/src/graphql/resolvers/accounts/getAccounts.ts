@@ -1,6 +1,7 @@
 import { GraphQLContext } from '../../types/context.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { ObjectId } from "mongodb";
+import { Account } from '../../../models/Account/account.type.js'
 
 export const getAccounts = async (
   _: undefined,
@@ -9,18 +10,16 @@ export const getAccounts = async (
 ) => {
   if (!context.user?.id) {
     throwError({
-      message: "Unauthorized",
+      message: "UNAUTHORIZED",
       status: HttpStatus.UNAUTHORIZED,
       code: GraphQLErrorCode.UNAUTHORIZED
     });
   }
 
   try {
-    const accounts = context.db.collection("accounts");
+    const accounts = context.db.collection<Account>("accounts");
     const userId = new ObjectId(context.user?.id);
-    const userAccountsList = await accounts
-      .find({ userId })
-      .toArray();
+    const userAccountsList = await accounts.find({ userId }).toArray();
 
     if (!userAccountsList.length) {
       throwError({
@@ -35,9 +34,9 @@ export const getAccounts = async (
   } catch (error) {
     console.error("Error in getAccounts", error);
     throwError({
-      message: "Error in getAccounts",
-      status: HttpStatus.BAD_REQUEST,
-      code: GraphQLErrorCode.BAD_REQUEST
+      message: "INTERNAL_SERVER_ERROR",
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      code: GraphQLErrorCode.INTERNAL_SERVER_ERROR
     })
   }
 

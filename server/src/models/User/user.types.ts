@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb'
 
 export const Roles = {
   DEVELOPER: "developer",
@@ -7,9 +8,17 @@ export const Roles = {
 
 export type Role = typeof Roles[keyof typeof Roles];
 
-export interface IUser {
+export interface UserDocument {
+  _id: ObjectId;
   username: string;
   password: string;
+  email: string;
+  role: Role;
+  avatar: string | null;
+}
+
+export interface UserDTO {
+  username: string;
   email: string;
   role: Role;
   avatar: string | null;

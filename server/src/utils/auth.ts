@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { GraphQLContext } from '../graphql/types/context.js'
 
-const TOKEN_LIVE_CYCLE = parseInt(process.env.TOKEN_LIVE_CYCLE ?? "600000", 10);
+const TOKEN_LIVE_CYCLE = parseInt(process.env.TOKEN_LIVE_CYCLE ?? "60000", 10);
 
 export const hashPassword = (password: string)  => {
   return bcrypt.hashSync(password, 10);
