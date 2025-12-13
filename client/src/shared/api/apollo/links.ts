@@ -5,7 +5,6 @@ import { AppRouters, RoutePaths, router } from '@/shared/config/router'
 import { sessionStore } from '@/entities/auth'
 import { userStore } from "@/entities/user"
 
-
 const uri = import.meta.env.VITE_API_URL;
 
 export const uploadHttpLink = new UploadHttpLink({
@@ -21,7 +20,6 @@ export const errorLink = new ErrorLink(({ result }) => {
 
   if (result?.errors) {
     for (const err of result.errors) {
-      console.log(err.extensions, "err.extensions")
       if (err.extensions?.code === "UNAUTHORIZED") {
         session_store.logout();
         user_store.clearUser();

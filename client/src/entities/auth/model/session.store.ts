@@ -14,7 +14,6 @@ export const sessionStore = defineStore("session", {
       this.error = message;
     },
     logout() {
-      console.log('LOGOUT');
       this.isAuthenticated = false;
     },
   },

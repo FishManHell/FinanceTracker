@@ -10,7 +10,6 @@ export const refresh = async (): Promise<User> => {
   const user_store = userStore();
 
   const resetStores = () => {
-    console.log('LOGS')
     user_store.clearUser()
     session_store.logout()
   }

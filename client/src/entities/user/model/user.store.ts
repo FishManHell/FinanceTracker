@@ -11,7 +11,6 @@ export const userStore = defineStore("user", {
       this.user = user;
     },
     clearUser() {
-      console.log('CLEAR USER')
       this.user = null;
     },
   },
