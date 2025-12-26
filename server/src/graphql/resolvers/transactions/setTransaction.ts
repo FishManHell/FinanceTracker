@@ -2,9 +2,9 @@ import { GraphQLContext } from '../../types/context.js';
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
 import { ObjectId, OptionalId } from 'mongodb';
 import { Account } from '../../../models/Account/account.type.js'
-import { Transaction, DefAccount } from '../../../models/Transaction/transaction.type.js'
+import { Transaction, DefAccountWithoutType } from '../../../models/Transaction/transaction.type.js'
 
-interface TransactionParams extends DefAccount {
+interface TransactionParams extends DefAccountWithoutType {
   account: {type: string, description: string}
 }
 
@@ -40,8 +40,11 @@ export const setTransaction = async (
       })
     }
 
+    const type = rest.amount > 0 ? "income" : "expense"
+
     const insertNewTransaction = await transactions.insertOne({
       ...rest,
+      type,
       userId,
       date: new Date(rest.date),
       accountId: userAccount._id,
@@ -50,6 +53,7 @@ export const setTransaction = async (
 
     return {
       ...rest,
+      type,
       id: insertNewTransaction.insertedId.toString(),
     };
   } catch (error) {

@@ -7,6 +7,19 @@ type Transaction {
     type: String!
     currency: String!
     description: String!
+    account: TransactionAccount
+}
+
+type TransactionAccount {
+    id: ID!
+    type: String!
+    description: String!
+}
+
+type TransactionMonthly {
+    month: Int!
+    total: Float!
+    currency: String!
 }
 
 input AccountInput {
@@ -18,13 +31,17 @@ input TransactionInput {
     date: String!
     amount: Float!
     category: String!
-    type: String!
     currency: String!
     description: String!
     account: AccountInput!
 }
 
 extend type Mutation {
-    setTransaction(params: TransactionInput!): Transaction!
+    transaction(params: TransactionInput!): Transaction!
+}
+
+extend type Query {
+    transactions(year: Int!, month: Int!): [Transaction!]!
+    transactionsMonthly(year: Int!): [TransactionMonthly!]!
 }
 `

@@ -6,18 +6,22 @@ import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 import { getAccounts } from './accounts/getAccounts.js'
 import { setTransaction } from './transactions/setTransaction.js'
 import { getBudget } from './budget/getBudget.js'
+import { getTransactions } from './transactions/getTransactions.js'
+import { getTransactionsMonthly } from './transactions/getTransactionsMonthly.js'
 
 export const resolvers = {
   Upload: GraphQLUpload,
   Query: {
     refresh,
     accounts: getAccounts,
-    getBudget
+    budget: getBudget,
+    transactions: getTransactions,
+    transactionsMonthly: getTransactionsMonthly
   },
   Mutation: {
     login,
     register,
     uploadAvatar,
-    setTransaction
+    transaction: setTransaction
   },
 }

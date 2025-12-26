@@ -2,9 +2,10 @@ export const BudgetTypeDefs: string = `#graphql
 type BudgetOverview {
     year: Int!
     month: Int!
-    budget: Float!
+    total: Float!
     spent: Float!
     remaining: Float!
+    currency: String!
 }
 
 type BudgetCategory {
@@ -13,6 +14,6 @@ type BudgetCategory {
 }
 
 extend type Query {
-    getBudget(year: Int!, month: Int!): BudgetOverview
+    budget(year: Int!, month: Int!): BudgetOverview
 }
 `

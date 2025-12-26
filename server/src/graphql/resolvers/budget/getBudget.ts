@@ -61,9 +61,10 @@ export const getBudget = async (
     return {
       year,
       month,
-      budget: budget.totalBudget,
-      spent: spentTotal,
+      total: budget.totalBudget,
       remaining: budget.totalBudget - spentTotal,
+      spent: spentTotal,
+      currency: budget.currency,
     }
   } catch (error) {
     console.error("Error budget:", error);

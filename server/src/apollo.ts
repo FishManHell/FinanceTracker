@@ -15,7 +15,7 @@ export async function getApolloMiddleware() {
     await apolloServer.start(); // safe lazy start
     apolloMiddleware = expressMiddleware(apolloServer, {
       context: async ({ req, res }) => {
-        const db = getClient().db("FinanceTacker");
+        const db = getClient().db("FinanceTracker");
         const token = req.cookies?.token;
         if (!token) return { user: null, db, req, res };
 
