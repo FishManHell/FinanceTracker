@@ -4,6 +4,14 @@
   gap: 25px;
 }
 
+.input_form_field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
 .input_field {
   width: 70%;
   input {

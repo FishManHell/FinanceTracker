@@ -1,116 +1,79 @@
 <script setup lang="ts">
-import Chart from 'primevue/chart';
-import { ref, onMounted } from "vue";
+import cls from './Budget.module.scss'
+import Chart from 'primevue/chart'
+import ProgressSpinner from 'primevue/progressspinner'
+import type { TooltipItem } from 'chart.js'
+import { computed } from 'vue'
+import { useGetBudget } from '@/entities/budget'
 
-// import { gql } from "@apollo/client/core";
-// import { apolloClient } from "@/shared/api/apollo";
-//
-// interface Account {
-//   _id: string
-//   userId: string
-//   type: string
-//   amount: number
-//   currency: string
-//   description: string
-// }
+const { data: budget, isLoading } = useGetBudget({ year: 2025, month: 12 })
 
-
-// const GET_ACCOUNTS = gql`
-//   query GetAccounts {
-//     getAccounts {
-//       _id
-//       userId
-//       type
-//       amount
-//       currency
-//       description
-//     }
-//   }
-//
-// `;
-
-// async function getAccounts() {
-//   try {
-//     const { data } = await apolloClient.query<{ accounts: Account[] }>({
-//       query: GET_ACCOUNTS,
-//       fetchPolicy: "network-only",
-//     });
-//
-//     if (data?.accounts) {
-//       console.log("Accounts data:", data.accounts);
-//     }
-//   } catch (err) {
-//     console.error("Error in getAccounts:", err);
-//   }
-// }
-
-onMounted(() => {
-  chartData.value = setChartData();
-  chartOptions.value = setChartOptions();
-});
-
-const chartData = ref();
-const chartOptions = ref();
-
-const setChartData = () => {
-  const documentStyle = getComputedStyle(document.body);
+const chartData = computed(() => {
+  const documentStyle = getComputedStyle(document.body)
 
   return {
-    labels: ["card", "cash", "investments", "cumulation"],
+    labels: ['Spent', 'Remaining'],
     datasets: [
       {
-        data: [5200, 2600, 3250, 1950],
+        data: [budget.value?.spent, budget.value?.remaining],
         backgroundColor: [
-          documentStyle.getPropertyValue('--p-cyan-500'),
-          documentStyle.getPropertyValue('--p-orange-500'),
+          documentStyle.getPropertyValue('--p-red-500'),
           documentStyle.getPropertyValue('--p-gray-500'),
-          documentStyle.getPropertyValue('--p-green-500'),
-          documentStyle.getPropertyValue('--p-purple-500')
         ],
         hoverBackgroundColor: [
-          documentStyle.getPropertyValue('--p-cyan-400'),
-          documentStyle.getPropertyValue('--p-orange-400'),
+          documentStyle.getPropertyValue('--p-red-400'),
           documentStyle.getPropertyValue('--p-gray-400'),
-          documentStyle.getPropertyValue('--p-green-400'),
-          documentStyle.getPropertyValue('--p-purple-400')
-        ]
-      }
-    ]
-  };
-};
+        ],
+      },
+    ],
+  }
+})
 
-
-const setChartOptions = () => {
-  const documentStyle = getComputedStyle(document.documentElement);
-  const textColor = documentStyle.getPropertyValue('--p-text-color');
+const chartOptions = computed(() => {
+  const documentStyle = getComputedStyle(document.documentElement)
+  const textColor = documentStyle.getPropertyValue('--p-text-color')
 
   return {
+    responsive: true,
+    cutout: '65%',
     plugins: {
+      tooltip: {
+        callbacks: {
+          label: (context: TooltipItem<'doughnut'>) => {
+            const value = (context.raw as number) || 0
+            const total = (context.chart.data.datasets[0]?.data as number[]).reduce(
+              (a, b) => a + b,
+              0,
+            )
+            const percent = ((value / total) * 100).toFixed(1)
+            return `$ ${value.toLocaleString()} (${percent}%)`
+          },
+        },
+      },
       legend: {
         labels: {
-          cutout: '60%',
-          color: textColor
-        }
-      }
-    }
-  };
-};
-
+          color: textColor,
+        },
+        onClick: () => null,
+      },
+    },
+  }
+})
 </script>
 
 <template>
-  <header>
-    <h1>Budget</h1>
-  </header>
-  <main>
-    <section>
-      <h2>$13000</h2>
-    </section>
-    <section>
-      <Chart type="doughnut" :data="chartData" :options="chartOptions"/>
-    </section>
-<!--    <button @click="getAccounts">Click</button>-->
-  </main>
+  <div :class="cls.budget_container">
+    <header>
+      <h1>Budget</h1>
+    </header>
+    <main v-if="!isLoading" :class="cls.budget_body">
+      <h2>{{ budget?.total }} {{ budget?.currency }}</h2>
+      <section :class="cls.chart_wrapper">
+        <Chart type="doughnut" :data="chartData" :options="chartOptions" />
+      </section>
+    </main>
+    <ProgressSpinner v-else />
+  </div>
 </template>
 
 <style scoped></style>

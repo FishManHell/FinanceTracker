@@ -2,7 +2,6 @@
 import { NavBar } from '@/widgets/NavBar';
 import DynamicDialog from 'primevue/dynamicdialog';
 
-
 </script>
 
 <template>

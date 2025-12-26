@@ -1,23 +1,16 @@
-interface AccountDescription {
-  description: string;
-  type: string;
-}
+import type { Account, TransactionWithoutType } from '@/entities/transaction'
 
 interface AccountGroup {
   type: string;
-  descriptions: AccountDescription[];
+  descriptions: Account[];
 }
 
 type Accounts = AccountGroup[];
 
-export interface TransactionFormData {
-  date: Date;
-  amount: number;
-  category: string;
-  account: Accounts;
-  type: string;
-  currency: string;
-  description: string;
+type BaseTransactionFormData = Omit<TransactionWithoutType, 'account'>
+
+export interface TransactionFormData extends BaseTransactionFormData {
+  account: Accounts
 }
 
 export interface DialogData {
@@ -27,8 +20,6 @@ export interface DialogData {
 }
 
 export interface InjectedProps {
-  value: {
-    data: DialogData
-  };
+  data: DialogData
   close: () => void
 }

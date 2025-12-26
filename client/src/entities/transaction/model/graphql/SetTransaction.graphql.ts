@@ -1,14 +1,11 @@
 import { gql } from '@apollo/client'
+import { TRANSACTION_FRAGMENT_WITHOUT_TYPE } from './Fragments.graphql.ts'
 
 export const SET_TRANSACTION = gql`
   mutation SetTransaction($params: TransactionInput!) {
-    setTransaction(params: $params) {
-      date
-      amount
-      category
-      type
-      currency
-      description
+    transaction(params: $params) {
+      ...TransactionFields
     }
   }
+  ${TRANSACTION_FRAGMENT_WITHOUT_TYPE}
 `

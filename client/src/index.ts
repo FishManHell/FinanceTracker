@@ -7,6 +7,7 @@ import App from './app/App.vue';
 import Aura from '@primeuix/themes/aura';
 import Ripple from 'primevue/ripple';
 import DialogService from 'primevue/dialogservice';
+import ToastService from 'primevue/toastservice'
 import 'primeicons/primeicons.css';
 import '@/app/styles/index.scss';
 
@@ -22,6 +23,7 @@ app.use(PrimeVue, {
 });
 app.directive('ripple', Ripple);
 app.use(DialogService);
+app.use(ToastService);
 
 const pinia = createPinia();
 app.use(pinia);

@@ -1,4 +1,4 @@
-interface Account {
+export interface Account {
   type: string
   description: string
 }
@@ -12,3 +12,15 @@ export interface Transaction {
   description: string;
   account: Account
 }
+
+export interface TransactionMonthly {
+  month: number;
+  total: number;
+  currency: string;
+}
+
+export type TransactionsMonthly = TransactionMonthly[]
+
+export type Transactions = Transaction[]
+
+export type TransactionWithoutType = Omit<Transaction, "type">

@@ -4,6 +4,7 @@ import { REFRESH_QUERY } from '../graphql/Refresh.ts'
 import { sessionStore } from '@/entities/auth'
 import { userStore } from '@/entities/user'
 import type { User } from '@/shared/types'
+import { stripTypename } from '@/shared/lib/graphql'
 
 export const refresh = async (): Promise<User> => {
   const session_store = sessionStore();
@@ -27,7 +28,7 @@ export const refresh = async (): Promise<User> => {
     const updatedUser = data?.refresh
     user_store.setUser(updatedUser);
     session_store.setAuthenticated(true)
-    return updatedUser
+    return stripTypename(updatedUser)
 
   } catch (error) {
     resetStores()

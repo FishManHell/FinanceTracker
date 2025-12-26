@@ -11,7 +11,7 @@ interface FlatItem {
 }
 
 export function groupForCascadeSelect(array: FlatItem[]): GroupedResult<FlatItem>[] {
-  const map = new Map<string, GroupedResult<FlatItem>>()
+  const map = new Map<string, GroupedResult<FlatItem>>();
 
   for (const item of array) {
     const groupLabel = capitalize(item.type)

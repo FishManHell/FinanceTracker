@@ -2,10 +2,11 @@ import { gql } from '@apollo/client'
 
 export const GET_BUDGET = gql`
   query GetBudget($year: Int!, $month: Int!) {
-    getBudget(year: $year, month: $month) {
+    budget(year: $year, month: $month) {
       year
       month
-      budget
+      total
+      currency
       spent
       remaining
     }

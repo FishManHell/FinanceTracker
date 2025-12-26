@@ -1,29 +1,27 @@
-import type { Transaction } from '@/entities/transaction';
 import { apolloClient } from '@/shared/api/apollo'
 import { SET_TRANSACTION } from '../graphql/SetTransaction.graphql.ts'
+import type { TransactionWithoutType, Transaction } from '../types/transaction.type.ts'
 
 interface SetTransactionResponse {
-  setTransaction: Transaction
+  transaction: Transaction
 }
 
 interface SetTransactionVariables {
-  params: Transaction
+  params: TransactionWithoutType
 }
 
-export const setTransaction = async (transaction: Transaction) => {
+export const setTransaction = async (transaction: TransactionWithoutType) => {
   try {
     const { data } = await apolloClient.mutate<SetTransactionResponse, SetTransactionVariables>({
       mutation: SET_TRANSACTION,
-      variables: {
-        params: transaction
-      },
+      variables: { params: transaction },
     })
 
-    if (!data?.setTransaction) {
+    if (!data?.transaction) {
       throw new Error('Failed to set transaction')
     }
 
-    return data.setTransaction;
+    return data.transaction
   } catch (error) {
     throw error
   }

@@ -20,10 +20,13 @@ export const errorLink = new ErrorLink(({ result }) => {
 
   if (result?.errors) {
     for (const err of result.errors) {
+      console.log(err, 'err')
       if (err.extensions?.code === "UNAUTHORIZED") {
+        console.log(err.extensions?.code, 'err.extensions?.code');
+
         session_store.logout();
         user_store.clearUser();
-        router.push(RoutePaths[AppRouters.SIGN_IN]);
+        router.push(RoutePaths[AppRouters.SIGN_IN])
         break;
       }
     }

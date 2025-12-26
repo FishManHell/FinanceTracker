@@ -2,6 +2,7 @@ import { apolloClient } from '@/shared/api/apollo'
 import { LOGIN_MUTATION } from "../graphql/Login.ts"
 import type { IAuthPayload } from '../types/authPayload.ts'
 import type { User } from '@/shared/types'
+import { stripTypename } from '@/shared/lib/graphql'
 
 interface LoginMutationResponse {
   login: IAuthPayload
@@ -13,12 +14,8 @@ export const login = async (user: {username: string, password: string}): Promise
     variables: user,
   });
 
-  if (!data?.login) throw new Error('There is no user');
+  const login = data?.login;
+  if (!login) throw new Error('There is no user')
 
-  return {
-    username: data.login.username,
-    email: data.login.email,
-    role: data.login.role,
-    avatar: data.login.avatar,
-  };
+  return stripTypename(login)
 };
