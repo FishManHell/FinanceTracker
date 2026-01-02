@@ -5,24 +5,20 @@ import { sessionStore } from '@/entities/auth'
 import { userStore } from '@/entities/user'
 import type { User } from '@/shared/types'
 import { stripTypename } from '@/shared/lib/graphql'
+import { AppRouters, RoutePaths, router } from '@/shared/config/router'
 
 export const refresh = async (): Promise<User> => {
   const session_store = sessionStore();
   const user_store = userStore();
 
-  const resetStores = () => {
-    user_store.clearUser()
-    session_store.logout()
-  }
   try {
     const { data } = await apolloClient.query<RefreshResponse>({
       query: REFRESH_QUERY,
       fetchPolicy: "network-only"
     });
 
-    if (!data?.refresh) {
-      resetStores()
-      throw new Error("There is no refresh data");
+    if (!data) {
+      throw new Error('No data returned from refresh')
     }
 
     const updatedUser = data?.refresh
@@ -31,8 +27,8 @@ export const refresh = async (): Promise<User> => {
     return stripTypename(updatedUser)
 
   } catch (error) {
-    resetStores()
+    await router.push(RoutePaths[AppRouters.SIGN_IN])
     console.error("Error", error)
-    throw new Error('Error')
+    throw error
   }
 }

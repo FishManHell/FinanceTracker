@@ -1,5 +1,4 @@
 import { createApp } from 'vue';
-import { createPinia } from 'pinia';
 import { router } from '@/shared/config/router/router'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query';
 import PrimeVue from 'primevue/config';
@@ -10,6 +9,7 @@ import DialogService from 'primevue/dialogservice';
 import ToastService from 'primevue/toastservice'
 import 'primeicons/primeicons.css';
 import '@/app/styles/index.scss';
+import { pinia } from '@/app/pinia.ts'
 
 const app = createApp(App);
 app.use(PrimeVue, {
@@ -25,8 +25,7 @@ app.directive('ripple', Ripple);
 app.use(DialogService);
 app.use(ToastService);
 
-const pinia = createPinia();
-app.use(pinia);
+app.use(pinia)
 
 const queryClient = new QueryClient();
 app.use(VueQueryPlugin, { queryClient });

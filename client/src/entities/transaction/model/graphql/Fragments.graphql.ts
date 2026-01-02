@@ -21,7 +21,7 @@ export const TRANSACTION_FRAGMENT = gql`
 `
 
 export const TRANSACTION_FRAGMENT_WITHOUT_TYPE = gql`
-  fragment TransactionFields on Transaction {
+  fragment TransactionFieldsWithoutType on Transaction {
     date
     amount
     category

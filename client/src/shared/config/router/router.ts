@@ -81,7 +81,7 @@ export const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to) => {
   const session_store = sessionStore();
   const user_store = userStore();
   const isAuth = session_store.isAuthenticated
@@ -93,15 +93,15 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (!isAuth) {
-      next({ name: AppRouters.SIGN_IN })
+      return { name: AppRouters.SIGN_IN }
     }
   }
   if (to.meta.roles && user?.role && !to.meta.roles.includes(user.role)) {
-    next({ name: AppRouters.DASHBOARD })
+    return { name: AppRouters.DASHBOARD }
   }
 
   if (to.name === AppRouters.SIGN_IN && isAuth) {
-    next({ name: AppRouters.DASHBOARD })
+    return { name: AppRouters.DASHBOARD }
   }
-  next()
+  return true
 })

@@ -3,23 +3,14 @@ import cls from './NavBar.module.scss'
 import FinanceIcon from '@/shared/assets/icons/finance.svg'
 import { Menu } from 'primevue'
 import { computed } from 'vue'
-import { sessionStore } from '@/entities/auth'
-import { userStore } from "@/entities/user"
+import { userStore } from '@/entities/user'
 import { navbarItems } from '../model/navbarItems.ts'
 import { AppRouters, RoutePaths } from '@/shared/config/router'
-import { useRouter } from 'vue-router'
 import { ThemeSwitcher } from '@/widgets/ThemeSwitcher'
 import { UserAvatar } from '@/shared/ui/UserAvatar'
+import { onLogout } from '@/entities/auth'
 
-const user_store = userStore();
-const session_store = sessionStore();
-const router = useRouter();
-
-const onLogout = () => {
-  user_store.clearUser()
-  session_store.logout()
-  router.push(RoutePaths[AppRouters.SIGN_IN])
-}
+const user_store = userStore()
 
 const filteredItems = computed(() => {
   return navbarItems.filter((item) => {
@@ -27,8 +18,7 @@ const filteredItems = computed(() => {
     if (!item.roles || item.roles.length === 0) return true
     return user_store.user && item.roles.includes(user_store.user.role)
   })
-});
-
+})
 </script>
 
 <template>
@@ -50,12 +40,7 @@ const filteredItems = computed(() => {
         </a>
       </router-link>
 
-      <a
-        v-else
-        v-ripple
-        v-bind="props.action"
-        @click="item.label === 'Logout' ? onLogout() : null"
-      >
+      <a v-else v-ripple v-bind="props.action" @click="item.label === 'Logout' ? onLogout() : null">
         <span :class="item.icon" />
         <span class="ml-2">{{ item.label }}</span>
       </a>
@@ -64,14 +49,14 @@ const filteredItems = computed(() => {
       <div :class="cls.navbar_footer">
         <div :class="cls.avatar_wrapper">
           <router-link :class="cls.avatar_link" :to="RoutePaths[AppRouters.PROFILE]">
-            <UserAvatar :image="user_store.user?.avatar"/>
+            <UserAvatar :image="user_store.user?.avatar" />
           </router-link>
           <div :class="cls.user_meta">
-            <span>{{user_store.user?.username}}</span>
-            <span>{{user_store.user?.role}}</span>
+            <span>{{ user_store.user?.username }}</span>
+            <span>{{ user_store.user?.role }}</span>
           </div>
         </div>
-        <ThemeSwitcher/>
+        <ThemeSwitcher />
       </div>
     </template>
   </Menu>

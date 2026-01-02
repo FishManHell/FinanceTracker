@@ -10,11 +10,11 @@ import {
 } from '@/entities/transaction'
 import { useDialog } from 'primevue/usedialog'
 import Tag from 'primevue/tag'
-import { computed, watch } from 'vue'
+import { computed, watchEffect } from 'vue'
 
 const dialog = useDialog()
 const { mutate } = useSetTransaction()
-const { data: transactions, isLoading } = useGetTransactions({ year: 2025, month: 12 })
+const { data: transactions, isFetching } = useGetTransactions({ year: 2025, month: 12 })
 const transactionStore = useTransactionStore()
 
 const totalIncomes = computed(() => {
@@ -52,26 +52,28 @@ function openTransactionDialog() {
   })
 }
 
-watch(transactions, (newTransactions) => {
-  if (newTransactions) {
-    transactionStore.setTransactions(newTransactions)
+watchEffect(() => {
+  if (transactions.value) {
+    transactionStore.setTransactions(transactions.value)
   }
+})
+
+watchEffect(() => {
+  transactionStore.setLoading(isFetching.value)
 })
 </script>
 
 <template>
   <div :class="cls.add_transaction_panel_container">
     <Tag severity="success" :class="cls.status" rounded>
-      <Skeleton v-if="isLoading" width="15.5rem" height="3.5rem" />
+      <Skeleton v-if="isFetching" width="15.5rem" height="3.5rem" />
       <span v-else>Incomes: {{ totalIncomes }}</span>
     </Tag>
 
     <Tag severity="danger" :class="cls.status" rounded>
-      <Skeleton v-if="isLoading" width="15.5rem" height="3.5rem" />
+      <Skeleton v-if="isFetching" width="15.5rem" height="3.5rem" />
       <span v-else>Expenses: {{ totalExpenses }}</span>
     </Tag>
     <Button label="Add Transaction" @click="openTransactionDialog" />
   </div>
 </template>
-
-<style scoped></style>

@@ -1,11 +1,29 @@
 @use "reset";
 
+
+html,
+body,
 #app {
   width: 100%;
   height: 100%;
 }
 
+html:not(.my-app-dark) body {
+  background-color: #efefed;
+}
+
 .app_layout {
+  max-width: 1920px;
+  margin: 0 auto;
   display: flex;
-  padding: 15px;
+  height: 100vh;
+  padding: 15px 0 15px 15px;
+
+  .app_layout_content {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 10px 10px 0 10px;
+  }
 }

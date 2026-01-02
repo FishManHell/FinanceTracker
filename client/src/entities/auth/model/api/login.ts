@@ -9,13 +9,19 @@ interface LoginMutationResponse {
 }
 
 export const login = async (user: {username: string, password: string}): Promise<User> => {
-  const { data } = await apolloClient.mutate<LoginMutationResponse>({
-    mutation: LOGIN_MUTATION,
-    variables: user,
-  });
+  try {
+    const { data } = await apolloClient.mutate<LoginMutationResponse>({
+      mutation: LOGIN_MUTATION,
+      variables: user,
+    })
 
-  const login = data?.login;
-  if (!login) throw new Error('There is no user')
+    const login = data?.login
+    if (!login) throw new Error('There is no user')
 
-  return stripTypename(login)
+    await apolloClient.resetStore()
+    return stripTypename(login)
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 };

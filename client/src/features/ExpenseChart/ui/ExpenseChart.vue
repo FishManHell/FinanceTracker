@@ -2,14 +2,14 @@
 import cls from './ExpenseChart.module.scss'
 import Chart from 'primevue/chart'
 import { useGetTransactionsMonthly } from '@/entities/transaction'
-import type { ChartDataset, TooltipItem } from 'chart.js'
 import { computed } from 'vue'
+import Card from 'primevue/card'
+import { useDarkMode } from '@/shared/lib/hooks'
+import { useExpenseChartOptions } from '../model/composables/useExpenseChartOptions.ts'
 
-interface CurrencyDataset extends ChartDataset<'line'> {
-  currency?: string[]
-}
-
-const { data: transactionsMonthly } = useGetTransactionsMonthly(2025)
+const { data: transactionsMonthly } = useGetTransactionsMonthly(2025);
+const { isDark } = useDarkMode();
+const { chartOptions } = useExpenseChartOptions(isDark);
 
 const setChartData = computed(() => {
   const documentStyle = getComputedStyle(document.documentElement)
@@ -32,32 +32,18 @@ const setChartData = computed(() => {
     ],
   }
 })
-
-const chartOptions = computed(() => ({
-  maintainAspectRatio: false,
-  responsive: true,
-  plugins: {
-    tooltip: {
-      callbacks: {
-        label: function (context: TooltipItem<'line'>) {
-          const dataset = context.dataset as CurrencyDataset
-          const value = context.parsed.y
-          const currency = dataset.currency?.[context.dataIndex] || ''
-          return `${value} ${currency}`
-        },
-      },
-    },
-    legend: {
-      onClick: () => null,
-    },
-  },
-}))
 </script>
 
 <template>
-  <div :class="cls.expense_chart_container">
-    <Chart type="line" :data="setChartData" :options="chartOptions" :class="cls.expense_chart" />
-  </div>
+  <Card :class="cls.expense_chart_container">
+    <template #content>
+      <Chart
+        type="line"
+        :data="setChartData"
+        :options="chartOptions"
+        :class="cls.expense_chart"
+        :key="String(isDark)"
+      />
+    </template>
+  </Card>
 </template>
-
-<style scoped></style>

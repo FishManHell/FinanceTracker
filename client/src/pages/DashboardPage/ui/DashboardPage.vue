@@ -5,6 +5,7 @@ import { BudgetFilter } from '@/features/BudgetFilter'
 import { AddTransactionPanel } from '@/features/AddTransactionPanel'
 import { ExpenseChart } from '@/features/ExpenseChart'
 import { TransactionTable } from '@/widgets/TransactionTable'
+
 </script>
 
 <template>
@@ -13,11 +14,13 @@ import { TransactionTable } from '@/widgets/TransactionTable'
       <h1>Dashboard</h1>
       <BudgetFilter />
     </header>
-    <section :class="cls.expenses_budget_section">
-      <ExpenseChart />
-      <Budget />
+    <section :class="cls.dashboard_page_body">
+      <div :class="cls.expenses_budget_section">
+        <ExpenseChart />
+        <Budget />
+      </div>
+      <AddTransactionPanel />
+      <TransactionTable />
     </section>
-    <AddTransactionPanel />
-    <TransactionTable />
   </div>
 </template>
