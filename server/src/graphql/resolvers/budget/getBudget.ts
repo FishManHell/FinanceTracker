@@ -29,11 +29,14 @@ export const getBudget = async (
     const budget = await budgets.findOne({ userId, year, month });
 
     if (!budget) {
-      throwError({
-        message: "Budget not found",
-        status: HttpStatus.NOT_FOUND,
-        code: GraphQLErrorCode.NOT_FOUND
-      })
+      return {
+        year,
+        month,
+        total: 0,
+        remaining: 0,
+        spent: 0,
+        currency: "USD"
+      }
     }
 
     const expenses = await transactions.aggregate([
