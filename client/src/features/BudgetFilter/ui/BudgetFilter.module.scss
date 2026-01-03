@@ -1,0 +1,15 @@
+.budget_filter {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__label {
+    text-align: left;
+    font-weight: 600;
+  }
+}

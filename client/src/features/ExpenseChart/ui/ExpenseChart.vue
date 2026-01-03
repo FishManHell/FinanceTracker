@@ -6,10 +6,15 @@ import { computed } from 'vue'
 import Card from 'primevue/card'
 import { useDarkMode } from '@/shared/lib/hooks'
 import { useExpenseChartOptions } from '../model/composables/useExpenseChartOptions.ts'
+import { useBudgetStore } from '@/entities/budget'
 
-const { data: transactionsMonthly } = useGetTransactionsMonthly(2025);
-const { isDark } = useDarkMode();
-const { chartOptions } = useExpenseChartOptions(isDark);
+const budgetStore = useBudgetStore()
+const year = computed(() => budgetStore.year)
+
+const { data: transactionsMonthly } = useGetTransactionsMonthly(year);
+
+const { isDark } = useDarkMode()
+const { chartOptions } = useExpenseChartOptions(isDark)
 
 const setChartData = computed(() => {
   const documentStyle = getComputedStyle(document.documentElement)
@@ -32,6 +37,7 @@ const setChartData = computed(() => {
     ],
   }
 })
+
 </script>
 
 <template>

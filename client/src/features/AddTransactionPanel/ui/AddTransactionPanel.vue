@@ -11,10 +11,15 @@ import {
 import { useDialog } from 'primevue/usedialog'
 import Tag from 'primevue/tag'
 import { computed, watchEffect } from 'vue'
+import { useBudgetStore } from '@/entities/budget'
 
 const dialog = useDialog()
+const budgetStore = useBudgetStore()
+const year = computed(() => budgetStore.year)
+const month = computed(() => budgetStore.month + 1)
+
 const { mutate } = useSetTransaction()
-const { data: transactions, isFetching } = useGetTransactions({ year: 2025, month: 12 })
+const { data: transactions, isFetching } = useGetTransactions({ year, month })
 const transactionStore = useTransactionStore()
 
 const totalIncomes = computed(() => {

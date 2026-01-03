@@ -1,5 +1,3 @@
-import type { DatePickerModelValue } from '@/entities/budget/model/store/budget.store.ts'
-
 export interface Budget {
   year: number;
   month: number;
@@ -11,6 +9,7 @@ export interface Budget {
 
 
 export interface BudgetState {
-  date: DatePickerModelValue
-  currency: string
+  currency: string;
+  year: number;
+  month: number;
 }

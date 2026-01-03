@@ -18,8 +18,7 @@ const transactions = computed(() => {
   return transactionStore.transactions
 })
 
-const loading = computed(() => transactionStore.isLoading);
-
+const loading = computed(() => transactionStore.isLoading)
 </script>
 
 <template>
@@ -32,6 +31,10 @@ const loading = computed(() => transactionStore.isLoading);
       scrollHeight="flex"
       :class="cls.transaction_table"
     >
+      <template #empty>
+        <h1 :class="cls.empty_block">No transactions found</h1>
+      </template>
+
       <Column header="Type">
         <template #body="{ data }">
           <TableCell :loading="loading">
