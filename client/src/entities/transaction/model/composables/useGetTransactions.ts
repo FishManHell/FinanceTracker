@@ -1,7 +1,7 @@
 import { useGraphqlQuery } from '@/shared/lib/hooks'
 import type { Transactions } from '../types/transaction.type.ts'
 import { getTransactions } from '../api/getTransactions.ts'
-import  { computed, type MaybeRef, unref } from 'vue'
+import { computed, type MaybeRef, unref } from 'vue'
 
 interface UseGetTransactionsParams {
   year: MaybeRef<number>

@@ -9,9 +9,9 @@ import { useExpenseChartOptions } from '../model/composables/useExpenseChartOpti
 import { useBudgetStore } from '@/entities/budget'
 
 const budgetStore = useBudgetStore()
-const year = computed(() => budgetStore.year)
+const year = computed(() => budgetStore.date.getFullYear())
 
-const { data: transactionsMonthly } = useGetTransactionsMonthly(year);
+const { data: transactionsMonthly } = useGetTransactionsMonthly(year)
 
 const { isDark } = useDarkMode()
 const { chartOptions } = useExpenseChartOptions(isDark)
@@ -37,7 +37,6 @@ const setChartData = computed(() => {
     ],
   }
 })
-
 </script>
 
 <template>

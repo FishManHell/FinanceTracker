@@ -15,8 +15,8 @@ import { useBudgetStore } from '@/entities/budget'
 
 const dialog = useDialog()
 const budgetStore = useBudgetStore()
-const year = computed(() => budgetStore.year)
-const month = computed(() => budgetStore.month + 1)
+const year = computed(() => budgetStore.date.getFullYear())
+const month = computed(() => budgetStore.date.getMonth() + 1)
 
 const { mutate } = useSetTransaction()
 const { data: transactions, isFetching } = useGetTransactions({ year, month })
@@ -56,6 +56,7 @@ function openTransactionDialog() {
     },
   })
 }
+
 
 watchEffect(() => {
   if (transactions.value) {

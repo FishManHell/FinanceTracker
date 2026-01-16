@@ -6,19 +6,13 @@ export type DatePickerModelValue = Date | Date[] | (Date | null)[] | null | unde
 export const useBudgetStore = defineStore('budget', {
   state: (): BudgetState => ({
     currency: 'USD',
-    year: new Date().getFullYear(),
-    month: new Date().getMonth(),
+    date: new Date()
   }),
 
   actions: {
-    setMonth(value: DatePickerModelValue) {
+    setDate(value: DatePickerModelValue) {
       if (value instanceof Date) {
-        this.month = value.getMonth()
-      }
-    },
-    setYear(value: DatePickerModelValue) {
-      if (value instanceof Date) {
-        this.year = value.getFullYear()
+        this.date = value
       }
     },
 

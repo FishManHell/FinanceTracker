@@ -10,6 +10,5 @@ export interface Budget {
 
 export interface BudgetState {
   currency: string;
-  year: number;
-  month: number;
+  date: Date
 }

@@ -8,29 +8,20 @@ const budgetStore = useBudgetStore()
 const currencies = ['USD', 'EUR', 'ILS']
 
 const onSetCurrency = (currency: string) => budgetStore.setCurrency(currency)
-const onSetYear = (date: DatePickerModelValue) => budgetStore.setYear(date)
-const onSetMonth = (date: DatePickerModelValue) => budgetStore.setMonth(date)
+const onSetDate = (date: DatePickerModelValue) => budgetStore.setDate(date)
+
 </script>
 
 <template>
   <div :class="cls.budget_filter">
     <div :class="cls.budget_filter__group">
-      <label :class="cls.budget_filter__label">Month</label>
+      <label :class="cls.budget_filter__label">Date</label>
       <DatePicker
-        :modelValue="new Date(budgetStore.year, budgetStore.month, 1)"
+        :modelValue="budgetStore.date"
         view="month"
-        dateFormat="mm"
-        @update:modelValue="onSetMonth"
-      />
-    </div>
-
-    <div :class="cls.budget_filter__group">
-      <label :class="cls.budget_filter__label">Year</label>
-      <DatePicker
-        :modelValue="new Date(budgetStore.year, budgetStore.month, 1)"
-        view="year"
-        dateFormat="yy"
-        @update:modelValue="onSetYear"
+        dateFormat="mm/yy"
+        :maxDate="new Date()"
+        @update:modelValue="onSetDate"
       />
     </div>
 

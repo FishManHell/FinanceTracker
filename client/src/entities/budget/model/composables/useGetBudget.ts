@@ -13,5 +13,6 @@ export const useGetBudget = (params: UseGetBudgetParams) => {
     queryKey: computed(() => ['budget', unref(params.year), unref(params.month)]),
     queryFn: async () => getBudget({ year: unref(params.year), month: unref(params.month) }),
     retry: false,
+    refetchOnWindowFocus: false,
   })
 }

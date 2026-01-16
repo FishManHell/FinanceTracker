@@ -9,8 +9,9 @@ import { useDarkMode } from '@/shared/lib/hooks'
 import { useBudgetChartOptions } from '../model/composables/useBudgetChartOptions'
 
 const budgetStore = useBudgetStore()
-const year = computed(() => budgetStore.year);
-const month = computed(() => budgetStore.month + 1);
+
+const year = computed(() => budgetStore.date.getFullYear())
+const month = computed(() => budgetStore.date.getMonth() + 1)
 
 const { data: budget, isFetching } = useGetBudget({ year, month })
 const { isDark } = useDarkMode()
