@@ -10,7 +10,7 @@ let client: MongoClient | null = null;
 
 export function getClient() {
   if (!client) {
-    const uri = process.env.MONGODB_URI;
+    const uri = process.env.MY_MONGODB_URI;
     if (!uri) {
       throw new Error('MongoDB URI is missing');
     }
