@@ -1,6 +1,7 @@
 import { resetAllStores } from '@/shared/lib/helpers'
 import { apolloClient } from '@/shared/api/apollo'
-import { AppRouters, RoutePaths, router } from '@/shared/config/router'
+import { AppRouters, RoutePaths } from '@/shared/config/router'
+import { router } from '@/shared/config/router/router'
 
 export const onLogout = async  () => {
   try {

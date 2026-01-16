@@ -1,7 +1,7 @@
 import { RemoveTypenameFromVariablesLink } from '@apollo/client/link/remove-typename'
 import UploadHttpLink from "apollo-upload-client/UploadHttpLink.mjs";
 import { ErrorLink } from '@apollo/client/link/error'
-import { onLogout } from '@/entities/auth'
+import { onLogout } from '@/entities/auth/model/onLogout'
 
 const uri = import.meta.env.VITE_API_URL;
 

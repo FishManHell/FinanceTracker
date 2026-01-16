@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import cls from "./SignUpPage.module.scss"
+import cls from './SignUpPage.module.scss'
 import { sessionStore } from '@/entities/auth'
 import { useRegisterMutation } from '@/entities/auth'
-import { AppRouters, router } from '@/shared/config/router'
+import { AppRouters } from '@/shared/config/router'
+import { router } from '@/shared/config/router/router'
+
 import classNames from 'classnames'
 
 const session_store = sessionStore()
@@ -22,8 +24,7 @@ const handleRegister = () => {
   })
 }
 
-const goToLogin = () => router.push({ name: AppRouters.SIGN_IN });
-
+const goToLogin = () => router.push({ name: AppRouters.SIGN_IN })
 </script>
 
 <template>
@@ -36,7 +37,9 @@ const goToLogin = () => router.push({ name: AppRouters.SIGN_IN });
       <button :class="cls.btn" @click="handleRegister" :disabled="isPending">Sign in</button>
       <p v-if="session_store.error" :class="cls.error">{{ session_store.error }}</p>
       <div :class="cls.divider" />
-      <button :class="classNames(cls.back_btn, cls.btn)" @click="goToLogin">Already have an account ? Sign In</button>
+      <button :class="classNames(cls.back_btn, cls.btn)" @click="goToLogin">
+        Already have an account ? Sign In
+      </button>
     </div>
   </div>
 </template>

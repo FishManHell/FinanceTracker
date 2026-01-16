@@ -5,7 +5,9 @@ import { sessionStore } from '@/entities/auth'
 import { userStore } from '@/entities/user'
 import type { User } from '@/shared/types'
 import { stripTypename } from '@/shared/lib/graphql'
-import { AppRouters, RoutePaths, router } from '@/shared/config/router'
+import { AppRouters, RoutePaths } from '@/shared/config/router'
+import { router } from '@/shared/config/router/router'
+
 
 export const refresh = async (): Promise<User> => {
   const session_store = sessionStore();

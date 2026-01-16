@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import classNames from 'classnames'
-import cls from "./SignInPage.module.scss"
+import cls from './SignInPage.module.scss'
 import { sessionStore } from '@/entities/auth'
 
 import { useLoginMutation } from '@/entities/auth'
-import { AppRouters, router } from '@/shared/config/router'
+import { AppRouters } from '@/shared/config/router'
+import { router } from '@/shared/config/router/router'
 
 const session_store = sessionStore()
 
