@@ -10,6 +10,7 @@ import { ProfilePage } from '@/pages/ProfilePage'
 import { refresh } from '@/entities/auth'
 import { userStore } from "@/entities/user";
 import { sessionStore } from "@/entities/auth"
+import { ManageBudgetPage } from '@/pages/ManageBudgetPage'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -46,6 +47,12 @@ const routes: RoutesType = [
         path: RoutePaths[AppRouters.DASHBOARD],
         name: AppRouters.DASHBOARD,
         component: DashboardPage,
+        meta: { roles: ALL_ROLES },
+      },
+      {
+        path: RoutePaths[AppRouters.MANAGE_BUDGET],
+        name: AppRouters.MANAGE_BUDGET,
+        component: ManageBudgetPage,
         meta: { roles: ALL_ROLES },
       },
       {

@@ -17,6 +17,13 @@ const { data: budget, isFetching } = useGetBudget({ year, month })
 const { isDark } = useDarkMode()
 const { chartOptions } = useBudgetChartOptions(isDark)
 
+const showChart = computed(() => {
+  const b = budget.value
+  if (!b) return false
+
+  return (b.spent ?? 0) !== 0 || (b.remaining ?? 0) !== 0
+})
+
 const chartData = computed(() => {
   const documentStyle = getComputedStyle(document.body)
 
@@ -41,14 +48,26 @@ const chartData = computed(() => {
 
 <template>
   <Card :class="cls.budget_container">
-    <template #content>
-      <header>
+    <template #header>
+      <header v-if="showChart && !isFetching">
         <h1>Budget</h1>
       </header>
+    </template>
+
+    <template #content>
       <section v-if="!isFetching" :class="cls.budget_body">
-        <h2>{{ budget?.total }} {{ budget?.currency }}</h2>
-        <Chart type="doughnut" :data="chartData" :options="chartOptions" :key="String(isDark)" />
+        <template v-if="showChart">
+          <h2>{{ budget?.total }} {{ budget?.currency }}</h2>
+          <Chart type="doughnut" :data="chartData" :options="chartOptions" :key="String(isDark)" />
+        </template>
+
+        <template v-else>
+          <section :class="cls.empty_budget_section">
+            <h2>No budget set or no data available.</h2>
+          </section>
+        </template>
       </section>
+
       <ProgressSpinner v-else :class="cls.budget_body_loading" />
     </template>
   </Card>

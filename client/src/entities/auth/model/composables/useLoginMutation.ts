@@ -1,5 +1,5 @@
 import { login } from '../api/login.ts'
-import { useAuthMutation } from '@/shared/lib/vue-query/useAuthMutation.ts'
+import { useAuthMutation } from '@/shared/lib/vue-query'
 import type { Credentials } from '@/shared/types'
 
 type LoginInputs = Credentials

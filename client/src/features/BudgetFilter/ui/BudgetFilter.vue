@@ -33,6 +33,7 @@ const onSetDate = (date: DatePickerModelValue) => budgetStore.setDate(date)
         placeholder="Select currency"
         :modelValue="budgetStore.currency"
         @update:modelValue="onSetCurrency"
+        disabled
       />
     </div>
   </div>

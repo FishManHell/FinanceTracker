@@ -5,6 +5,7 @@ export enum AppRouters {
   SIGN_IN = 'sign_in',
   SIGN_UP = 'sign_up',
   DASHBOARD = 'dashboard',
+  MANAGE_BUDGET = 'manage_budget',
   ADMINISTRATION = 'administration',
   PROFILE = 'profile',
   REDIRECT = "redirect",
@@ -15,6 +16,7 @@ export const RoutePaths = {
   [AppRouters.SIGN_IN]: '/sign_in',
   [AppRouters.SIGN_UP]: '/sign_up',
   [AppRouters.DASHBOARD]: '/dashboard',
+  [AppRouters.MANAGE_BUDGET]: '/manage_budget',
   [AppRouters.ADMINISTRATION]: '/administration',
   [AppRouters.PROFILE]: '/profile',
   [AppRouters.REDIRECT]: "/:pathMatch(.*)*"

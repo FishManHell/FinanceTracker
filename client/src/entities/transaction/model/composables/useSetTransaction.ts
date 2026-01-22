@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { setTransaction } from '../api/setTransaction.ts'
 import { useToast } from 'primevue'
+import { invalidateTransactionQueries } from './invalidateTransactionQueries'
 
 export function useSetTransaction() {
   const toast = useToast();
@@ -11,14 +12,7 @@ export function useSetTransaction() {
     onSuccess: (result) => {
       if (result) {
         toast.add({ severity: 'success', summary: 'Transaction added', life: 3000 })
-
-        const date = new Date(result.date)
-        const year = date.getFullYear()
-        const month = date.getMonth() + 1
-
-        queryClient.invalidateQueries({ queryKey: ['transactions', year, month] })
-        queryClient.invalidateQueries({ queryKey: ['budget', year, month] })
-        queryClient.invalidateQueries({ queryKey: ['transactionsMonthly', year] })
+        invalidateTransactionQueries(queryClient, result.date)
       }
       else toast.add({ severity: 'warn', summary: 'No transaction returned', life: 3000 })
     },

@@ -7,5 +7,6 @@ export function useGetTransactionsMonthly(year: MaybeRef<number>) {
   return useGraphqlQuery<TransactionsMonthly>({
     queryKey: computed(() => ['transactionsMonthly', unref(year)]),
     queryFn: async () => getTransactionsMonthly(unref(year)),
+    refetchOnWindowFocus: false,
   })
 }

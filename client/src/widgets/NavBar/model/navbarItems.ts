@@ -11,6 +11,12 @@ export const navbarItems: NavbarItemProps[] = [
     roles: ALL_ROLES,
   },
   {
+    label: 'Manage Budget',
+    icon: 'pi pi-chart-pie',
+    route: RoutePaths[AppRouters.MANAGE_BUDGET],
+    roles: ALL_ROLES,
+  },
+  {
     label: 'Administration',
     icon: 'pi pi-user',
     route: RoutePaths[AppRouters.ADMINISTRATION],
@@ -25,5 +31,5 @@ export const navbarItems: NavbarItemProps[] = [
   {
     label: 'Logout',
     icon: 'pi pi-sign-out',
-  }
+  },
 ]

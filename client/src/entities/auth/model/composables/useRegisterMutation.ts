@@ -1,5 +1,5 @@
 import {register} from "../api/register.ts"
-import { useAuthMutation } from '@/shared/lib/vue-query/useAuthMutation.ts'
+import { useAuthMutation } from '@/shared/lib/vue-query'
 import type { Credentials } from '@/shared/types'
 
 export interface RegisterInputs extends Credentials {
