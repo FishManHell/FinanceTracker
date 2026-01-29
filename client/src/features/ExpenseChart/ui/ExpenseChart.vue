@@ -19,17 +19,38 @@ const { chartOptions } = useExpenseChartOptions(isDark)
 const setChartData = computed(() => {
   const documentStyle = getComputedStyle(document.documentElement)
 
+  const monthLabels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+
+  const monthlyMap = new Map(
+    transactionsMonthly?.value?.map(({ total, currency, month }) => [
+      month - 1,
+      { total, currency },
+    ]),
+  )
+
+  const alignedTotals = monthLabels.map((_, index) => monthlyMap.get(index)?.total ?? null)
+  const alignedCurrencies = monthLabels.map((_, index) => monthlyMap.get(index)?.currency ?? null)
+
   return {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: monthLabels,
     datasets: [
       {
-        label: ['Expenses'],
-        data: transactionsMonthly?.value?.map((transactionMonthly) => {
-          return transactionMonthly.total
-        }),
-        currency: transactionsMonthly?.value?.map((transactionMonthly) => {
-          return transactionMonthly.currency
-        }),
+        label: 'Expenses',
+        data: alignedTotals,
+        currencies: alignedCurrencies,
         fill: false,
         borderColor: documentStyle.getPropertyValue('--p-red-500'),
         tension: 0.4,

@@ -7,6 +7,6 @@ export function invalidateTransactionQueries(queryClient: QueryClient, date: str
 
   queryClient.invalidateQueries({ queryKey: ['transactions', year, month] })
   queryClient.invalidateQueries({ queryKey: ['budget', year, month] })
-  queryClient.invalidateQueries({ queryKey: ['transactions-monthly', year] })
+  queryClient.invalidateQueries({ queryKey: ['transactionsMonthly', year] })
 }
 

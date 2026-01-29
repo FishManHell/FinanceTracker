@@ -1,8 +1,8 @@
 import type { ChartDataset, ChartOptions, TooltipItem } from 'chart.js'
 import { type Ref, ref, watch } from 'vue'
 
-interface CurrencyDataset extends ChartDataset<'line'> {
-  currency?: string[]
+interface CurrenciesDataset extends ChartDataset<'line'> {
+  currencies?: string[]
 }
 
 export const useExpenseChartOptions = (isDark: Ref<boolean, boolean>) => {
@@ -21,10 +21,10 @@ export const useExpenseChartOptions = (isDark: Ref<boolean, boolean>) => {
         tooltip: {
           callbacks: {
             label: function (context: TooltipItem<'line'>) {
-              const dataset = context.dataset as CurrencyDataset
+              const dataset = context.dataset as CurrenciesDataset
               const value = context.parsed.y
-              const currency = dataset.currency?.[context.dataIndex] || ''
-              return `${value} ${currency}`
+              const currencies = dataset.currencies?.[context.dataIndex] || ''
+              return `${value} ${currencies}`
             },
           },
         },
