@@ -1,7 +1,7 @@
 export const TransactionTypeDefs: string = `#graphql
 type Transaction {
     id: ID!
-    date: String!
+    date: DateTime!
     amount: Float!
     category: String!
     type: String!

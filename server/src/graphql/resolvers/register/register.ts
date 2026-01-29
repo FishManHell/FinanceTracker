@@ -1,18 +1,18 @@
 import { Role, Roles, UserDocument, UserDTO } from '../../../models/User/user.types.js'
 import { generateToken, hashPassword, setAuthCookie } from '../../../utils/auth.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
-import { GraphQLContext } from '../../types/context.js';
 import {OptionalId} from "mongodb"
+import { Resolver } from '../../types/resolver.js'
 
 type RegisterArgs = Omit<UserDocument, "_id"> & { role?: Role };
 type NewUserDocument = OptionalId<UserDocument>;
 
-export const register = async (
-  _: undefined,
-  regArgs: RegisterArgs,
-  context: GraphQLContext
+export const register: Resolver<RegisterArgs, UserDTO> = async (
+  _,
+  args,
+  context
 )=> {
-  const { username, email, password } = regArgs;
+  const { username, email, password } = args;
 
   const users = context.db.collection<NewUserDocument>("users");
   const existingUser = await users.findOne({ username, email });
@@ -26,7 +26,7 @@ export const register = async (
   }
 
   const hashedPassword = hashPassword(password);
-  const role = regArgs.role ?? Roles.USER;
+  const role = args.role ?? Roles.USER;
   const avatar = null
 
   const newUser: NewUserDocument = { username, email, password: hashedPassword, role, avatar};

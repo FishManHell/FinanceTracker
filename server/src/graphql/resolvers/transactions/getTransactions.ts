@@ -1,17 +1,17 @@
-import { GraphQLContext } from '../../types/context.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { ObjectId } from 'mongodb'
-import { Transaction } from '../../../models/Transaction/transaction.type.js';
+import { Transaction, TransactionWithAccount } from '../../../models/Transaction/transaction.db.js'
+import { Resolver } from '../../types/resolver.js'
 
-interface GetTransactionsParams {
+interface Args {
   year: number;
   month: number;
 }
 
-export const getTransactions = async (
-  _: undefined,
-  params: GetTransactionsParams,
-  context: GraphQLContext
+export const getTransactions: Resolver<Args, TransactionWithAccount[]> = async (
+  _,
+  { year, month },
+  context
 ) => {
   if (!context.user?.id) {
     throwError({
@@ -22,19 +22,11 @@ export const getTransactions = async (
   }
 
   try {
-    const { year, month } = params;
     const transactions = context.db.collection<Transaction>('transactions');
     const userId = new ObjectId(context.user?.id);
 
-    if (!transactions) {
-      throwError({
-        message: "Transactions data not found",
-        status: HttpStatus.NOT_FOUND,
-        code: GraphQLErrorCode.NOT_FOUND
-      })
-    }
     return await transactions
-      .aggregate([
+      .aggregate<TransactionWithAccount>([
         {
           $match: {
             userId,
@@ -55,19 +47,8 @@ export const getTransactions = async (
           }
         },
         { $unwind: "$account" },
-        {
-          $addFields: {
-            date: {
-              $dateToString: {
-                format: "%Y-%m-%dT%H:%M:%S.%LZ",
-                date: "$date"
-              }
-            }
-          }
-        }
       ])
       .toArray();
-
 
   } catch (error) {
     console.error("Error in getTransactions", error);

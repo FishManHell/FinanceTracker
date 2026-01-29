@@ -1,18 +1,15 @@
-import { GraphQLContext } from '../../types/context.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { ObjectId } from 'mongodb'
-import { Transaction } from '../../../models/Transaction/transaction.type.js'
-import { Budget } from '../../../models/Budget/budget.type.js'
+import { Transaction } from '../../../models/Transaction/transaction.db.js'
+import { Budget } from '../../../models/Budget/budget.db.js'
+import { Resolver } from '../../types/resolver.js'
+import { GetBudgetResponse } from '../../../models/Budget/budget.output.js'
+import { ExpenseGroup } from '../../types/aggregations/expenseGroup.types.js'
 
-interface BudgetParams {
-  year: number;
-  month: number;
-}
-
-export const getBudget = async (
-  _: undefined,
-  { year, month }: BudgetParams,
-  context: GraphQLContext
+export const getBudget: Resolver<{year: number, month: number}, GetBudgetResponse> = async (
+  _,
+  { year, month },
+  context
 ) => {
   if (!context.user?.id) {
     throwError({
@@ -36,10 +33,10 @@ export const getBudget = async (
         remaining: 0,
         spent: 0,
         currency: "USD"
-      }
+      } as GetBudgetResponse
     }
 
-    const expenses = await transactions.aggregate([
+    const expenses = await transactions.aggregate<ExpenseGroup>([
       {
         $match: {
           userId,
@@ -61,14 +58,16 @@ export const getBudget = async (
       return acc + Math.abs(e.spent)
     }, 0);
 
-    return {
+    const response: GetBudgetResponse = {
       year,
       month,
-      total: budget.totalBudget,
-      remaining: budget.totalBudget - spentTotal,
+      total: budget.total,
+      remaining: budget.total - spentTotal,
       spent: spentTotal,
       currency: budget.currency,
     }
+
+    return response
   } catch (error) {
     console.error("Error budget:", error);
     throwError({

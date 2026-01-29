@@ -1,6 +1,6 @@
 {
   "name": "finance-server",
-  "version": "0.1.88",
+  "version": "0.1.89",
   "private": true,
   "type": "module",
   "scripts": {
@@ -21,6 +21,7 @@
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "graphql": "^16.11.0",
+    "graphql-scalars": "^1.25.0",
     "graphql-upload": "^17.0.0",
     "i": "^0.3.7",
     "jsonwebtoken": "^9.0.2",

@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
 import { ObjectId } from 'mongodb'
-import { GraphQLContext } from '../../types/context.js'
 import { UserPayload } from '../../types/userPayload.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { UserDTO } from '../../../models/User/user.types.js'
 import { getUser } from '../../../services/user/user.js'
 import { assertUser } from '../../utils/assertions.js'
+import { Resolver } from '../../types/resolver.js'
 
 const unauthorizeError = () => {
   throwError({
@@ -15,10 +15,10 @@ const unauthorizeError = () => {
   })
 }
 
-export const refresh = async (
-  _: undefined,
-  __: undefined,
-  context: GraphQLContext
+export const refresh: Resolver<undefined, UserDTO> = async (
+  _,
+  __,
+  context
 ) => {
   const token = context.req.cookies?.token;
   if (!token) unauthorizeError()

@@ -1,17 +1,16 @@
-import { GraphQLContext } from '../../types/context.js';
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
 import { ObjectId, OptionalId } from 'mongodb';
 import { Account } from '../../../models/Account/account.type.js'
-import { Transaction, DefAccountWithoutType } from '../../../models/Transaction/transaction.type.js'
+import { Resolver } from '../../types/resolver.js'
+import { Transaction } from '../../../models/Transaction/transaction.db.js'
+import { TransactionParams } from '../../../models/Transaction/transaction.input.js'
+import { CreatedTransactionResponse } from '../../../models/Transaction/transaction.output.js'
+import { GraphQLError } from 'graphql'
 
-interface TransactionParams extends DefAccountWithoutType {
-  account: {type: string, description: string}
-}
-
-export const setTransaction = async (
-  _: undefined,
-  { params: {account, ...rest} }: { params: TransactionParams },
-  context: GraphQLContext,
+export const setTransaction: Resolver<TransactionParams, CreatedTransactionResponse> = async (
+  _,
+  { params: {account, ...rest} },
+  context,
 ) => {
   if (!context.user?.id) {
     throwError({
@@ -41,7 +40,6 @@ export const setTransaction = async (
     }
 
     const type = rest.amount > 0 ? "income" : "expense"
-
     const insertNewTransaction = await transactions.insertOne({
       ...rest,
       type,
@@ -58,8 +56,11 @@ export const setTransaction = async (
     };
   } catch (error) {
     console.error("Error inserting transaction:", error);
+    if (error instanceof GraphQLError) {
+      throw error;
+    }
     throwError({
-      message: "Error in setTransactions",
+      message: "INTERNAL_SERVER_ERROR",
       status: HttpStatus.INTERNAL_SERVER_ERROR,
       code: GraphQLErrorCode.INTERNAL_SERVER_ERROR
     })

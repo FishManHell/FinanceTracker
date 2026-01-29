@@ -1,12 +1,13 @@
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
-import { GraphQLContext } from '../../../graphql/types/context.js'
-import { Transaction } from '../../../models/Transaction/transaction.type.js'
+import { Transaction } from '../../../models/Transaction/transaction.db.js'
 import { ObjectId } from 'mongodb'
+import { Resolver } from '../../types/resolver.js'
+import { MonthlyTransactionSummary } from '../../../models/Transaction/transaction.output.js'
 
-export const getTransactionsMonthly = async (
-  _: undefined,
-  params: { year: number },
-  context: GraphQLContext
+export const getTransactionsMonthly: Resolver<{year: number}, MonthlyTransactionSummary[]> = async (
+  _,
+  { year } ,
+  context
 ) => {
   if (!context.user?.id) {
     throwError({
@@ -16,19 +17,10 @@ export const getTransactionsMonthly = async (
     });
   }
   try {
-    const { year } = params
     const transactions = context.db.collection<Transaction>('transactions');
     const userId = new ObjectId(context.user?.id);
 
-    if (!transactions) {
-      throwError({
-        message: "Transactions data not found",
-        status: HttpStatus.NOT_FOUND,
-        code: GraphQLErrorCode.NOT_FOUND
-      })
-    }
-
-    return await transactions.aggregate([
+    return await transactions.aggregate<MonthlyTransactionSummary>([
       {
         $match: {
           userId,

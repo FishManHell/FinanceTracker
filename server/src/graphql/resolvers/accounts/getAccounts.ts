@@ -1,12 +1,12 @@
-import { GraphQLContext } from '../../types/context.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { ObjectId } from "mongodb";
 import { Account } from '../../../models/Account/account.type.js'
+import { Resolver } from '../../types/resolver.js'
 
-export const getAccounts = async (
-  _: undefined,
-  params: undefined,
-  context: GraphQLContext
+export const getAccounts: Resolver<undefined, Account[]> = async (
+  _,
+  __,
+  context
 ) => {
   if (!context.user?.id) {
     throwError({
@@ -19,18 +19,8 @@ export const getAccounts = async (
   try {
     const accounts = context.db.collection<Account>("accounts");
     const userId = new ObjectId(context.user?.id);
-    const userAccountsList = await accounts.find({ userId }).toArray();
 
-    if (!userAccountsList.length) {
-      throwError({
-        message: "Accounts data not found",
-        status: HttpStatus.NOT_FOUND,
-        code: GraphQLErrorCode.NOT_FOUND
-      })
-    }
-
-    return userAccountsList;
-
+    return await accounts.find({ userId }).toArray();
   } catch (error) {
     console.error("Error in getAccounts", error);
     throwError({

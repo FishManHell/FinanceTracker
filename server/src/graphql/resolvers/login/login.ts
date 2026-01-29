@@ -1,8 +1,8 @@
 import { generateToken, setAuthCookie, verifyPassword } from '../../../utils/auth.js'
 import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
-import { GraphQLContext } from '../../types/context.js';
 import { getUser } from '../../../services/user/user.js';
 import { UserDTO } from '../../../models/User/user.types.js'
+import { Resolver } from '../../types/resolver.js'
 
 interface LoginArgs {
   username: string;
@@ -17,8 +17,11 @@ const throwLoginError = (message: string) => {
   })
 }
 
-export const login = async (_: undefined, params: LoginArgs, context: GraphQLContext) => {
-  const { username, password } = params;
+export const login: Resolver<LoginArgs, UserDTO> = async (
+  _,
+  { username, password },
+  context
+) => {
   const user = await getUser(context, { username });
 
   if (!user) return throwLoginError("User not found")
