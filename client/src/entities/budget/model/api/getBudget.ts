@@ -1,13 +1,13 @@
 import { apolloClient } from '@/shared/api/apollo'
 import { GET_BUDGET } from '../graphql/GetBudget.graphql.ts'
-import type { Budget } from '../type/budget.type.ts'
+import type { BudgetDetails } from '../type/budget.type.ts'
 import { stripTypename } from '@/shared/lib/graphql'
 
 interface GetBudgetResponse {
-  budget: Budget
+  budget: BudgetDetails
 }
 
-export interface GetBudgetVariables {
+interface GetBudgetVariables {
   year: number;
   month: number;
 }

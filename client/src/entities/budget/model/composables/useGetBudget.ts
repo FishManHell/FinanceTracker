@@ -1,5 +1,5 @@
 import { useGraphqlQuery } from '@/shared/lib/hooks'
-import type { Budget } from '../type/budget.type.ts'
+import type { BudgetDetails } from '../type/budget.type.ts'
 import { getBudget } from '../api/getBudget.ts'
 import  { computed, type MaybeRef, unref } from 'vue'
 
@@ -9,7 +9,7 @@ interface UseGetBudgetParams {
 }
 
 export const useGetBudget = (params: UseGetBudgetParams) => {
-  return useGraphqlQuery<Budget>({
+  return useGraphqlQuery<BudgetDetails>({
     queryKey: computed(() => ['budget', unref(params.year), unref(params.month)]),
     queryFn: async () => getBudget({ year: unref(params.year), month: unref(params.month) }),
     retry: false,

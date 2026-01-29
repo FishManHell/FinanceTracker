@@ -1,6 +1,6 @@
 {
   "name": "financetracker",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "private": true,
   "type": "module",
   "engines": {
@@ -48,6 +48,7 @@
     "jsdom": "^27.0.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "3.6.2",
+    "rollup-plugin-visualizer": "^6.0.5",
     "sass-embedded": "^1.93.2",
     "typescript": "~5.9.0",
     "vite": "^7.1.7",

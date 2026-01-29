@@ -1,7 +1,7 @@
 import { useQuery, type UseQueryOptions } from '@tanstack/vue-query'
 
-type UseGraphqlQueryOptions<TData> = UseQueryOptions<TData, Error>
+type UseGraphqlQueryOptions<TQueryFnData> = UseQueryOptions<TQueryFnData, Error>
 
-export function useGraphqlQuery<TData>(options: UseGraphqlQueryOptions<TData>) {
-  return useQuery<TData>(options)
+export function useGraphqlQuery<TQueryFnData>(options: UseGraphqlQueryOptions<TQueryFnData>) {
+  return useQuery<TQueryFnData>(options)
 }

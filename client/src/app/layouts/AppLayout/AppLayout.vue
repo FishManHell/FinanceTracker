@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { NavBar } from '@/widgets/NavBar'
 import DynamicDialog from 'primevue/dynamicdialog'
+import ConfirmDialog from 'primevue/confirmdialog'
 </script>
 
 <template>
@@ -10,5 +11,6 @@ import DynamicDialog from 'primevue/dynamicdialog'
       <router-view />
     </div>
     <DynamicDialog />
+    <ConfirmDialog :closable="false" />
   </div>
 </template>

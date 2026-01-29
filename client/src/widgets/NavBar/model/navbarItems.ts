@@ -11,7 +11,7 @@ export const navbarItems: NavbarItemProps[] = [
     roles: ALL_ROLES,
   },
   {
-    label: 'Manage Budget',
+    label: 'Budget Manage',
     icon: 'pi pi-chart-pie',
     route: RoutePaths[AppRouters.MANAGE_BUDGET],
     roles: ALL_ROLES,

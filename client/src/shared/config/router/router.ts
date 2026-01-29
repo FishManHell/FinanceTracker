@@ -10,7 +10,7 @@ import { ProfilePage } from '@/pages/ProfilePage'
 import { refresh } from '@/entities/auth'
 import { userStore } from "@/entities/user";
 import { sessionStore } from "@/entities/auth"
-import { ManageBudgetPage } from '@/pages/ManageBudgetPage'
+import { ManageBudgetPage } from '@/pages/BudgetManagementPage'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -91,23 +91,21 @@ export const router = createRouter({
 router.beforeEach(async (to) => {
   const session_store = sessionStore();
   const user_store = userStore();
-  const isAuth = session_store.isAuthenticated
-  const user = user_store.user
 
   if (to.meta.requiresAuth) {
-    if (!isAuth) {
+    if (!session_store.isAuthenticated) {
       await refresh()
     }
 
-    if (!isAuth) {
+    if (!session_store.isAuthenticated) {
       return { name: AppRouters.SIGN_IN }
     }
   }
-  if (to.meta.roles && user?.role && !to.meta.roles.includes(user.role)) {
+  if (to.meta.roles && user_store.user?.role && !to.meta.roles.includes(user_store.user.role)) {
     return { name: AppRouters.DASHBOARD }
   }
 
-  if (to.name === AppRouters.SIGN_IN && isAuth) {
+  if (to.name === AppRouters.SIGN_IN && session_store.isAuthenticated) {
     return { name: AppRouters.DASHBOARD }
   }
   return true

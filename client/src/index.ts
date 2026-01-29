@@ -10,6 +10,9 @@ import ToastService from 'primevue/toastservice'
 import 'primeicons/primeicons.css';
 import '@/app/styles/index.scss';
 import { pinia } from '@/app/pinia.ts'
+import ConfirmationService from 'primevue/confirmationservice'
+import { Message } from 'primevue'
+
 
 const app = createApp(App);
 app.use(PrimeVue, {
@@ -24,6 +27,8 @@ app.use(PrimeVue, {
 app.directive('ripple', Ripple);
 app.use(DialogService);
 app.use(ToastService);
+app.use(ConfirmationService)
+app.component('Message', Message)
 
 app.use(pinia)
 

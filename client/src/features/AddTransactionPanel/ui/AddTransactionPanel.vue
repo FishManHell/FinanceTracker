@@ -8,12 +8,13 @@ import {
   useSetTransaction,
   useTransactionStore,
 } from '@/entities/transaction'
-import { useDialog } from 'primevue/usedialog'
 import Tag from 'primevue/tag'
 import { computed, watchEffect } from 'vue'
 import { useBudgetStore } from '@/entities/budget'
+import { useAppDialog } from '@/shared/lib/hooks'
 
-const dialog = useDialog()
+const { openFormDialog } = useAppDialog()
+
 const budgetStore = useBudgetStore()
 const year = computed(() => budgetStore.date.getFullYear())
 const month = computed(() => budgetStore.date.getMonth() + 1)
@@ -38,25 +39,13 @@ const totalExpenses = computed(() => {
 
 const onSetTransaction = (transaction: TransactionWithoutType) => mutate(transaction)
 
-function openTransactionDialog() {
-  dialog.open(TransactionForm, {
-    props: {
-      header: 'Add Transaction',
-      style: {
-        width: '100%',
-        maxWidth: '800px',
-        textAlign: 'center',
-      },
-      modal: true,
-    },
-    data: {
-      onSubmit: onSetTransaction,
-      initialData: null,
-      mode: 'add',
-    },
+const openTransactionDialog = () => {
+  openFormDialog(TransactionForm, 'Add Transaction', {
+    onSubmit: onSetTransaction,
+    initialData: null,
+    mode: 'add',
   })
 }
-
 
 watchEffect(() => {
   if (transactions.value) {
