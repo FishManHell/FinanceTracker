@@ -40,6 +40,7 @@ export const getBudget: Resolver<{year: number, month: number}, GetBudgetRespons
       {
         $match: {
           userId,
+          type: "expense",
           date: {
             $gte: new Date(`${year}-${month}-01`),
             $lte: new Date(`${year}-${month}-31`)
