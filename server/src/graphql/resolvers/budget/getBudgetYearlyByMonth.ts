@@ -1,5 +1,5 @@
 import { Resolver } from '../../types/resolver.js'
-import { GraphQLErrorCode, HttpStatus, throwError } from '@/utils/errors.js'
+import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { Budget } from '../../../models/Budget/budget.db.js'
 import { Transaction } from '../../../models/Transaction/transaction.db.js'
 import { ObjectId } from 'mongodb'
