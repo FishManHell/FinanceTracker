@@ -5,13 +5,13 @@ import { Button, Toolbar } from 'primevue'
 import { BudgetManagementTable } from '@/widgets/BudgetManagementTable'
 import { AddBudgetForm } from '@/features/AddBudgetForm'
 import { useAppDialog } from '@/shared/lib/hooks'
+import { BudgetManagementChart } from "@/features/BudgetManagementChart"
 
 const { openFormDialog } = useAppDialog()
 
 const openBudgetManagementFormDialog = () => {
   openFormDialog(AddBudgetForm, 'Add New Budget')
 }
-
 </script>
 
 <template>
@@ -23,6 +23,7 @@ const openBudgetManagementFormDialog = () => {
     <section>
       <div style="display: flex">
         <Budget />
+        <BudgetManagementChart />
       </div>
       <Toolbar>
         <template #start>
