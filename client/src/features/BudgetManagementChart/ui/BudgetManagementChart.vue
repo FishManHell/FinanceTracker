@@ -2,13 +2,16 @@
 import Chart from 'primevue/chart'
 import Card from 'primevue/card'
 import { useDarkMode } from '@/shared/lib/hooks'
-import { useGetBudgetsYearlyByMonth } from '@/entities/budget'
+import { useBudgetStore, useGetBudgetsYearlyByMonth } from '@/entities/budget'
 import { computed } from 'vue'
 import { useExpenseChartOptions } from '@/features/ExpenseChart/model/composables/useExpenseChartOptions.ts'
 
+const budgetStore = useBudgetStore();
+const year = computed(() => budgetStore.date.getFullYear());
+
 const { isDark } = useDarkMode()
 const { chartOptions } = useExpenseChartOptions(isDark)
-const { data: budgetsYearlyByMonth } = useGetBudgetsYearlyByMonth(2025)
+const { data: budgetsYearlyByMonth } = useGetBudgetsYearlyByMonth(year)
 
 const setChartData = computed(() => {
   const documentStyle = getComputedStyle(document.documentElement)
