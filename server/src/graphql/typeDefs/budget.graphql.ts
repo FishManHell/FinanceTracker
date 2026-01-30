@@ -37,9 +37,19 @@ input DeleteBudgetInput {
     id: String!
 }
 
+
+type BudgetYearlyByMonth {
+    month: Int!
+    budget: Int!
+    expense: Int!
+    budgetCurrency: String
+    expenseCurrency: String
+}
+
 extend type Query {
     budget(year: Int!, month: Int!): BudgetOverview
     budgets: [Budget!]!
+    budgetsYearlyByMonth(year: Int!): [BudgetYearlyByMonth!]!
 }
 
 extend type Mutation {
