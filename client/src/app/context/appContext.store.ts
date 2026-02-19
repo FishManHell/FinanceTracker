@@ -1,12 +1,11 @@
-import { defineStore } from 'pinia';
-import type { BudgetState } from '../type/budget.type.ts'
+import { defineStore } from 'pinia'
 
 export type DatePickerModelValue = Date | Date[] | (Date | null)[] | null | undefined
 
-export const useBudgetStore = defineStore('budget', {
-  state: (): BudgetState => ({
+export const useAppContextStore = defineStore("app", {
+  state: () => ({
+    date: new Date(),
     currency: 'USD',
-    date: new Date()
   }),
 
   actions: {

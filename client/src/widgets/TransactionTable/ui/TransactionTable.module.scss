@@ -1,12 +1,6 @@
-.transaction_table_container {
-  flex: 1;
-  display: flex;
-  min-height: 0;
-
-  .transaction_table {
-    text-align: center;
-    width: 100%;
-  }
+.transaction_table {
+  text-align: center;
+  width: 100%;
 }
 
 .empty_block {

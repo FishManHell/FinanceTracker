@@ -1,0 +1,15 @@
+.expense_chart_container {
+  width: 64%;
+
+  :global(.p-card-body) {
+    height: 100%;
+  }
+
+  :global(.p-card-content) {
+    height: 100%;
+  }
+
+  .expense_chart {
+    height: 100%;
+  }
+}

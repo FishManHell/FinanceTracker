@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import cls from './BudgetFilter.module.scss'
 import { DatePicker, Select } from 'primevue'
-import { type DatePickerModelValue, useBudgetStore } from '@/entities/budget'
+import { type DatePickerModelValue, useAppContextStore } from '@/app'
 
-const budgetStore = useBudgetStore()
+const appStore = useAppContextStore()
 
 const currencies = ['USD', 'EUR', 'ILS']
 
-const onSetCurrency = (currency: string) => budgetStore.setCurrency(currency)
-const onSetDate = (date: DatePickerModelValue) => budgetStore.setDate(date)
-
+const onSetCurrency = (currency: string) => appStore.setCurrency(currency)
+const onSetDate = (date: DatePickerModelValue) => appStore.setDate(date)
 </script>
 
 <template>
@@ -17,7 +16,7 @@ const onSetDate = (date: DatePickerModelValue) => budgetStore.setDate(date)
     <div :class="cls.budget_filter__group">
       <label :class="cls.budget_filter__label">Date</label>
       <DatePicker
-        :modelValue="budgetStore.date"
+        :modelValue="appStore.date"
         view="month"
         dateFormat="mm/yy"
         :maxDate="new Date()"
@@ -31,7 +30,7 @@ const onSetDate = (date: DatePickerModelValue) => budgetStore.setDate(date)
         :options="currencies"
         name="currency"
         placeholder="Select currency"
-        :modelValue="budgetStore.currency"
+        :modelValue="appStore.currency"
         @update:modelValue="onSetCurrency"
         disabled
       />

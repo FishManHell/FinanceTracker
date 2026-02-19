@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import cls from './BudgetManagementChart.module.scss'
 import Chart from 'primevue/chart'
 import Card from 'primevue/card'
 import { useDarkMode } from '@/shared/lib/hooks'
-import { useBudgetStore, useGetBudgetsYearlyByMonth } from '@/entities/budget'
+import { useGetBudgetsYearlyByMonth } from '@/entities/budget'
+import { useAppContextStore } from '@/app'
 import { computed } from 'vue'
-import { useExpenseChartOptions } from '@/features/ExpenseChart/model/composables/useExpenseChartOptions.ts'
+import { useExpenseChartOptions } from '@/features/ExpenseChart'
+import { MONTH_LABELS } from '@/shared/lib/date/monthLabels.ts'
 
-const budgetStore = useBudgetStore();
-const year = computed(() => budgetStore.date.getFullYear());
+const appStore = useAppContextStore()
+const year = computed(() => appStore.date.getFullYear())
 
 const { isDark } = useDarkMode()
 const { chartOptions } = useExpenseChartOptions(isDark)
@@ -15,21 +18,6 @@ const { data: budgetsYearlyByMonth } = useGetBudgetsYearlyByMonth(year)
 
 const setChartData = computed(() => {
   const documentStyle = getComputedStyle(document.documentElement)
-
-  const monthLabels = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ]
 
   const monthlyMap = new Map(
     budgetsYearlyByMonth.value?.map(
@@ -40,23 +28,23 @@ const setChartData = computed(() => {
     ),
   )
 
-  const alignedBudgets = monthLabels.map((_, index) => monthlyMap.get(index)?.budget ?? null)
+  const alignedBudgets = MONTH_LABELS.map((_, index) => monthlyMap.get(index)?.budget ?? null)
 
-  const alignedExpenses = monthLabels.map((_, index) => monthlyMap.get(index)?.expense ?? null)
+  const alignedExpenses = MONTH_LABELS.map((_, index) => monthlyMap.get(index)?.expense ?? null)
 
-  const alignedBudgetCurrencies = monthLabels.map(
+  const alignedBudgetCurrencies = MONTH_LABELS.map(
     (_, index) => monthlyMap.get(index)?.budgetCurrency ?? null,
   )
 
-  const alignedExpenseCurrencies = monthLabels.map(
+  const alignedExpenseCurrencies = MONTH_LABELS.map(
     (_, index) => monthlyMap.get(index)?.expenseCurrency ?? null,
   )
 
   return {
-    labels: monthLabels,
+    labels: MONTH_LABELS,
     datasets: [
       {
-        label: 'Budget',
+        label: 'BudgetOverview',
         data: alignedBudgets,
         currencies: alignedBudgetCurrencies,
         fill: false,
@@ -77,38 +65,15 @@ const setChartData = computed(() => {
 </script>
 
 <template>
-  <Card class="expense_chart_container" style="width: 100%">
+  <Card :class="cls.expense_chart_container">
     <template #content>
       <Chart
         type="line"
         :data="setChartData"
         :options="chartOptions"
-        class="expense_chart"
+        :class="cls.expense_chart"
         :key="String(isDark)"
       />
     </template>
   </Card>
 </template>
-
-<style scoped>
-expense_chart_container {
-  width: 64%;
-  height: 100% !important;
-
-  :global(.p-card-body) {
-    height: 100%;
-  }
-
-  :global(.p-card-content) {
-    height: 100%;
-  }
-
-  .expense_chart {
-    height: 100%;
-  }
-}
-
-.p-card.p-card-body {
-  height: 100% !important;
-}
-</style>

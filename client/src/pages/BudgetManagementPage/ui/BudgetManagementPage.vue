@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import cls from './BudgetManagementPage.module.scss'
-import { Budget } from '@/widgets/Budget'
-import { Button, Toolbar } from 'primevue'
+import { BudgetOverview } from '@/widgets/BudgetOverview'
 import { BudgetManagementTable } from '@/widgets/BudgetManagementTable'
-import { AddBudgetForm } from '@/features/AddBudgetForm'
+import { BudgetManagementChart } from '@/features/BudgetManagementChart'
+import { BudgetFilter } from '@/features/BudgetFilter'
 import { useAppDialog } from '@/shared/lib/hooks'
-import { BudgetManagementChart } from "@/features/BudgetManagementChart"
+import { AddBudgetForm } from '@/features/AddBudgetForm'
+import { SectionCard } from '@/shared/ui/SectionCard'
+import { PageHeader } from '@/shared/ui/PageHeader'
 
 const { openFormDialog } = useAppDialog()
 
@@ -16,23 +18,23 @@ const openBudgetManagementFormDialog = () => {
 
 <template>
   <div :class="cls.manage_budget_page">
-    <header :class="cls.header">
-      <h1>Budget Management</h1>
-    </header>
-
-    <section>
-      <div style="display: flex">
-        <Budget />
+    <PageHeader title="Budget Management">
+      <BudgetFilter />
+    </PageHeader>
+    <section :class="cls.body">
+      <div :class="cls.chart_section">
         <BudgetManagementChart />
+        <BudgetOverview />
       </div>
-      <Toolbar>
-        <template #start>
-          <Button label="Add new" icon="pi pi-plus" @click="openBudgetManagementFormDialog" />
-        </template>
-      </Toolbar>
-      <BudgetManagementTable />
+
+      <SectionCard
+        title="Budgets"
+        buttonLabel="New"
+        buttonIcon="pi pi-plus"
+        :onButtonClick="openBudgetManagementFormDialog"
+      >
+        <BudgetManagementTable />
+      </SectionCard>
     </section>
   </div>
 </template>
-
-<style scoped></style>

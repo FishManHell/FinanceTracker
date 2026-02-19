@@ -15,11 +15,4 @@ export interface BaseBudgetWIthId extends BaseBudget {
   id: string
 }
 
-
-export interface BudgetState {
-  currency: string;
-  date: Date
-}
-
-
 export type Budgets = BaseBudgetWIthId[]

@@ -1,0 +1,21 @@
+@use "@/app/styles/utility" as utility;
+
+.section_card {
+  @include utility.flex-col-fill;
+
+  :global(.p-card-body) {
+    @include utility.flex-col-fill;
+  }
+
+  :global(.p-card-content) {
+    @include utility.flex-col-fill;
+  }
+
+  .header {
+    margin-bottom: 10px;
+  }
+
+  .content {
+    @include utility.flex-col-fill;
+  }
+}

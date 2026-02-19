@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import cls from './Budget.module.scss'
+import cls from './BudgetOverview.module.scss'
 import Chart from 'primevue/chart'
 import ProgressSpinner from 'primevue/progressspinner'
 import { computed } from 'vue'
-import { useBudgetStore, useGetBudget } from '@/entities/budget'
+import { useGetBudget } from '@/entities/budget'
+import { useAppContextStore } from '@/app'
 import Card from 'primevue/card'
 import { useDarkMode } from '@/shared/lib/hooks'
 import { useBudgetChartOptions } from '../model/composables/useBudgetChartOptions'
 
-const budgetStore = useBudgetStore()
+const appStore = useAppContextStore()
 
-const year = computed(() => budgetStore.date.getFullYear())
-const month = computed(() => budgetStore.date.getMonth() + 1)
+const year = computed(() => appStore.date.getFullYear())
+const month = computed(() => appStore.date.getMonth() + 1)
 
 const { data: budget, isFetching } = useGetBudget({ year, month })
 const { isDark } = useDarkMode()
@@ -50,7 +51,7 @@ const chartData = computed(() => {
   <Card :class="cls.budget_container">
     <template #header>
       <header v-if="showChart && !isFetching">
-        <h1>Budget</h1>
+        <h1>Budget Overview</h1>
       </header>
     </template>
 
@@ -63,7 +64,7 @@ const chartData = computed(() => {
 
         <template v-else>
           <section :class="cls.empty_budget_section">
-            <h2>No budget set or no data available.</h2>
+            <h2>No budget overview</h2>
           </section>
         </template>
       </section>
@@ -72,5 +73,3 @@ const chartData = computed(() => {
     </template>
   </Card>
 </template>
-
-<style scoped></style>

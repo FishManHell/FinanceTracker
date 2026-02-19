@@ -1,3 +1,5 @@
+@use "@/app/styles/utility" as utility;
+
 .manage_budget_page {
   width: 100%;
   display: flex;
@@ -5,5 +7,19 @@
 
   .header {
     text-align: center;
+  }
+
+  .body {
+    @include utility.flex-col-fill;
+  }
+
+  .chart_section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .table_header {
+    margin-bottom: 10px;
   }
 }

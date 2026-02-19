@@ -1,38 +1,21 @@
 <script setup lang="ts">
 import cls from './BudgetManagementTable.module.scss'
 import { Column, DataTable, DatePicker } from 'primevue'
-import {
-  useEditBudget,
-  useGetBudgets,
-  type BaseBudgetWIthId,
-  useDeleteBudget,
-} from '@/entities/budget'
-import { computed, ref } from 'vue'
+import { useGetBudgets } from '@/entities/budget'
+import { computed } from 'vue'
 import { DisplayCell } from '@/shared/ui/DisplayCell'
 import { EditNumberCell } from '@/shared/ui/EditNumberCell'
 import { EditSelectCell } from '@/shared/ui/EditSelectCell'
-import { useQueryClient } from '@tanstack/vue-query'
 import { formatYearMonth } from '@/helpers/date.ts'
 import { createSkeletonBudgets } from '@/helpers/skeleton.ts'
-import { useConfirmActions } from '@/shared/lib/hooks'
 import BudgetActionsCell from './BudgetActionsCell.vue'
-
-interface BudgetWithDate extends BaseBudgetWIthId {
-  date: Date
-}
+import { useEditBudgetManagement } from '@/features/budget-management'
 
 const { data, isFetching } = useGetBudgets()
-const { mutate: onMutateEditBudget } = useEditBudget()
-const { mutate: onMutateDeleteBudget } = useDeleteBudget()
-const { confirmDeleteBudget, confirmSaveChanges } = useConfirmActions()
-
-const queryClient = useQueryClient()
-const editingRows = ref<BudgetWithDate[]>([])
-const originalRow = ref<BudgetWithDate | null>(null)
+const { onDelete, onSave, onStartEdit, onCancelEdit, editingRows, isRowEditing } =
+  useEditBudgetManagement()
 
 const currencies = ['USD', 'EUR', 'ILS']
-
-const isRowEditing = (id: string) => editingRows.value.some((r) => r.id === id)
 
 const budgets = computed(() => {
   if (isFetching.value && (!data.value || data.value.length === 0)) {
@@ -41,50 +24,17 @@ const budgets = computed(() => {
   return data.value
 })
 
-const cellLoading = computed(() => isFetching.value && (!data.value || data.value.length === 0))
-const tableLoading = computed(() => isFetching.value && !!data.value && data.value.length > 0)
-
-const onEditBudget = (updatedBudget: BudgetWithDate) => {
-  const year = updatedBudget.date.getFullYear()
-  const month = updatedBudget.date.getMonth() + 1
-  onMutateEditBudget({
-    id: updatedBudget.id,
-    update: {
-      currency: updatedBudget.currency,
-      total: updatedBudget.total,
-      year,
-      month,
-    },
-  })
-}
-
-const onRowEditSave = (row: BudgetWithDate) => {
-  if (!originalRow.value) return
-  const isChanged = JSON.stringify(originalRow.value) !== JSON.stringify(row)
-  if (!isChanged) {
-    editingRows.value = []
-    return
-  }
-
-  const year = row.date.getFullYear()
-  const month = row.date.getMonth() + 1
-  queryClient.setQueryData(['budgets'], (old: BudgetWithDate[]) => {
-    return old.map((b) => (b.id === row.id ? { ...row, year, month } : b))
-  })
-  onEditBudget(row)
-  editingRows.value = []
-}
-
-const onStartEdit = (row: BudgetWithDate) => {
-  editingRows.value = [row]
-  originalRow.value = JSON.parse(JSON.stringify(row))
-}
-
-const onCancelEdit = () => (editingRows.value = [])
+const cellLoading = computed(() => {
+  return isFetching.value && (!data.value || data.value.length === 0)
+})
+const tableLoading = computed(() => {
+  return isFetching.value && !!data.value && data.value.length > 0
+})
 </script>
 
 <template>
   <DataTable
+    stripedRows
     v-model:editingRows="editingRows"
     :value="budgets"
     scrollable
@@ -92,10 +42,8 @@ const onCancelEdit = () => (editingRows.value = [])
     :loading="tableLoading"
     editMode="row"
     dataKey="id"
+    :class="cls.budget_table"
   >
-    <template #header>
-      <h2>Budgets</h2>
-    </template>
     <template #empty>
       <h1 :class="cls.empty_block">No budgets found</h1>
     </template>
@@ -132,8 +80,8 @@ const onCancelEdit = () => (editingRows.value = [])
           :loading="cellLoading"
           @edit="onStartEdit"
           @cancel="onCancelEdit"
-          @save="(row) => confirmSaveChanges(async () => onRowEditSave(row))"
-          @delete="(id) => confirmDeleteBudget(async () => onMutateDeleteBudget(id))"
+          @save="onSave"
+          @delete="onDelete"
         />
       </template>
     </Column>
