@@ -70,5 +70,12 @@ const loading = computed(() => transactionStore.isLoading)
         </TableCell>
       </template>
     </Column>
+    <Column field="currency" header="Currency">
+      <template #body="{ data }">
+        <TableCell :loading="loading">
+          {{data.currency}}
+        </TableCell>
+      </template>
+    </Column>
   </DataTable>
 </template>
