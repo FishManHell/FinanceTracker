@@ -1,4 +1,6 @@
-type SeverityType = 'balance' | 'income' | 'expense'
+export type SeverityType = 'balance' | 'income' | 'expense';
+export type SeverityValue = ReturnType<typeof getSeverity>
+
 
 export function getSeverity(type: SeverityType, value: number) {
   switch (type) {

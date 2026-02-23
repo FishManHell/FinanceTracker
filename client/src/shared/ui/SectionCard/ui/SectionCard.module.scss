@@ -13,6 +13,23 @@
 
   .header {
     margin-bottom: 10px;
+
+    :global(.p-iftalabel) {
+      height: 40px;
+      .month_picker {
+        height: 100%;
+      }
+    }
+    :global(.p-toolbar-end) {
+      gap: 10px;
+    }
+  }
+
+  .month_picker {
+    width: 120px;
+    :global(.p-inputtext) {
+      width: 100%;
+    }
   }
 
   .content {

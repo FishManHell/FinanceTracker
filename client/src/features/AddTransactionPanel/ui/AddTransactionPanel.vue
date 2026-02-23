@@ -1,53 +1,25 @@
 <script setup lang="ts">
 import cls from './AddTransactionPanel.module.scss'
-import {
-  useGetTransactions,
-  useTransactionStore,
-} from '@/entities/transaction'
-import { computed, watchEffect } from 'vue'
-import { useAppContextStore } from '@/app'
 import { StatusTag } from '@/shared/ui/StatusTag'
-import { getSeverity } from '@/shared/lib/finance/getSeverity'
+import type { Transactions } from '@/entities/transaction'
+import { useTransactionsSummary } from '@/features/TransactionsContainer'
+import { computed } from 'vue'
 
-const appStore = useAppContextStore()
+const props = defineProps<{
+  transactions: Transactions | undefined
+  isFetching: boolean
+}>()
 
-const year = computed(() => appStore.date.getFullYear())
-const month = computed(() => appStore.date.getMonth() + 1)
+const transactionsRef = computed(() => props.transactions)
 
-const { data: transactions, isFetching } = useGetTransactions({ year, month })
-const transactionStore = useTransactionStore()
-
-const totalIncomes = computed(() => {
-  return (
-    transactions.value
-      ?.filter(({ type }) => type === 'income')
-      .reduce((sum, { amount }) => sum + amount, 0) ?? 0
-  )
-})
-
-const totalExpenses = computed(() => {
-  return (
-    transactions.value
-      ?.filter(({ type }) => type === 'expense')
-      .reduce((sum, { amount }) => sum + Math.abs(amount), 0) ?? 0
-  )
-})
-
-const balance = computed(() => totalIncomes.value - totalExpenses.value)
-
-const balanceSeverity = computed(() => getSeverity('balance', balance.value))
-const incomesSeverity = computed(() => getSeverity('income', totalIncomes.value))
-const expensesSeverity = computed(() => getSeverity('expense', totalExpenses.value))
-
-watchEffect(() => {
-  if (transactions.value) {
-    transactionStore.setTransactions(transactions.value)
-  }
-})
-
-watchEffect(() => {
-  transactionStore.setLoading(isFetching.value)
-})
+const {
+  balance,
+  balanceSeverity,
+  incomesSeverity,
+  expensesSeverity,
+  totalIncomes,
+  totalExpenses
+} = useTransactionsSummary(transactionsRef)
 </script>
 
 <template>

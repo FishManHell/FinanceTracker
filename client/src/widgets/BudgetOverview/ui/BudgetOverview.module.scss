@@ -4,6 +4,25 @@
   flex-direction: column;
   justify-content: center;
   width: 34%;
+  padding: 10px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .month_picker {
+    width: 120px;
+    :global(.p-iftalabel) {
+      height: 40px;
+    }
+    :global(.p-datepicker) {
+      height: 100%;
+    }
+    :global(.p-inputtext) {
+      width: 100%;
+    }
+  }
 
   .budget_body {
     position: relative;
@@ -11,21 +30,21 @@
     align-items: center;
     justify-content: center;
 
-    h2 {
+    h2, h3 {
       position: absolute;
       top: 50%;
     }
   }
 
   .budget_body_loading {
-    max-width: 340px;
-    max-height: 340px;
+    max-width: 297px;
+    max-height: 297px;
     width: 100%;
     height: 100%;
   }
 
   .empty_budget_section {
-    height: 340px;
+    height: 300px;
     display: flex;
     justify-content: center;
   }

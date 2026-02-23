@@ -8,11 +8,13 @@ import { useAppContextStore } from '@/app'
 import Card from 'primevue/card'
 import { useDarkMode } from '@/shared/lib/hooks'
 import { useBudgetChartOptions } from '../model/composables/useBudgetChartOptions'
+import { MonthPicker } from '@/shared/ui/MonthPicker'
+import { useMonth } from '@/entities/date'
 
 const appStore = useAppContextStore()
 
 const year = computed(() => appStore.date.getFullYear())
-const month = computed(() => appStore.date.getMonth() + 1)
+const month = useMonth('budget', year)
 
 const { data: budget, isFetching } = useGetBudget({ year, month })
 const { isDark } = useDarkMode()
@@ -50,8 +52,18 @@ const chartData = computed(() => {
 <template>
   <Card :class="cls.budget_container">
     <template #header>
-      <header v-if="showChart && !isFetching">
-        <h1>Budget Overview</h1>
+      <header :class="cls.header">
+        <h2>Budget Overview</h2>
+        <MonthPicker
+          panelClass="date_panel"
+          :class="cls.month_picker"
+          :year="year"
+          v-model="month"
+          showIcon
+          iconDisplay="input"
+          variant="filled"
+          size="small"
+        />
       </header>
     </template>
 
@@ -64,7 +76,7 @@ const chartData = computed(() => {
 
         <template v-else>
           <section :class="cls.empty_budget_section">
-            <h2>No budget overview</h2>
+            <h3>No budget overview</h3>
           </section>
         </template>
       </section>

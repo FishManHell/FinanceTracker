@@ -1,0 +1,13 @@
+.monthly_picker {
+  width: 120px;
+
+  :global(.p-iftalabel) {
+    height: 40px;
+  }
+  :global(.p-datepicker) {
+    height: 100%;
+  }
+  :global(.p-inputtext) {
+    width: 100%;
+  }
+}

@@ -28,6 +28,7 @@ defineProps<Props>()
             severity="contrast"
             @click="onButtonClick"
           />
+          <slot name="toolbar-end" />
         </template>
       </Toolbar>
 

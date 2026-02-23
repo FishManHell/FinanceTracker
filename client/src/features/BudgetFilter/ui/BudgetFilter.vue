@@ -17,8 +17,8 @@ const onSetDate = (date: DatePickerModelValue) => appStore.setDate(date)
       <label :class="cls.budget_filter__label">Date</label>
       <DatePicker
         :modelValue="appStore.date"
-        view="month"
-        dateFormat="mm/yy"
+        view="year"
+        dateFormat="yy"
         :maxDate="new Date()"
         @update:modelValue="onSetDate"
       />

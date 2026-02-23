@@ -11,7 +11,7 @@ export const useAppContextStore = defineStore("app", {
   actions: {
     setDate(value: DatePickerModelValue) {
       if (value instanceof Date) {
-        this.date = value
+        this.date = new Date(value)
       }
     },
 
