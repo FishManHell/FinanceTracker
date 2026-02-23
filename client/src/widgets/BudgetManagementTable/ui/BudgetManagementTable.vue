@@ -34,7 +34,6 @@ const tableLoading = computed(() => {
 
 <template>
   <DataTable
-    stripedRows
     v-model:editingRows="editingRows"
     :value="budgets"
     scrollable
