@@ -5,6 +5,7 @@ import { UploadDefs } from './upload.graphql.js'
 import { RootTypeDefs } from './rootType.graphql.js'
 import { BudgetTypeDefs } from "./budget.graphql.js"
 import { DataTimeGraphqlDefs } from './dataTime.graphql.js'
+import { AdministrationTypeDefs } from './administration.graphql.js'
 
 export const typeDefs: string[] = [
   DataTimeGraphqlDefs,
@@ -13,5 +14,6 @@ export const typeDefs: string[] = [
   TransactionTypeDefs,
   AuthTypeDefs,
   UploadDefs,
-  BudgetTypeDefs
+  BudgetTypeDefs,
+  AdministrationTypeDefs
 ]

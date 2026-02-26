@@ -14,6 +14,9 @@ import { deleteBudget } from './budget/deleteBudget.js'
 import { getBudgets } from './budget/getBudgets.js'
 import { editBudget } from './budget/editBudget.js'
 import { getBudgetYearlyByMonth } from './budget/getBudgetYearlyByMonth.js'
+import { getUsers } from './administration/getUsers.js'
+import { editUser } from './administration/editUser.js'
+import { deleteUser } from './administration/deleteUser.js'
 
 export const resolvers = {
   DateTime: GraphQLDateTime,
@@ -26,6 +29,7 @@ export const resolvers = {
     transactionsMonthly: getTransactionsMonthly,
     budgets: getBudgets,
     budgetsYearlyByMonth: getBudgetYearlyByMonth,
+    users: getUsers
   },
   Mutation: {
     login,
@@ -35,5 +39,7 @@ export const resolvers = {
     newBudget: setBudget,
     deleteBudget,
     editBudget,
+    updatedUser: editUser,
+    deleteUser,
   },
 }
