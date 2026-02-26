@@ -1,9 +1,9 @@
 import { useGraphqlQuery } from '@/shared/lib/hooks'
-import type { Budgets } from '../type/budget.type.ts'
+import type { Budgets, BudgetsWithDate } from '../type/budget.type.ts'
 import { getBudgets } from '../api/getBudgets.ts'
 
 export const useGetBudgets = () => {
-  return useGraphqlQuery<Budgets>({
+  return useGraphqlQuery<Budgets, BudgetsWithDate>({
     queryKey: ['budgets'],
     queryFn: async () => getBudgets(),
     refetchOnWindowFocus: false,

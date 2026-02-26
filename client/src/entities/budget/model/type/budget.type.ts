@@ -11,8 +11,13 @@ export interface BudgetDetails extends BaseBudget {
   remaining: number
 }
 
-export interface BaseBudgetWIthId extends BaseBudget {
+export interface BudgetWithId extends BaseBudget {
   id: string
 }
 
-export type Budgets = BaseBudgetWIthId[]
+export interface BudgetWithDate extends BudgetWithId {
+  date: Date
+}
+
+export type BudgetsWithDate = BudgetWithDate[]
+export type Budgets = BudgetWithId[]

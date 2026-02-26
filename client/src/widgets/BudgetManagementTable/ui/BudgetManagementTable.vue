@@ -1,21 +1,55 @@
 <script setup lang="ts">
 import cls from './BudgetManagementTable.module.scss'
 import { Column, DataTable, DatePicker } from 'primevue'
-import { useGetBudgets } from '@/entities/budget'
 import { computed } from 'vue'
+import { type BudgetWithDate, type BudgetsWithDate, useDeleteBudget } from '@/entities/budget'
+import { useEditBudget, useGetBudgets } from '@/entities/budget'
 import { DisplayCell } from '@/shared/ui/DisplayCell'
 import { EditNumberCell } from '@/shared/ui/EditNumberCell'
 import { EditSelectCell } from '@/shared/ui/EditSelectCell'
+import { TableEditorActions } from '@/shared/ui/TableEditorActions'
 import { formatYearMonth } from '@/helpers/date.ts'
 import { createSkeletonBudgets } from '@/helpers/skeleton.ts'
-import BudgetActionsCell from './BudgetActionsCell.vue'
-import { useEditBudgetManagement } from '@/features/budget-management'
+import { type OnSavePayload, useEditableTable } from '@/features/table-editor'
+import { useQueryClient } from '@tanstack/vue-query'
+import { useConfirmActions } from '@/shared/lib/hooks'
 
 const { data, isFetching } = useGetBudgets()
-const { onDelete, onSave, onStartEdit, onCancelEdit, editingRows, isRowEditing } =
-  useEditBudgetManagement()
+const { mutate: onMutateEditBudget } = useEditBudget()
+const { mutate: onMutateDeleteBudget } = useDeleteBudget()
+const { confirmDelete, confirmSave } = useConfirmActions()
+
+const queryClient = useQueryClient()
+const { editingRows, saveRow, isRowEditing, cancelEdit, startEdit } =
+  useEditableTable<BudgetWithDate>({
+    data,
+    validators: {},
+    onSave: onSaveTest,
+  })
 
 const currencies = ['USD', 'EUR', 'ILS']
+
+function onSaveTest({ id, update }: OnSavePayload<BudgetWithDate>) {
+  const { date, ...rest } = update
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+
+  queryClient.setQueryData(['budgets'], (budgets: BudgetsWithDate) =>
+    budgets.map((budget) => {
+      return budget.id === id ? { ...update, year, month } : budget
+    }),
+  )
+  onMutateEditBudget({ id, update: { ...rest, year, month } })
+}
+
+const onSaveHandler = (row: BudgetWithDate) => {
+  saveRow(row)
+  editingRows.value = []
+}
+
+const onDelete = (id: string) => {
+  confirmDelete(async () => onMutateDeleteBudget(id))
+}
 
 const budgets = computed(() => {
   if (isFetching.value && (!data.value || data.value.length === 0)) {
@@ -27,6 +61,7 @@ const budgets = computed(() => {
 const cellLoading = computed(() => {
   return isFetching.value && (!data.value || data.value.length === 0)
 })
+
 const tableLoading = computed(() => {
   return isFetching.value && !!data.value && data.value.length > 0
 })
@@ -73,13 +108,13 @@ const tableLoading = computed(() => {
     </Column>
     <Column header="Actions">
       <template #body="{ data }">
-        <BudgetActionsCell
+        <TableEditorActions
           :row="data"
           :is-editing="isRowEditing(data.id)"
           :loading="cellLoading"
-          @edit="onStartEdit"
-          @cancel="onCancelEdit"
-          @save="onSave"
+          @edit="startEdit"
+          @cancel="cancelEdit"
+          @save="onSaveHandler"
           @delete="onDelete"
         />
       </template>

@@ -1,10 +1,10 @@
-import type { BaseBudget, BaseBudgetWIthId } from '../type/budget.type.ts'
+import type { BaseBudget, BudgetWithId } from '../type/budget.type.ts'
 import { apolloClient } from '@/shared/api/apollo'
 import { EDIT_BUDGET } from '../graphql/EditBudget.graphql.ts'
 
 
 interface EditBudgetResponse {
-  editBudget: BaseBudgetWIthId
+  editBudget: BudgetWithId
 }
 
 interface EditBudgetInput {

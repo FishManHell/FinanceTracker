@@ -1,49 +1,3 @@
-// import { useConfirm } from 'primevue/useconfirm'
-//
-// export function useConfirmActions() {
-//   const confirm = useConfirm()
-//
-//   const confirmSaveChanges = <T>(row: T, onSave: (row: T) => void) => {
-//     confirm.require({
-//       message: 'Are you sure you want to save these changes?',
-//       icon: 'pi pi-info-circle',
-//       rejectProps: {
-//         label: 'Cancel',
-//         severity: 'danger',
-//         outlined: true,
-//       },
-//       acceptProps: {
-//         label: 'Save',
-//         outlined: true,
-//       },
-//       accept: () => onSave(row),
-//     })
-//   }
-//
-//   const confirmDeleteBudget = <T>(id: T, onDelete: (id: T) => void) => {
-//     confirm.require({
-//       message: 'Are you sure you want to delete it?',
-//       icon: 'pi pi-info-circle',
-//       rejectProps: {
-//         label: 'Cancel',
-//         severity: 'danger',
-//         outlined: true,
-//       },
-//       acceptProps: {
-//         label: 'Delete',
-//         severity: 'danger',
-//         outlined: true,
-//       },
-//       accept: () => onDelete(id),
-//     })
-//   }
-//
-//   return {
-//     confirmSaveChanges,
-//     confirmDeleteBudget,
-//   }
-// }
-
 import { ref } from 'vue'
 import { useConfirm } from 'primevue/useconfirm'
 
@@ -51,9 +5,9 @@ export function useConfirmActions() {
   const confirm = useConfirm()
   const isLoading = ref(false)
 
-  const confirmSaveChanges = (onSave: () => Promise<void>) => {
+  const confirmSave = (onSave: () => Promise<void>) => {
     confirm.require({
-      message: 'Are you sure you want to save these changes?',
+      message: 'Confirm save?',
       icon: 'pi pi-info-circle',
 
       rejectProps: {
@@ -80,7 +34,7 @@ export function useConfirmActions() {
     })
   }
 
-  const confirmDeleteBudget = (onDelete: () => Promise<void>) => {
+  const confirmDelete = (onDelete: () => Promise<void>) => {
     confirm.require({
       message: 'Are you sure you want to delete it?',
       icon: 'pi pi-info-circle',
@@ -111,8 +65,8 @@ export function useConfirmActions() {
   }
 
   return {
-    confirmSaveChanges,
-    confirmDeleteBudget,
+    confirmSave,
+    confirmDelete,
   }
 }
 

@@ -7,7 +7,6 @@ export function useEditBudget() {
   const toast = useToast();
   const queryClient = useQueryClient()
 
-
   return useMutation({
     mutationFn: editBudget,
     onSuccess: (result) => {

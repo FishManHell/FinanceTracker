@@ -1,10 +1,10 @@
 import { apolloClient } from '@/shared/api/apollo'
 import { SET_BUDGET } from '../graphql/SetBudget.graphql.ts'
-import type { BaseBudget, BaseBudgetWIthId } from '../type/budget.type.ts'
+import type { BaseBudget, BudgetWithId } from '../type/budget.type.ts'
 import { stripTypename } from '@/shared/lib/graphql'
 
 interface SetBudgetResponse {
-  newBudget: BaseBudgetWIthId
+  newBudget: BudgetWithId
 }
 
 interface SetBudgetParams {

@@ -14,12 +14,15 @@ const emit = defineEmits<{
   (e: 'cancel'): void
   (e: 'delete', id: string): void
 }>()
+
+const cloneRow = <T,>(row: T): T => JSON.parse(JSON.stringify(row));
+
 </script>
 
 <template>
   <TableCell :loading="loading">
     <div v-if="!isEditing">
-      <Button label="Edit" @click="emit('edit', row)" outlined />
+      <Button label="Edit" @click="emit('edit', cloneRow(row))" outlined />
       <Button label="Delete" severity="danger" outlined @click="emit('delete', row.id)" />
     </div>
 
