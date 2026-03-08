@@ -19,17 +19,8 @@ export const setBudget: Resolver<SetBudgetParams, SetBudgetResponse> = async (
     });
   }
   try {
-    const {year, month} = budget
     const budgets = context.db.collection<OptionalId<Budget>>("budgets");
     const userId = new ObjectId(context.user?.id);
-    const existing = await budgets.findOne({userId, year, month});
-    if (existing) {
-      throwError({
-        message: "Budget is already exists",
-        status: HttpStatus.CONFLICT,
-        code: GraphQLErrorCode.CONFLICT
-      })
-    }
     const insertNewBudget = await budgets.insertOne({
       userId,
       ...budget,
@@ -45,9 +36,17 @@ export const setBudget: Resolver<SetBudgetParams, SetBudgetResponse> = async (
 
   } catch (error) {
     console.error("Error inserting budget", error);
-    if (error instanceof GraphQLError) {
-      throw error;
+
+    if (error instanceof Error && 'code' in error && error.code === 11000) {
+      throwError({
+        message: "Budget already exists",
+        status: HttpStatus.CONFLICT,
+        code: GraphQLErrorCode.CONFLICT
+      })
     }
+
+    if (error instanceof GraphQLError) throw error;
+
     throwError({
       message: "INTERNAL_SERVER_ERROR",
       status: HttpStatus.INTERNAL_SERVER_ERROR,

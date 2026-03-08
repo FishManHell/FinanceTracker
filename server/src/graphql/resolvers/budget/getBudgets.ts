@@ -20,7 +20,10 @@ export const getBudgets: Resolver<{}, GetBudgetsResponse[]> = async (
   try {
     const budgets = context.db.collection<Budget>("budgets");
     const userId = new ObjectId(context.user?.id);
-    const userBudgets = await budgets.find({ userId }).toArray();
+    const userBudgets = await budgets
+      .find({ userId })
+      .sort({ year: -1, month: -1 })
+      .toArray();
     return userBudgets.map(({_id, userId, createdAt, ...rest}) => {
       return { id: _id.toString(), ...rest }
     });

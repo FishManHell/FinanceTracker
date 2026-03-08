@@ -3,6 +3,9 @@ import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.
 import { UserDocument } from "../../../models/User/user.types.js"
 import { GraphQLError } from 'graphql'
 import { ObjectId } from 'mongodb'
+import { Transaction } from '../../../models/Transaction/transaction.db.js'
+import { Budget } from '../../../models/Budget/budget.db.js'
+import { Account } from '../../../models/Account/account.type.js'
 
 export const deleteUser: Resolver<{params: {id: string}}, boolean> = async (
   _, { params: {id} }, context
@@ -15,17 +18,32 @@ export const deleteUser: Resolver<{params: {id: string}}, boolean> = async (
     });
   }
 
-  try {
-    const users = context.db.collection<UserDocument>('users');
-    const deletedUser = await users.deleteOne({_id: new ObjectId(id)});
+  const session = context.db.client.startSession();
 
-    if (deletedUser.deletedCount === 0) {
-      throwError({
-        message: "USER_NOT_FOUND",
-        status: HttpStatus.NOT_FOUND,
-        code: GraphQLErrorCode.NOT_FOUND
-      });
-    }
+  try {
+    await session.withTransaction(async () => {
+      const users = context.db.collection<UserDocument>('users');
+      const transactions = context.db.collection<Transaction>('transactions');
+      const budgets = context.db.collection<Budget>('budgets');
+      const accounts = context.db.collection<Account>('accounts');
+
+      const userObjectId = new ObjectId(id);
+      const deletedUser = await users.deleteOne({_id: userObjectId});
+
+      if (deletedUser.deletedCount === 0) {
+        throwError({
+          message: "USER_NOT_FOUND",
+          status: HttpStatus.NOT_FOUND,
+          code: GraphQLErrorCode.NOT_FOUND
+        });
+      }
+
+      await Promise.all([
+        transactions.deleteMany({ userId: userObjectId }),
+        budgets.deleteMany({ userId: userObjectId }),
+        accounts.deleteMany({ userId: userObjectId })
+      ]);
+    })
 
     return true
 
@@ -37,5 +55,7 @@ export const deleteUser: Resolver<{params: {id: string}}, boolean> = async (
       status: HttpStatus.INTERNAL_SERVER_ERROR,
       code: GraphQLErrorCode.INTERNAL_SERVER_ERROR
     })
+  } finally {
+    await session.endSession()
   }
 }

@@ -19,7 +19,7 @@ input EditUserInput {
     update: BaseUserInput!
 }
 
-input DeleteUserParams {
+input DeleteUserInput {
     id: ID!
 }
 
@@ -29,6 +29,6 @@ extend type Query {
 
 extend type Mutation {
     updatedUser(params: EditUserInput!): User!
-    deleteUser(params: DeleteUserParams!): Boolean!
+    deleteUser(params: DeleteUserInput!): Boolean!
 }
 `
