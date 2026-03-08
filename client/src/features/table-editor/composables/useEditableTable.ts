@@ -1,5 +1,7 @@
-import { useRowEditing, useRowSave, useRowValidation } from '@/features/table-editor'
-import type { EditableTableOptions } from '@/features/table-editor/types/editableTable.types.ts'
+import type { EditableTableOptions } from '../types/editableTable.types'
+import { useRowEditing } from './useRowEditing'
+import { useRowValidation } from './useRowValidation'
+import { useRowSave } from './useRowSave'
 
 export function useEditableTable<T extends { id: string }>(
   options: EditableTableOptions<T>
