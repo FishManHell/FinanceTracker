@@ -1,9 +1,11 @@
 import type { OnSavePayload, Validators } from '@/features/table-editor'
-import type { UserWithId } from '@/entities/administration'
+import type { UserDTO, UsersDTO } from '@/entities/administration'
 
 export interface AdministrationTableProps {
-  data: UserWithId[]
-  validators: Validators<UserWithId>
-  onSave: (payload: OnSavePayload<UserWithId>) => void
+  data: UsersDTO
+  validators: Validators<UserDTO>
+  onSave: (payload: OnSavePayload<UserDTO>) => void
+  onDelete: (id: string) => void
   loading?: boolean
+  isSkeleton?: boolean
 }

@@ -1,31 +1,31 @@
 import { useToast } from 'primevue'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
-import { editUser } from '../api/editUser.ts'
-import { updateUserCache } from '../utils/updateUserCache.ts'
+import { editUser as mutationFn } from '../api/editUser.ts'
+import { optimisticEditUser } from '../mutations/editUser/optimisticEditUser.ts'
+import type { UsersDTO } from '../types/administration.dto'
+import type { EditUserInput, EditUserResponse } from '../types/administration.mutation'
+import { useMutationFeedback } from '@/shared/lib/hooks'
 
 export function useEditUser() {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: editUser,
-    onSuccess: (result) => {
-      if (result) {
-        const updatedUser = result.updatedUser;
-        toast.add({ severity: 'success', summary: `${updatedUser.username} was just updated`, life: 3000 })
-        updateUserCache(queryClient, updatedUser);
-      } else {
-        toast.add({ severity: 'warn', summary: 'No user edit returned', life: 3000 })
-      }
+  const {handleError, handleSuccess: onSuccess} = useMutationFeedback({
+    queryClient,
+    queryKey: ['users'],
+    successSummary: 'user was just updated',
+    errorSummary: 'Failed to update user',
+    toast
+  })
+
+  return useMutation<EditUserResponse, Error, EditUserInput, { previousUsers?: UsersDTO }>({
+    mutationFn,
+    onSuccess,
+    onMutate: (variables) => {
+      return optimisticEditUser({ queryClient, variables })
     },
-    onError: (err, variables) => {
-      updateUserCache(queryClient, null, variables.original)
-      toast.add({
-        severity: 'error',
-        summary: 'Failed to edit user',
-        detail: err.message,
-        life: 3000,
-      })
+    onError: (err, _, context) => {
+      return handleError(err, context?.previousUsers)
     },
   })
 }

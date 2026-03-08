@@ -1,10 +1,10 @@
 import { apolloClient } from '@/shared/api/apollo'
 import { GET_USERS } from '../graphql/GetUsers.graphql'
-import type { UsersWithId } from '../types/administration.types'
 import { stripTypename } from '@/shared/lib/graphql'
+import type { UsersDTO } from '../types/administration.dto'
 
 interface GetUsersResponse {
-  users: UsersWithId
+  users: UsersDTO
 }
 
 export const getUsers = async () => {

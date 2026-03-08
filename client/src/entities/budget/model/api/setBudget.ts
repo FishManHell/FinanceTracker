@@ -1,17 +1,17 @@
 import { apolloClient } from '@/shared/api/apollo'
 import { SET_BUDGET } from '../graphql/SetBudget.graphql.ts'
-import type { BaseBudget, BudgetWithId } from '../type/budget.type.ts'
 import { stripTypename } from '@/shared/lib/graphql'
+import type { BudgetDTO, CreateBudgetDTO } from '../types/budget.dto.ts'
 
-interface SetBudgetResponse {
-  newBudget: BudgetWithId
+export interface SetBudgetResponse {
+  newBudget: BudgetDTO
 }
 
 interface SetBudgetParams {
-  params: BaseBudget
+  params: CreateBudgetDTO
 }
 
-export const setBudget = async (params: BaseBudget) => {
+export const setBudget = async (params: CreateBudgetDTO): Promise<BudgetDTO> => {
   try {
     const { data } = await apolloClient.mutate<SetBudgetResponse, SetBudgetParams>({
       mutation: SET_BUDGET,

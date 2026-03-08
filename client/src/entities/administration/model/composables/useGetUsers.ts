@@ -1,9 +1,9 @@
 import { useGraphqlQuery } from '@/shared/lib/hooks'
 import { getUsers } from '../api/getUsers.ts'
-import type { UsersWithId } from '../types/administration.types'
+import type { UsersDTO } from '../types/administration.dto'
 
 export function useGetUsers() {
-  return useGraphqlQuery<UsersWithId>({
+  return useGraphqlQuery<UsersDTO>({
     queryKey: ['users'],
     queryFn: async () => getUsers(),
   })

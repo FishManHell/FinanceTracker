@@ -1,28 +1,20 @@
-import type { BaseBudget, BudgetWithId } from '../type/budget.type.ts'
 import { apolloClient } from '@/shared/api/apollo'
 import { EDIT_BUDGET } from '../graphql/EditBudget.graphql.ts'
+import type {
+  EditBudgetInputDTO,
+  EditBudgetParamsDTO,
+  EditBudgetResponse,
+} from '../types/budget.mutation.ts'
 
-
-interface EditBudgetResponse {
-  editBudget: BudgetWithId
-}
-
-interface EditBudgetInput {
-  id: string
-  update: BaseBudget
-}
-
-interface EditBudgetParams {
-  params: EditBudgetInput
-}
-
-
-export const editBudget = async (params: EditBudgetInput) => {
+export const editBudget = async (params: EditBudgetInputDTO) => {
   try {
-    const { data } = await apolloClient.mutate<EditBudgetResponse, EditBudgetParams>({
+    const { data } = await apolloClient.mutate<EditBudgetResponse, EditBudgetParamsDTO>({
       mutation: EDIT_BUDGET,
-      variables: {params}
+      variables: { params },
     })
+    if (!data) {
+      throw new Error('No data returned from editBudget')
+    }
 
     return data
   } catch (error) {

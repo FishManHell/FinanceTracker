@@ -1,6 +1,7 @@
 import { useGetUsers } from "./model/composables/useGetUsers.ts";
 import { useEditUser } from './model/composables/useEditUser.ts'
+import { useDeleteUser } from './model/composables/useDeleteUser.ts'
+import type { UserDTO, UsersDTO } from "./model/types/administration.dto.ts"
 
-import type {UserWithId, UsersWithId} from "./model/types/administration.types"
-
-export { useGetUsers, useEditUser, type UserWithId, type UsersWithId }
+export { useGetUsers, useEditUser, useDeleteUser }
+export type { UserDTO, UsersDTO }

@@ -1,10 +1,10 @@
 import { apolloClient } from '@/shared/api/apollo'
 import { GET_BUDGETS } from '../graphql/GetBudgets.graphql.ts'
-import type { Budgets } from '../type/budget.type.ts'
 import { stripTypename } from '@/shared/lib/graphql'
+import type { BudgetsDTO } from '../types/budget.dto.ts'
 
 interface GetBudgetsResponse {
-  budgets: Budgets
+  budgets: BudgetsDTO
 }
 
 export const getBudgets = async () => {

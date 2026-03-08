@@ -1,10 +1,10 @@
 import { apolloClient } from '@/shared/api/apollo'
 import { GET_BUDGET } from '../graphql/GetBudget.graphql.ts'
-import type { BudgetDetails } from '../type/budget.type.ts'
 import { stripTypename } from '@/shared/lib/graphql'
+import type { BudgetDetailsDTO } from '../types/budget.dto.ts'
 
 interface GetBudgetResponse {
-  budget: BudgetDetails
+  budget: BudgetDetailsDTO
 }
 
 interface GetBudgetVariables {

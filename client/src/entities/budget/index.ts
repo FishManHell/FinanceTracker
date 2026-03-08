@@ -4,7 +4,7 @@ import { useSetBudget } from './model/composables/useSetBudget.ts'
 import { useDeleteBudget } from "./model/composables/useDeleteBudget.ts"
 import { useEditBudget } from "./model/composables/useEditBudget.ts"
 import { useGetBudgetsYearlyByMonth } from "./model/composables/useGetBudgetsYearlyByMonth.ts"
-import type { BudgetWithId, BudgetWithDate, BudgetsWithDate } from './model/type/budget.type.ts'
+import type { BudgetUI, BudgetsUI } from "./model/types/budget.ui.ts"
 
 export {
   useGetBudget,
@@ -15,4 +15,4 @@ export {
   useGetBudgetsYearlyByMonth
 }
 
-export type { BudgetWithId, BudgetWithDate, BudgetsWithDate }
+export type { BudgetUI, BudgetsUI }
