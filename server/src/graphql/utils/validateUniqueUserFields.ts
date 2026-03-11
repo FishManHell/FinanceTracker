@@ -1,6 +1,6 @@
-import { throwError, GraphQLErrorCode, HttpStatus } from "../../utils/errors.js";
 import { UserDocument } from "../../models/User/user.types.js";
 import { Collection } from "mongodb";
+import { badRequest } from '../../utils/errors/httpErrors.js'
 
 export async function validateUniqueUserFields(
   users: Collection<UserDocument>,
@@ -15,13 +15,7 @@ export async function validateUniqueUserFields(
       _id: { $ne: objectId }
     });
 
-    if (emailExists) {
-      throwError({
-        message: "EMAIL_ALREADY_EXISTS",
-        status: HttpStatus.BAD_REQUEST,
-        code: GraphQLErrorCode.BAD_REQUEST
-      });
-    }
+    if (emailExists) badRequest("EMAIL_ALREADY_EXISTS")
   }
 
   if (update.username && update.username !== existingUser.username) {
@@ -30,12 +24,6 @@ export async function validateUniqueUserFields(
       _id: { $ne: objectId }
     });
 
-    if (usernameExists) {
-      throwError({
-        message: "USERNAME_ALREADY_EXISTS",
-        status: HttpStatus.BAD_REQUEST,
-        code: GraphQLErrorCode.BAD_REQUEST
-      });
-    }
+    if (usernameExists) badRequest("USERNAME_ALREADY_EXISTS")
   }
 }

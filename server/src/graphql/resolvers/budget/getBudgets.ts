@@ -1,25 +1,20 @@
-import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { Budget } from '../../../models/Budget/budget.db.js'
 import { ObjectId } from 'mongodb'
 import { Resolver } from '../../types/resolver.js'
 import { GetBudgetsResponse } from '../../../models/Budget/budget.output.js'
+import { requireUser } from '../../../utils/auth.js'
+import { internalServerError } from '../../../utils/errors/httpErrors.js'
 
-export const getBudgets: Resolver<{}, GetBudgetsResponse[]> = async (
+export const getBudgets: Resolver<{}, GetBudgetsResponse> = async (
   _,
   __,
   context
 ) => {
-  if (!context.user?.id) {
-    throwError({
-      message: "Unauthorized",
-      status: HttpStatus.UNAUTHORIZED,
-      code: GraphQLErrorCode.UNAUTHORIZED
-    });
-  }
+  const currentUser = requireUser(context.user)
 
   try {
     const budgets = context.db.collection<Budget>("budgets");
-    const userId = new ObjectId(context.user?.id);
+    const userId = new ObjectId(currentUser.id);
     const userBudgets = await budgets
       .find({ userId })
       .sort({ year: -1, month: -1 })
@@ -29,10 +24,6 @@ export const getBudgets: Resolver<{}, GetBudgetsResponse[]> = async (
     });
   } catch (error) {
     console.error("Error get budgets:", error);
-    throwError({
-      message: "INTERNAL_SERVER_ERROR",
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      code: GraphQLErrorCode.INTERNAL_SERVER_ERROR
-    })
+    internalServerError()
   }
 }

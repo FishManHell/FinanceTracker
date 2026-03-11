@@ -1,20 +1,12 @@
 import { generateToken, setAuthCookie, verifyPassword } from '../../../utils/auth.js'
-import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js';
 import { getUser } from '../../../services/user/user.js';
 import { UserDTO } from '../../../models/User/user.types.js'
 import { Resolver } from '../../types/resolver.js'
+import { notFound } from '../../../utils/errors/httpErrors.js'
 
 interface LoginArgs {
   username: string;
   password: string;
-}
-
-const throwLoginError = (message: string) => {
-  return throwError({
-    message,
-    status: HttpStatus.NOT_FOUND,
-    code: GraphQLErrorCode.NOT_FOUND
-  })
 }
 
 export const login: Resolver<LoginArgs, UserDTO> = async (
@@ -24,19 +16,21 @@ export const login: Resolver<LoginArgs, UserDTO> = async (
 ) => {
   const user = await getUser(context, { username });
 
-  if (!user) return throwLoginError("User not found")
+  if (!user) notFound("User not found")
 
   const valid = await verifyPassword(password, user.password);
-  if (!valid) return throwLoginError("Invalid password");
+  if (!valid) notFound("Invalid password");
+
+  const id = user._id.toString()
 
   const token = generateToken({
-    id: user._id.toString(),
-    username: user.username
+    id, username: user.username, role: user.role,
   });
 
   setAuthCookie(context, token);
 
   const result: UserDTO = {
+    id,
     username,
     email: user.email,
     role: user.role,

@@ -1,26 +1,22 @@
-import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { Budget } from '../../../models/Budget/budget.db.js'
 import { ObjectId, OptionalId } from 'mongodb'
 import { SetBudgetParams } from '../../../models/Budget/budget.input.js'
 import { Resolver } from '../../types/resolver.js'
 import { SetBudgetResponse } from '../../../models/Budget/budget.output.js'
 import { GraphQLError } from 'graphql/index.js'
+import { requireUser } from '../../../utils/auth.js'
+import { conflict, internalServerError } from '../../../utils/errors/httpErrors.js'
 
 export const setBudget: Resolver<SetBudgetParams, SetBudgetResponse> = async (
   _,
   { params: budget },
   context
 ) => {
-  if (!context.user?.id) {
-    throwError({
-      message: "Unauthorized",
-      status: HttpStatus.UNAUTHORIZED,
-      code: GraphQLErrorCode.UNAUTHORIZED
-    });
-  }
+  const currentUser = requireUser(context.user)
+
   try {
     const budgets = context.db.collection<OptionalId<Budget>>("budgets");
-    const userId = new ObjectId(context.user?.id);
+    const userId = new ObjectId(currentUser.id);
     const insertNewBudget = await budgets.insertOne({
       userId,
       ...budget,
@@ -37,20 +33,14 @@ export const setBudget: Resolver<SetBudgetParams, SetBudgetResponse> = async (
   } catch (error) {
     console.error("Error inserting budget", error);
 
-    if (error instanceof Error && 'code' in error && error.code === 11000) {
-      throwError({
-        message: "Budget already exists",
-        status: HttpStatus.CONFLICT,
-        code: GraphQLErrorCode.CONFLICT
-      })
+    if (error instanceof Error
+      && 'code' in error
+      && error.code === 11000
+    ) {
+      conflict("Budget already exists")
     }
 
     if (error instanceof GraphQLError) throw error;
-
-    throwError({
-      message: "INTERNAL_SERVER_ERROR",
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      code: GraphQLErrorCode.INTERNAL_SERVER_ERROR
-    })
+    internalServerError()
   }
 }

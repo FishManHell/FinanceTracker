@@ -6,7 +6,7 @@ export interface BudgetResponse extends BaseBudgetFields {
 
 export type EditBudgetResponse = BudgetResponse
 export type SetBudgetResponse = BudgetResponse
-export type GetBudgetsResponse = BudgetResponse
+export type GetBudgetsResponse = BudgetResponse[]
 
 export interface GetBudgetResponse extends BaseBudgetFields {
   total: number;

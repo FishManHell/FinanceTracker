@@ -1,23 +1,18 @@
 import { Resolver } from '../../types/resolver.js'
-import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { UserDocument } from "../../../models/User/user.types.js"
 import { GraphQLError } from 'graphql'
 import { ObjectId } from 'mongodb'
 import { Transaction } from '../../../models/Transaction/transaction.db.js'
 import { Budget } from '../../../models/Budget/budget.db.js'
 import { Account } from '../../../models/Account/account.type.js'
+import { canManageUser } from '../../../utils/permissions/userPermissions.js'
+import { requireUser } from '../../../utils/auth.js'
+import { forbidden, internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
 
 export const deleteUser: Resolver<{params: {id: string}}, boolean> = async (
   _, { params: {id} }, context
 ) => {
-  if (!context.user?.id) {
-    throwError({
-      message: "UNAUTHORIZED",
-      status: HttpStatus.UNAUTHORIZED,
-      code: GraphQLErrorCode.UNAUTHORIZED
-    });
-  }
-
+  const currentUser = requireUser(context.user)
   const session = context.db.client.startSession();
 
   try {
@@ -28,33 +23,34 @@ export const deleteUser: Resolver<{params: {id: string}}, boolean> = async (
       const accounts = context.db.collection<Account>('accounts');
 
       const userObjectId = new ObjectId(id);
-      const deletedUser = await users.deleteOne({_id: userObjectId});
+      const targetUser = await users.findOne(
+        { _id: userObjectId },
+        { session }
+      )
 
-      if (deletedUser.deletedCount === 0) {
-        throwError({
-          message: "USER_NOT_FOUND",
-          status: HttpStatus.NOT_FOUND,
-          code: GraphQLErrorCode.NOT_FOUND
-        });
-      }
+      if (!targetUser) notFound("USER_NOT_FOUND");
+      if (!canManageUser(currentUser, targetUser)) forbidden("FORBIDDEN_DELETE")
+
+      const deletedUser = await users.deleteOne(
+        {_id: userObjectId},
+        { session }
+      );
+
+      if (deletedUser.deletedCount === 0) notFound("USER_NOT_FOUND");
 
       await Promise.all([
-        transactions.deleteMany({ userId: userObjectId }),
-        budgets.deleteMany({ userId: userObjectId }),
-        accounts.deleteMany({ userId: userObjectId })
-      ]);
+        transactions.deleteMany({ userId: userObjectId }, { session }),
+        budgets.deleteMany({ userId: userObjectId }, { session }),
+        accounts.deleteMany({ userId: userObjectId }, { session }),
+      ])
     })
 
     return true
 
   } catch (error) {
-    console.error("Error in deleteUser", error);
+    console.error('Error in deleteUser', error)
     if (error instanceof GraphQLError) throw error;
-    throwError({
-      message: "INTERNAL_SERVER_ERROR",
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      code: GraphQLErrorCode.INTERNAL_SERVER_ERROR
-    })
+    internalServerError();
   } finally {
     await session.endSession()
   }

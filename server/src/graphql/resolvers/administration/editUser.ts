@@ -1,52 +1,53 @@
 import { Resolver } from '../../types/resolver.js'
-import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
-import { UserDocument, UserDTO } from '../../../models/User/user.types.js'
-import { UserWithIdDTO } from '../administration/getUsers.js'
+import { Roles, UpdateUserDTO, UserDocument, UserDTO } from '../../../models/User/user.types.js'
 import { ObjectId } from 'mongodb'
 import { GraphQLError } from 'graphql'
 import { validateUniqueUserFields } from '../../utils/validateUniqueUserFields.js'
+import { canManageUser } from '../../../utils/permissions/userPermissions.js'
+import { requireUser } from '../../../utils/auth.js'
+import { forbidden, internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
 
-interface EditUserParams {
-  params: {
-    id: string
-    update: UserDTO
-  }
+interface EditUserInput {
+  id: string;
+  update: UpdateUserDTO
 }
 
-export const editUser: Resolver<EditUserParams, UserWithIdDTO> = async (
-  _, { params }, context
+interface EditUserParams {
+  params: EditUserInput
+}
+
+export const editUser: Resolver<EditUserParams, UserDTO> = async (
+  _, { params: {id, update} }, context
 ) => {
-  if (!context.user?.id) {
-    throwError({
-      message: "UNAUTHORIZED",
-      status: HttpStatus.UNAUTHORIZED,
-      code: GraphQLErrorCode.UNAUTHORIZED
-    });
-  }
-  const { id, update } = params
+  const currentUser = requireUser(context.user)
   try {
     const users = context.db.collection<UserDocument>("users");
     const existingUser = await users.findOne({ _id: new ObjectId(id) });
 
-    if (!existingUser) {
-      throwError({
-        message: "USER_NOT_FOUND",
-        status: HttpStatus.NOT_FOUND,
-        code: GraphQLErrorCode.NOT_FOUND
-      });
+    if (!existingUser) notFound("USER_NOT_FOUND")
+
+    if (!canManageUser(currentUser, existingUser)) forbidden()
+
+    if (currentUser.role === Roles.ADMIN
+      && update.role
+      && update.role !== Roles.USER
+    ) {
+      forbidden("FORBIDDEN_ROLE_CHANGE")
     }
 
     await validateUniqueUserFields(users, existingUser, update);
     await users.updateOne({ _id: new ObjectId(id) }, { $set: update});
-    return { id, ...update };
+    return {
+      id,
+      username: update.username ?? existingUser.username,
+      email: update.email ?? existingUser.email,
+      role: update.role ?? existingUser.role,
+      avatar: update.avatar ?? existingUser.avatar,
+    };
 
   } catch (error) {
     console.error("Error in getUsers", error);
     if (error instanceof GraphQLError) throw error;
-    throwError({
-      message: "INTERNAL_SERVER_ERROR",
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      code: GraphQLErrorCode.INTERNAL_SERVER_ERROR
-    })
+    internalServerError()
   }
 }

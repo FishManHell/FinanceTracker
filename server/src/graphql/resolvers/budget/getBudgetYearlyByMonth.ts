@@ -1,9 +1,9 @@
 import { Resolver } from '../../types/resolver.js'
-import { GraphQLErrorCode, HttpStatus, throwError } from '../../../utils/errors.js'
 import { Budget } from '../../../models/Budget/budget.db.js'
 import { Transaction } from '../../../models/Transaction/transaction.db.js'
 import { ObjectId } from 'mongodb'
-
+import { requireUser } from '../../../utils/auth.js'
+import { internalServerError } from '../../../utils/errors/httpErrors.js'
 
 interface GetBudgetYearlyByMonthResponse {
   month: number;
@@ -18,15 +18,10 @@ export const getBudgetYearlyByMonth: Resolver<{ year: number }, GetBudgetYearlyB
   { year },
   context
 ) => {
-  if (!context.user?.id) {
-    throwError({
-      message: "Unauthorized",
-      status: HttpStatus.UNAUTHORIZED,
-      code: GraphQLErrorCode.UNAUTHORIZED
-    });
-  }
+  const currentUser = requireUser(context.user)
+
   try {
-    const userId = new ObjectId(context.user?.id);
+    const userId = new ObjectId(currentUser.id);
     const budgets = context.db.collection<Budget>("budgets");
     const transactions = context.db.collection<Transaction>("transactions");
     const budgetsByMonth = await budgets.find({ userId, year }).toArray();
@@ -67,10 +62,6 @@ export const getBudgetYearlyByMonth: Resolver<{ year: number }, GetBudgetYearlyB
 
   } catch (error) {
     console.error("Error budget year by month:", error);
-    throwError({
-      message: "INTERNAL_SERVER_ERROR",
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      code: GraphQLErrorCode.INTERNAL_SERVER_ERROR
-    })
+    internalServerError()
   }
 }

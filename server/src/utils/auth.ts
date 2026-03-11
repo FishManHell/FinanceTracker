@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { GraphQLContext } from '../graphql/types/context.js'
+import { ContextUser, GraphQLContext } from '../graphql/types/context.js'
+import { unauthorized } from './errors/httpErrors.js'
 
 const TOKEN_LIVE_CYCLE = parseInt(process.env.TOKEN_LIVE_CYCLE ?? "600000", 10);
 
@@ -27,4 +28,10 @@ export const setAuthCookie = (context: GraphQLContext, token: string) => {
     sameSite: "none",
     maxAge: TOKEN_LIVE_CYCLE
   });
+}
+
+export function requireUser(user: ContextUser | null): ContextUser {
+  if (!user) unauthorized();
+
+  return user
 }
