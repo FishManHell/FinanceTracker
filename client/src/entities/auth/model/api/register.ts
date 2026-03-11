@@ -1,21 +1,25 @@
 import { apolloClient } from '@/shared/api/apollo'
 import { REGISTER_MUTATION } from '../graphql/Register.ts'
 import type { IAuthPayload } from '../types/authPayload.ts'
-import type { User } from '@/shared/types'
+import type { UserDTO } from '@/shared/types'
 import { stripTypename } from '@/shared/lib/graphql'
 
 interface RegisterMutationResponse {
   register: IAuthPayload
 }
 
-export const register = async (newUser: {username: string, email: string, password: string}): Promise<User> => {
+export const register = async (newUser: {
+  username: string
+  email: string
+  password: string
+}): Promise<UserDTO> => {
   const { data } = await apolloClient.mutate<RegisterMutationResponse>({
     mutation: REGISTER_MUTATION,
     variables: newUser,
-  });
+  })
 
-  const reg = data?.register;
-  if (!reg) throw new Error('There is no data');
+  const reg = data?.register
+  if (!reg) throw new Error('There is no data')
 
-  return stripTypename(reg);
-};
+  return stripTypename(reg)
+}

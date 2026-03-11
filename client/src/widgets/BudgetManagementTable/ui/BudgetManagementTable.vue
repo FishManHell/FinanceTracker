@@ -18,8 +18,13 @@ const { mutate: onMutateEditBudget } = useEditBudget()
 const { mutate: onMutateDeleteBudget } = useDeleteBudget()
 const { confirmDelete, confirmSave } = useConfirmActions()
 
-const { editingRows, saveRow, isRowEditing, cancelEdit, startEdit } =
-  useEditableTable<BudgetUI>({ data, validators: {}, onSave})
+const {
+  editingRows,
+  saveRow,
+  isRowEditing,
+  cancelEdit,
+  startEdit
+} = useEditableTable<BudgetUI>({ data, validators: {}, onSave})
 
 const currencies = ['USD', 'EUR', 'ILS']
 

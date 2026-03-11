@@ -1,5 +1,4 @@
-import type { User } from '@/shared/types'
-import type { UserDTO } from './administration.dto.ts'
+import type { User, UserDTO } from '@/shared/types'
 
 export interface EditUserResponse {
   updatedUser: UserDTO

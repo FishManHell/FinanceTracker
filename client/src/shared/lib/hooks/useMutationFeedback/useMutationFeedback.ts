@@ -3,8 +3,8 @@ import type { QueryClient, QueryKey } from '@tanstack/vue-query'
 import { rollbackQueryData, showErrorToast, showSuccessToast } from '@/shared/lib/helpers'
 
 interface MutationFeedbackOptions<T> {
-  queryClient: QueryClient
-  queryKey: QueryKey
+  queryClient?: QueryClient
+  queryKey?: QueryKey
   toast: ToastServiceMethods
   successSummary: string
   errorSummary: string
@@ -25,7 +25,9 @@ export function useMutationFeedback<T>({
   }
 
   const handleError = (error: Error, previousData?: T) => {
-    rollbackQueryData<T>(queryClient, queryKey, previousData)
+    if (queryClient && queryKey && previousData) {
+      rollbackQueryData<T>(queryClient, queryKey, previousData)
+    }
     showErrorToast({ toast, summary: errorSummary, error })
   }
 

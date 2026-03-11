@@ -1,41 +1,17 @@
 <script setup lang="ts">
-import { type Ref } from 'vue'
-import {
-  useDeleteUser,
-  useEditUser,
-  useGetUsers,
-  type UserDTO,
-  type UsersDTO,
-} from '@/entities/administration'
-import { AdministrationTable } from '@/features/AdministrationTable'
-import type { OnSavePayload, Validators } from '@/features/table-editor'
+import { useDeleteUser, useEditUser, useGetUsers} from '@/entities/administration'
+import { AdministrationTable, createUserValidators } from '@/features/AdministrationTable'
+import type { OnSavePayload } from '@/features/table-editor'
+import type { UserDTO } from '@/shared/types'
 
 const { mutate: onMutateEditUser, isPending: isEditPending } = useEditUser()
 const { mutate: onMutateDeleteUser, isPending: isDeletePending } = useDeleteUser()
 const { data, isFetching } = useGetUsers()
 
-const onSave = ({ id, update }: OnSavePayload<UserDTO>) => onMutateEditUser({ id, update });
-const onDelete = (id: string) => onMutateDeleteUser({ id });
+const onSave = ({ id, update }: OnSavePayload<UserDTO>) => onMutateEditUser({ id, update })
+const onDelete = (id: string) => onMutateDeleteUser({ id })
 
-const validators = createValidators(data)
-
-function createValidators(data: Ref<UsersDTO | undefined>): Validators<UserDTO> {
-  return {
-    username: (row, value) => {
-      const trimmed = value?.trim()
-
-      if (!trimmed) return 'Username is required'
-
-      const isDuplicate = data.value?.some(({ id, username }) => {
-        return id !== row.id && username?.toLowerCase() === trimmed.toLowerCase()
-      })
-
-      if (isDuplicate) return 'Username already exists'
-
-      return null
-    },
-  }
-}
+const validators = createUserValidators(data)
 </script>
 
 <template>

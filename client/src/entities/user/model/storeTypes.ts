@@ -1,5 +1,5 @@
-import type { User } from '@/shared/types'
+import type { UserDTO } from '@/shared/types'
 
 export interface UserState {
-  user: User | null;
+  user: UserDTO | null
 }

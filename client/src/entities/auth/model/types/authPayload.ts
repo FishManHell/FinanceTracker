@@ -1,3 +1,3 @@
-import type { User } from '@/shared/types'
+import type { UserDTO } from '@/shared/types'
 
-export type IAuthPayload = User;
+export type IAuthPayload = UserDTO

@@ -1,10 +1,15 @@
-<script setup lang="ts" generic="T">
+<script setup lang="ts">
 import { TableCell } from '@/shared/ui/TableCell'
 
-defineProps<{
-  value: T
-  loading: boolean
-}>()
+withDefaults(
+  defineProps<{
+    value: unknown
+    loading?: boolean
+  }>(),
+  {
+    loading: false,
+  },
+)
 </script>
 
 <template>

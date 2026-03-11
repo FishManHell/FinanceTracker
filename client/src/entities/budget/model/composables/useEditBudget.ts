@@ -6,7 +6,8 @@ import type { EditBudgetInputUI, EditBudgetResponse, } from '../types/budget.mut
 import type { BudgetsUI } from "../types/budget.ui.ts"
 import { toEditBudgetDTO } from '../helpers/toEditBudgetDTO.ts'
 import { useMutationFeedback } from '@/shared/lib/hooks'
-import { invalidateBudgetQueries } from '../composables/invalidateBudgetQueries.ts'
+import { invalidateQueries } from '@/shared/lib/vue-query'
+import { budgetQueryKeys } from '../api/budgetQueryKeys.ts'
 
 export function useEditBudget() {
   const toast = useToast();
@@ -18,7 +19,11 @@ export function useEditBudget() {
     queryClient,
     successSummary: 'budget was just updated',
     errorSummary: 'Failed to update budget',
-    afterSuccess: () => invalidateBudgetQueries(queryClient),
+    afterSuccess: async () =>
+      await invalidateQueries(queryClient, [
+        budgetQueryKeys.budget,
+        budgetQueryKeys.budgetsYearlyByMonth,
+      ]),
   })
 
   return useMutation<

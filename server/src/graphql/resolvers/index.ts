@@ -3,6 +3,7 @@ import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 import {login} from "./login/login.js"
 import {register} from "./register/register.js"
 import {refresh} from "./refresh/refresh.js"
+import { logout } from './logout/logout.js'
 import { uploadAvatar } from './uploadAvatar/uploadAvatar.js'
 import { getAccounts } from './accounts/getAccounts.js'
 import { setTransaction } from './transactions/setTransaction.js'
@@ -41,5 +42,6 @@ export const resolvers = {
     editBudget,
     updatedUser: editUser,
     deleteUser,
+    logout
   },
 }

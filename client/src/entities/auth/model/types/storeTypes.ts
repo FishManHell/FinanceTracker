@@ -1,7 +1,7 @@
-import type {User} from "@/shared/types"
+import type { UserDTO } from '@/shared/types'
 
 export interface RefreshResponse {
-  refresh: User;
+  refresh: UserDTO
 }
 
 export interface SessionState {

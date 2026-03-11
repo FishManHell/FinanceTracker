@@ -1,7 +1,7 @@
 import { apolloClient } from '@/shared/api/apollo'
 import { GET_USERS } from '../graphql/GetUsers.graphql'
 import { stripTypename } from '@/shared/lib/graphql'
-import type { UsersDTO } from '../types/administration.dto'
+import type { UsersDTO } from '@/shared/types'
 
 interface GetUsersResponse {
   users: UsersDTO

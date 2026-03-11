@@ -1,12 +1,11 @@
 import { gql } from '@apollo/client'
+import { AUTH_PAYLOAD_FRAGMENT } from '../graphql/Fragments.ts'
 
 export const REFRESH_QUERY = gql`
   query Refresh {
     refresh {
-      username
-      email
-      role,
-      avatar
+      ...AuthPayloadFields
     }
   }
-`;
+  ${AUTH_PAYLOAD_FRAGMENT}
+`

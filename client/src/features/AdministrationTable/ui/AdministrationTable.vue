@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Column, DataTable, useToast } from 'primevue'
-import { EditTextCell } from '@/shared/ui/EditTextCell'
 import { DisplayCell } from '@/shared/ui/DisplayCell'
-import { EditSelectCell } from '@/shared/ui/EditSelectCell'
 import { TableEditorActions } from '@/shared/ui/TableEditorActions'
 import { createSkeletonBudgets } from '@/helpers/skeleton.ts'
 import { useConfirmActions } from '@/shared/lib/hooks'
 import type { AdministrationTableProps } from '../model/types.ts'
 import { useEditableTable } from '@/features/table-editor'
-import type { UserDTO } from '@/entities/administration'
+import type { UserDTO } from '@/shared/types'
+import { useUserPermissions } from '@/entities/user'
+import { createColumns } from '../lib/columns.ts'
+import { type ColumnConfig, getEditor, getPermissionRow } from '@/shared/lib/table'
 
-const props = defineProps<AdministrationTableProps>();
+const props = defineProps<AdministrationTableProps>()
 
 const {
   editingRows,
@@ -22,16 +23,17 @@ const {
   isRowEditing,
   saveRow,
   getFirstError,
+  originalRow,
 } = useEditableTable<UserDTO>({
   data: computed(() => props.data),
   validators: props.validators,
   onSave: props.onSave,
 })
 const { confirmSave, confirmDelete } = useConfirmActions()
+const { canDeleteUser, canEditUser, canEditUserRole } = useUserPermissions()
+const columns = createColumns(canEditUserRole)
 
 const toast = useToast()
-
-const roles = ['admin', 'user', 'developer']
 
 const onSaveHandler = (row: UserDTO) => {
   confirmSave(async () => {
@@ -48,7 +50,7 @@ const onSaveHandler = (row: UserDTO) => {
   })
 }
 
-const onDeleteHandler = (id: string) => confirmDelete(async () => props.onDelete(id));
+const onDeleteHandler = (id: string) => confirmDelete(async () => props.onDelete(id))
 
 const users = computed(() => {
   if (props.isSkeleton && (!props.data || props.data.length === 0)) {
@@ -57,9 +59,11 @@ const users = computed(() => {
   return props.data
 })
 
-const cellLoading = computed(() => {
-  return props.isSkeleton && (!props.data || props.data.length === 0)
-})
+const cellLoading = computed(() => props.isSkeleton && (!props.data || props.data.length === 0))
+
+const resolverPermissionRow = (row: UserDTO) => getPermissionRow(row, originalRow.value)
+
+const resolveEditor = (col: ColumnConfig<UserDTO>, row: UserDTO) => getEditor(col, row)
 </script>
 
 <template>
@@ -76,36 +80,20 @@ const cellLoading = computed(() => {
       <h1>No users found</h1>
     </template>
 
-    <Column field="id" header="ID">
+    <Column v-for="col in columns" :key="col.field" :field="col.field" :header="col.header">
       <template #body="{ data }">
-        <DisplayCell :loading="cellLoading" :value="data.id" />
+        <DisplayCell :value="data[col.field]" :loading="cellLoading" />
       </template>
-    </Column>
-    <Column field="username" header="Username">
-      <template #body="{ data }">
-        <DisplayCell :loading="cellLoading" :value="data.username" />
-      </template>
-
-      <template #editor="{ data, field }">
-        <EditTextCell
-          v-model="data[field as keyof UserDTO]"
-          :error="validationErrors[data.id]?.[field as keyof UserDTO] ?? ''"
-          @update:modelValue="(val) => validateField(data, field as keyof UserDTO, val)"
+      <template #editor="{ data }">
+        <component
+          v-if="resolveEditor(col, data)"
+          :is="resolveEditor(col, data)"
+          v-model="data[col.field]"
+          :options="col.options"
+          :error="validationErrors[data.id]?.[col.field]"
+          @update:modelValue="validateField(data, col.field, $event)"
         />
-      </template>
-    </Column>
-    <Column field="email" header="Email">
-      <template #body="{ data }">
-        <DisplayCell :loading="cellLoading" :value="data.email" />
-      </template>
-    </Column>
-    <Column field="role" header="Role">
-      <template #body="{ data }">
-        <DisplayCell :loading="cellLoading" :value="data.role" />
-      </template>
-
-      <template #editor="{ data, field }">
-        <EditSelectCell v-model="data[field]" :options="roles" />
+        <DisplayCell v-else :value="data[col.field]" />
       </template>
     </Column>
     <Column header="Actions">
@@ -114,6 +102,8 @@ const cellLoading = computed(() => {
           :row="data"
           :is-editing="isRowEditing(data.id)"
           :loading="cellLoading"
+          :can-delete="canDeleteUser(resolverPermissionRow(data))"
+          :can-edit="canEditUser(resolverPermissionRow(data))"
           @edit="startEdit"
           @cancel="cancelEdit"
           @save="onSaveHandler"

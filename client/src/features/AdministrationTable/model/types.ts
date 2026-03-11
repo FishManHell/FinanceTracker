@@ -1,5 +1,5 @@
 import type { OnSavePayload, Validators } from '@/features/table-editor'
-import type { UserDTO, UsersDTO } from '@/entities/administration'
+import type { UserDTO, UsersDTO } from '@/shared/types'
 
 export interface AdministrationTableProps {
   data: UsersDTO

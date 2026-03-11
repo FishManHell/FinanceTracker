@@ -1,7 +1,7 @@
 import type { QueryClient } from '@tanstack/vue-query'
 import type { EditUserInput } from '../../types/administration.mutation.ts'
 import { usePatchRowCache } from '@/shared/lib/hooks'
-import type { UserDTO, UsersDTO } from '../../types/administration.dto.ts'
+import type { UserDTO, UsersDTO } from '@/shared/types'
 
 interface OptimisticEditUserOptions {
   queryClient: QueryClient

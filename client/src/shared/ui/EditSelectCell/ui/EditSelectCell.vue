@@ -15,6 +15,7 @@ const emit = defineEmits<{
 
 <template>
   <Select
+    v-bind="$attrs"
     :model-value="modelValue"
     :options="options"
     :option-label="optionLabel"
