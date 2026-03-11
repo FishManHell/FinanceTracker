@@ -1,6 +1,6 @@
 import type { QueryClient } from '@tanstack/vue-query'
 import type { DeleteUserInput } from '../../types/administration.mutation'
-import type { UsersDTO } from '../../types/administration.dto'
+import type { UsersDTO } from '@/shared/types'
 
 interface OptimisticDeleteUserOptions {
   queryClient: QueryClient

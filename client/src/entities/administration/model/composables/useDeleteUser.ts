@@ -1,10 +1,10 @@
 import { useToast } from 'primevue'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import type { DeleteUserInput } from '../types/administration.mutation'
-import type { UsersDTO } from '../types/administration.dto'
 import { deleteUser as mutationFn } from '../api/deleteUser.ts'
 import { useMutationFeedback } from '@/shared/lib/hooks'
 import { optimisticDeleteUser } from '../mutations/deleteUser/optimisticDeleteUser.ts'
+import type { UsersDTO } from '@/shared/types'
 
 export function useDeleteUser() {
   const toast = useToast();

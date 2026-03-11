@@ -2,9 +2,9 @@ import { useToast } from 'primevue'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { editUser as mutationFn } from '../api/editUser.ts'
 import { optimisticEditUser } from '../mutations/editUser/optimisticEditUser.ts'
-import type { UsersDTO } from '../types/administration.dto'
 import type { EditUserInput, EditUserResponse } from '../types/administration.mutation'
 import { useMutationFeedback } from '@/shared/lib/hooks'
+import type { UsersDTO } from '@/shared/types'
 
 export function useEditUser() {
   const toast = useToast();
