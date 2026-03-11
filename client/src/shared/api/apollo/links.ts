@@ -1,7 +1,7 @@
 import { RemoveTypenameFromVariablesLink } from '@apollo/client/link/remove-typename'
 import UploadHttpLink from "apollo-upload-client/UploadHttpLink.mjs";
 import { ErrorLink } from '@apollo/client/link/error'
-import { onLogout } from '@/entities/auth/model/onLogout'
+import { logoutOnUnauthorized } from '@/entities/auth/model/authLogout.ts'
 
 const uri = import.meta.env.VITE_API_URL;
 
@@ -18,7 +18,7 @@ export const errorLink = new ErrorLink(({ result }) => {
     for (const err of result.errors) {
       if (err.extensions?.code === "UNAUTHORIZED") {
         console.log(err.extensions?.code, 'err.extensions?.code');
-        onLogout()
+        logoutOnUnauthorized()
         break;
       }
     }

@@ -8,7 +8,7 @@ import { navbarItems } from '../model/navbarItems.ts'
 import { AppRouters, RoutePaths } from '@/shared/config/router'
 import { ThemeSwitcher } from '@/widgets/ThemeSwitcher'
 import { UserAvatar } from '@/shared/ui/UserAvatar'
-import { onLogout } from '@/entities/auth/model/onLogout'
+import { onLogout } from '@/entities/auth/model/authLogout.ts'
 
 const user_store = userStore()
 
