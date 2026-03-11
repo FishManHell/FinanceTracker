@@ -5,4 +5,5 @@ export interface ColumnConfig<T> {
   header: string
   editor?: Component | ((row: T) => Component | null)
   options?: string[]
+  formatter?: (value: T[keyof T], row: T) => unknown
 }
