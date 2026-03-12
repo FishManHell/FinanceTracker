@@ -18,13 +18,14 @@ export function useSetBudget() {
     errorSummary: 'Failed to add a new budget',
     afterSuccess: async () =>
       await invalidateQueries(queryClient, [
+        budgetQueryKeys.budgets,
         budgetQueryKeys.budget,
         budgetQueryKeys.budgetsYearlyByMonth,
-        budgetQueryKeys.budgets,
-      ])
+      ]),
   })
 
   return useMutation<BudgetDTO, Error, CreateBudgetInputUI>({
+    mutationKey: ["setBudget"],
     mutationFn: (variables) => {
       return setBudget(toCreateBudgetDTO(variables))
     },

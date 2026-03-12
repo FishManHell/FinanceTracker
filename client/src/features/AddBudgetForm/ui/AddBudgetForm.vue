@@ -19,9 +19,7 @@ const currencies = ['USD', 'EUR', 'ILS']
 
 const { mutate: onMutateSetBudget } = useSetBudget()
 
-function onAddNewBudget(e: FormSubmitEvent) {
-  return onMutateSetBudget(e.values as BudgetManagementForm)
-}
+const onAddNewBudget = (e: FormSubmitEvent) => onMutateSetBudget(e.values as BudgetManagementForm)
 </script>
 
 <template>

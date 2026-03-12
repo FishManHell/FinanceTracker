@@ -3,18 +3,18 @@ import cls from './BudgetManagementTable.module.scss'
 import { Column, DataTable } from 'primevue'
 import { computed } from 'vue'
 import { type BudgetUI, useDeleteBudget } from '@/entities/budget'
-import { useEditBudget, useGetBudgets } from '@/entities/budget'
+import { useEditBudget, useGetBudgets, createBudgetColumns } from '@/entities/budget'
 import { DisplayCell } from '@/shared/ui/DisplayCell'
 import { TableEditorActions } from '@/shared/ui/TableEditorActions'
-import { createSkeletonBudgets } from '@/helpers/skeleton.ts'
 import { type OnSavePayload, useEditableTable } from '@/features/table-editor'
-import { useConfirmActions } from '@/shared/lib/hooks'
-import { createBudgetColumns } from '@/entities/budget/model/lib/createBudgetColumns.ts'
-import { type ColumnConfig, getEditor } from '@/shared/lib/table'
+import { useConfirmActions, useTableLoading } from '@/shared/lib/hooks'
+import { type ColumnConfig, createSkeletonRows, getEditor } from '@/shared/lib/table'
+import { useIsMutating } from '@tanstack/vue-query'
 
-const { data, isFetching } = useGetBudgets()
-const { mutate: onMutateEditBudget } = useEditBudget()
-const { mutate: onMutateDeleteBudget } = useDeleteBudget()
+const creatingBudget = useIsMutating({ mutationKey: ['setBudget'] })
+const { data, isFetching, isLoading } = useGetBudgets()
+const { mutate: onMutateEditBudget, isPending: isEditing } = useEditBudget()
+const { mutate: onMutateDeleteBudget, isPending: isDeleting } = useDeleteBudget()
 const { confirmDelete, confirmSave } = useConfirmActions()
 
 const { editingRows, saveRow, isRowEditing, cancelEdit, startEdit } = useEditableTable<BudgetUI>({
@@ -23,6 +23,21 @@ const { editingRows, saveRow, isRowEditing, cancelEdit, startEdit } = useEditabl
   onSave,
 })
 
+const actionLoading = computed(
+  () => isEditing.value || isDeleting.value || creatingBudget.value > 0,
+)
+
+const {
+  rows: budgets,
+  cellLoading,
+  tableLoading,
+} = useTableLoading<BudgetUI>({
+  data,
+  isFetching,
+  isLoading,
+  actionLoading,
+  skeletonFactory: createSkeletonRows,
+})
 
 function onSave({ id, update }: OnSavePayload<BudgetUI>) {
   onMutateEditBudget({ id, update })
@@ -36,21 +51,6 @@ const onSaveHandler = (row: BudgetUI) => {
 }
 
 const onDelete = (id: string) => confirmDelete(async () => onMutateDeleteBudget(id))
-
-const budgets = computed(() => {
-  if (isFetching.value && (!data.value || data.value.length === 0)) {
-    return createSkeletonBudgets(5)
-  }
-  return data.value
-})
-
-const cellLoading = computed(() => {
-  return isFetching.value && (!data.value || data.value.length === 0)
-})
-
-const tableLoading = computed(() => {
-  return isFetching.value && !!data.value && data.value.length > 0
-})
 
 const resolveEditor = (col: ColumnConfig<BudgetUI>, row: BudgetUI) => getEditor(col, row)
 </script>

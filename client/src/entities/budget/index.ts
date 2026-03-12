@@ -5,6 +5,7 @@ import { useDeleteBudget } from "./model/composables/useDeleteBudget.ts"
 import { useEditBudget } from "./model/composables/useEditBudget.ts"
 import { useGetBudgetsYearlyByMonth } from "./model/composables/useGetBudgetsYearlyByMonth.ts"
 import type { BudgetUI, BudgetsUI } from "./model/types/budget.ui.ts"
+import { createBudgetColumns } from "./model/lib/createBudgetColumns.ts"
 
 export {
   useGetBudget,
@@ -12,7 +13,8 @@ export {
   useSetBudget,
   useDeleteBudget,
   useEditBudget,
-  useGetBudgetsYearlyByMonth
+  useGetBudgetsYearlyByMonth,
+  createBudgetColumns,
 }
 
 export type { BudgetUI, BudgetsUI }
