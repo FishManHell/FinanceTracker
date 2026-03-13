@@ -42,6 +42,11 @@ export const getTransactions: Resolver<Args, TransactionWithAccount[]> = async (
           }
         },
         { $unwind: "$account" },
+        {
+          $addFields: {
+            id: { $toString: '$_id' }
+          },
+        },
       ])
       .toArray();
 

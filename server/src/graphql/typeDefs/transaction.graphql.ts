@@ -38,6 +38,7 @@ input TransactionInput {
 
 extend type Mutation {
     transaction(params: TransactionInput!): Transaction!
+    deleteTransaction(id: ID!): Boolean!
 }
 
 extend type Query {
