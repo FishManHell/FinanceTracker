@@ -1,80 +1,55 @@
 <script setup lang="ts">
 import cls from './TransactionsTable.module.scss'
-import { Column, DataTable, Tag } from 'primevue'
-import { type Transactions } from '@/entities/transaction'
+import { Button, Column, DataTable } from 'primevue'
+import type { TransactionDTO, TransactionsDTO } from '@/entities/transaction'
+import { transactionColumns } from '@/entities/transaction'
+import { CellRenderer } from '@/shared/ui/CellRenderer'
 import { computed } from 'vue'
-import { TableCell } from '@/shared/ui/TableCell'
+import { resolveRowsWithSkeleton } from '@/shared/lib/table'
+import { useConfirmActions } from '@/shared/lib/hooks'
 
 const props = defineProps<{
-  transactions: Transactions | undefined
-  isLoading: boolean
+  data: TransactionsDTO
+  loading?: boolean
+  isSkeleton?: boolean
+  onDelete: (id: string) => void
 }>()
 
-const transactionsList = computed(() => {
-  if (!props.transactions && props.isLoading) {
-    return Array.from({ length: 10 }).map((_, i) => ({
-      id: i.toString(),
-      __skeleton: true,
-    }))
-  }
+const { confirmDelete } = useConfirmActions()
 
-  return props.transactions ?? []
+const onDeleteHandler = (id: string) => confirmDelete(async () => props.onDelete(id))
+
+const asTransactionRow = (row: TransactionDTO) => row
+
+const transactions = computed(() => {
+  return resolveRowsWithSkeleton(props.data, props.isSkeleton, 5)
 })
 </script>
 
 <template>
   <DataTable
-    :value="transactionsList"
+    :value="transactions"
     scrollable
     scrollHeight="flex"
     :class="cls.transaction_table"
+    :loading="loading"
   >
     <template #empty>
       <h1 :class="cls.empty_block">No transactions found</h1>
     </template>
-
-    <Column header="Type">
+    <Column
+      v-for="col in transactionColumns"
+      :key="col.field"
+      :field="col.field"
+      :header="col.header"
+    >
       <template #body="{ data }">
-        <TableCell :loading="isLoading">
-          <Tag :value="data.type" :severity="data.type === 'income' ? 'success' : 'danger'" />
-        </TableCell>
+        <CellRenderer :row="asTransactionRow(data)" :col="col" :loading="isSkeleton" />
       </template>
     </Column>
-    <Column header="Account" style="width: 25%">
+    <Column header="Actions">
       <template #body="{ data }">
-        <TableCell :loading="isLoading">
-          {{ data.account.type.charAt(0).toUpperCase() + data.account.type.slice(1) }}
-          -
-          {{ data.account.description }}
-        </TableCell>
-      </template>
-    </Column>
-    <Column field="category" header="Category" style="width: 25%">
-      <template #body="{ data }">
-        <TableCell :loading="isLoading">
-          {{ data.category }}
-        </TableCell>
-      </template>
-    </Column>
-    <Column field="date" header="Date">
-      <template #body="{ data }">
-        <TableCell :loading="isLoading">
-          {{ new Date(data.date).toLocaleDateString() }}
-        </TableCell>
-      </template>
-    </Column>
-    <Column field="amount" header="Amount">
-      <template #body="{ data }">
-        <TableCell :loading="isLoading">
-          <Tag :value="data.amount" :severity="data.amount > 0 ? 'success' : 'danger'" />
-        </TableCell>
-      </template>
-    </Column>
-    <Column field="currency" header="Currency">
-      <template #body="{ data }">
-        <TableCell :loading="isLoading">
-          {{ data.currency }}
-        </TableCell>
+        <Button label="Delete" severity="danger" outlined @click="onDeleteHandler(data.id)" />
       </template>
     </Column>
   </DataTable>

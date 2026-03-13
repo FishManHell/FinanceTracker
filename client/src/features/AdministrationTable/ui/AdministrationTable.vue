@@ -3,14 +3,18 @@ import { computed } from 'vue'
 import { Column, DataTable, useToast } from 'primevue'
 import { DisplayCell } from '@/shared/ui/DisplayCell'
 import { TableEditorActions } from '@/shared/ui/TableEditorActions'
-import { createSkeletonBudgets } from '@/helpers/skeleton.ts'
 import { useConfirmActions } from '@/shared/lib/hooks'
 import type { AdministrationTableProps } from '../model/types.ts'
 import { useEditableTable } from '@/features/table-editor'
 import type { UserDTO } from '@/shared/types'
 import { useUserPermissions } from '@/entities/user'
-import { createColumns } from '../lib/columns.ts'
-import { type ColumnConfig, getEditor, getPermissionRow } from '@/shared/lib/table'
+import { createUserColumns } from '../lib/columns.ts'
+import {
+  type ColumnConfig,
+  getEditor,
+  getPermissionRow,
+  resolveRowsWithSkeleton,
+} from '@/shared/lib/table'
 
 const props = defineProps<AdministrationTableProps>()
 
@@ -31,7 +35,7 @@ const {
 })
 const { confirmSave, confirmDelete } = useConfirmActions()
 const { canDeleteUser, canEditUser, canEditUserRole } = useUserPermissions()
-const columns = createColumns(canEditUserRole)
+const columns = createUserColumns(canEditUserRole)
 
 const toast = useToast()
 
@@ -53,13 +57,8 @@ const onSaveHandler = (row: UserDTO) => {
 const onDeleteHandler = (id: string) => confirmDelete(async () => props.onDelete(id))
 
 const users = computed(() => {
-  if (props.isSkeleton && (!props.data || props.data.length === 0)) {
-    return createSkeletonBudgets(5)
-  }
-  return props.data
+  return resolveRowsWithSkeleton(props.data, props.isSkeleton)
 })
-
-const cellLoading = computed(() => props.isSkeleton && (!props.data || props.data.length === 0))
 
 const resolverPermissionRow = (row: UserDTO) => getPermissionRow(row, originalRow.value)
 
@@ -82,7 +81,7 @@ const resolveEditor = (col: ColumnConfig<UserDTO>, row: UserDTO) => getEditor(co
 
     <Column v-for="col in columns" :key="col.field" :field="col.field" :header="col.header">
       <template #body="{ data }">
-        <DisplayCell :value="data[col.field]" :loading="cellLoading" />
+        <DisplayCell :value="data[col.field]" :loading="props.isSkeleton" />
       </template>
       <template #editor="{ data }">
         <component
@@ -101,7 +100,7 @@ const resolveEditor = (col: ColumnConfig<UserDTO>, row: UserDTO) => getEditor(co
         <TableEditorActions
           :row="data"
           :is-editing="isRowEditing(data.id)"
-          :loading="cellLoading"
+          :loading="props.isSkeleton"
           :can-delete="canDeleteUser(resolverPermissionRow(data))"
           :can-edit="canEditUser(resolverPermissionRow(data))"
           @edit="startEdit"

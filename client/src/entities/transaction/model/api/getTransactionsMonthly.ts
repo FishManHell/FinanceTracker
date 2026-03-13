@@ -1,10 +1,10 @@
 import { apolloClient } from '@/shared/api/apollo'
-import type { TransactionsMonthly } from '../types/transaction.type.ts'
+import type { TransactionsMonthlyDTO } from '../types/transaction.dto.ts'
 import { GET_TRANSACTIONS_MONTHLY } from '../graphql/GetTransactionsMonthly.graphql.ts'
 import { stripTypename } from '@/shared/lib/graphql'
 
 interface GetTransactionsMonthlyResponse {
-  transactionsMonthly: TransactionsMonthly
+  transactionsMonthly: TransactionsMonthlyDTO
 }
 
 export const getTransactionsMonthly = async (year: number) => {

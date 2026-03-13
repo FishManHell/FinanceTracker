@@ -17,3 +17,14 @@ export const getEditor = <T>(col: ColumnConfig<T>, row: T): Component | null => 
 
   return col.editor
 }
+
+export const resolveValue = <T>(col: ColumnConfig<T>, row: T): unknown => {
+  const value = row[col.field]
+
+  if (!col.formatter) {
+    return value
+  }
+
+  const formatter = col.formatter as (value: unknown, row: T) => unknown
+  return formatter(value, row)
+}

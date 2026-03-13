@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-import type { Transactions } from '../types/transaction.type.ts'
+import type { TransactionsDTO } from '../types/transaction.dto.ts'
 
 interface UseTransactionStoreState {
-  transactions: Transactions
+  transactions: TransactionsDTO
   isLoading: boolean
 }
 
@@ -13,7 +13,7 @@ export const useTransactionStore = defineStore('transaction', {
   }),
 
   actions: {
-    setTransactions(transactions: Transactions) {
+    setTransactions(transactions: TransactionsDTO) {
       this.transactions = transactions
     },
     setLoading(isLoading: boolean) {

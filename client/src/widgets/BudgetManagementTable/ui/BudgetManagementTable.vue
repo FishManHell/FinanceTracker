@@ -8,7 +8,7 @@ import { DisplayCell } from '@/shared/ui/DisplayCell'
 import { TableEditorActions } from '@/shared/ui/TableEditorActions'
 import { type OnSavePayload, useEditableTable } from '@/features/table-editor'
 import { useConfirmActions, useTableLoading } from '@/shared/lib/hooks'
-import { type ColumnConfig, createSkeletonRows, getEditor } from '@/shared/lib/table'
+import { type ColumnConfig, getEditor, resolveRowsWithSkeleton, resolveValue } from '@/shared/lib/table'
 import { useIsMutating } from '@tanstack/vue-query'
 
 const creatingBudget = useIsMutating({ mutationKey: ['setBudget'] })
@@ -27,16 +27,11 @@ const actionLoading = computed(
   () => isEditing.value || isDeleting.value || creatingBudget.value > 0,
 )
 
-const {
-  rows: budgets,
-  cellLoading,
-  tableLoading,
-} = useTableLoading<BudgetUI>({
+const { cellLoading, tableLoading } = useTableLoading<BudgetUI>({
   data,
   isFetching,
   isLoading,
   actionLoading,
-  skeletonFactory: createSkeletonRows,
 })
 
 function onSave({ id, update }: OnSavePayload<BudgetUI>) {
@@ -53,6 +48,11 @@ const onSaveHandler = (row: BudgetUI) => {
 const onDelete = (id: string) => confirmDelete(async () => onMutateDeleteBudget(id))
 
 const resolveEditor = (col: ColumnConfig<BudgetUI>, row: BudgetUI) => getEditor(col, row)
+const resolveBudgetValue = (col: ColumnConfig<BudgetUI>, row: BudgetUI) => resolveValue(col, row)
+
+const budgets = computed(() => {
+  return resolveRowsWithSkeleton(data.value, cellLoading.value, 5)
+})
 </script>
 
 <template>
@@ -77,10 +77,7 @@ const resolveEditor = (col: ColumnConfig<BudgetUI>, row: BudgetUI) => getEditor(
       :header="col.header"
     >
       <template #body="{ data }">
-        <DisplayCell
-          :loading="cellLoading"
-          :value="col.formatter ? col.formatter(data[col.field], data) : data[col.field]"
-        />
+        <DisplayCell :loading="cellLoading" :value="resolveBudgetValue(col, data)" />
       </template>
 
       <template #editor="{ data }">

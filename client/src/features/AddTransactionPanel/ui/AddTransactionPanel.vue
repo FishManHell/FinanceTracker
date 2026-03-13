@@ -1,25 +1,19 @@
 <script setup lang="ts">
 import cls from './AddTransactionPanel.module.scss'
 import { StatusTag } from '@/shared/ui/StatusTag'
-import type { Transactions } from '@/entities/transaction'
+import type { TransactionsDTO } from '@/entities/transaction'
 import { useTransactionsSummary } from '@/features/TransactionsContainer'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  transactions: Transactions | undefined
+  transactions: TransactionsDTO | undefined
   isFetching: boolean
 }>()
 
 const transactionsRef = computed(() => props.transactions)
 
-const {
-  balance,
-  balanceSeverity,
-  incomesSeverity,
-  expensesSeverity,
-  totalIncomes,
-  totalExpenses
-} = useTransactionsSummary(transactionsRef)
+const { balance, balanceSeverity, incomesSeverity, expensesSeverity, totalIncomes, totalExpenses } =
+  useTransactionsSummary(transactionsRef)
 </script>
 
 <template>

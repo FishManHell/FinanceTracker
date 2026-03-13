@@ -1,13 +1,13 @@
-import type { Account, TransactionWithoutType } from '@/entities/transaction'
+import type { AccountDTO, TransactionBaseDTO } from '@/entities/transaction'
 
 interface AccountGroup {
   type: string;
-  descriptions: Account[];
+  descriptions: AccountDTO[];
 }
 
 type Accounts = AccountGroup[];
 
-type BaseTransactionFormData = Omit<TransactionWithoutType, 'account'>
+type BaseTransactionFormData = Omit<TransactionBaseDTO, 'account'>
 
 export interface TransactionFormData extends BaseTransactionFormData {
   account: Accounts
