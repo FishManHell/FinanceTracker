@@ -1,6 +1,6 @@
 import { computed, type ComputedRef, type Ref } from 'vue'
 import { getSeverity, type SeverityValue } from '@/shared/lib/finance/getSeverity'
-import type { Transactions } from '@/entities/transaction'
+import type { TransactionsDTO } from '@/entities/transaction'
 
 interface TransactionsSummary {
   totalIncomes: ComputedRef<number>
@@ -12,7 +12,7 @@ interface TransactionsSummary {
 }
 
 export function useTransactionsSummary(
-  transactions: Ref<Transactions | undefined> | ComputedRef<Transactions | undefined>,
+  transactions: Ref<TransactionsDTO | undefined> | ComputedRef<TransactionsDTO | undefined>,
 ): TransactionsSummary {
   const totalIncomes = computed(() => {
     return (
