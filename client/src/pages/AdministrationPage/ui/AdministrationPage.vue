@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useDeleteUser, useEditUser, useGetUsers } from '@/entities/administration'
+import { computed, onUnmounted } from 'vue'
+import {
+  administrationQueryKeys,
+  useDeleteUser,
+  useEditUser,
+  useGetUsers,
+} from '@/entities/administration'
 import { AdministrationTable, createUserValidators } from '@/features/AdministrationTable'
 import type { OnSavePayload } from '@/features/table-editor'
 import type { UserDTO } from '@/shared/types'
 import { useTableLoading } from '@/shared/lib/hooks'
+import { removeQueries } from '@/shared/lib/vue-query'
+import { useQueryClient } from '@tanstack/vue-query'
 
+const queryClient = useQueryClient()
 const { mutate: onMutateEditUser, isPending: isEditing } = useEditUser()
 const { mutate: onMutateDeleteUser, isPending: isDeleting } = useDeleteUser()
 const { data, isFetching, isLoading } = useGetUsers()
@@ -23,6 +31,10 @@ const onSave = ({ id, update }: OnSavePayload<UserDTO>) => onMutateEditUser({ id
 const onDelete = (id: string) => onMutateDeleteUser({ id })
 
 const validators = createUserValidators(data)
+
+onUnmounted(() => {
+  removeQueries(queryClient, [administrationQueryKeys.users])
+})
 </script>
 
 <template>

@@ -8,12 +8,24 @@ import { useAppDialog } from '@/shared/lib/hooks'
 import { AddBudgetForm } from '@/features/AddBudgetForm'
 import { SectionCard } from '@/shared/ui/SectionCard'
 import { PageHeader } from '@/shared/ui/PageHeader'
+import { useQueryClient } from '@tanstack/vue-query'
+import { onUnmounted } from 'vue'
+import { removeQueries } from '@/shared/lib/vue-query'
+import { budgetQueryKeys } from '@/entities/budget'
 
 const { openFormDialog } = useAppDialog()
+const queryClient = useQueryClient()
 
 const openBudgetManagementFormDialog = () => {
   openFormDialog(AddBudgetForm, 'Add New Budget')
 }
+
+onUnmounted(() => {
+  removeQueries(queryClient, [
+    budgetQueryKeys.budgetsYearlyByMonth,
+    budgetQueryKeys.budgets
+  ])
+})
 </script>
 
 <template>

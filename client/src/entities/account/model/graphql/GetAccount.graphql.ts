@@ -1,11 +1,5 @@
 import { gql } from '@apollo/client'
-
-export const ACCOUNT_BASE_FIELDS = gql`
-  fragment AccountBaseFields on Account {
-    type
-    description
-  }
-`
+import { ACCOUNT_FRAGMENT } from './Fragments.graphql'
 
 export const GET_ACCOUNTS_SELECT = gql`
   query GetAccountsSelect {
@@ -13,7 +7,7 @@ export const GET_ACCOUNTS_SELECT = gql`
       ...AccountBaseFields
     }
   }
-  ${ACCOUNT_BASE_FIELDS}
+  ${ACCOUNT_FRAGMENT}
 `
 
 export const GET_ACCOUNTS_FULL = gql`
@@ -24,5 +18,5 @@ export const GET_ACCOUNTS_FULL = gql`
       amount
     }
   }
-  ${ACCOUNT_BASE_FIELDS}
+  ${ACCOUNT_FRAGMENT}
 `

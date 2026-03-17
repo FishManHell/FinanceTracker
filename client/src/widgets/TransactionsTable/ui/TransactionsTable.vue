@@ -7,6 +7,7 @@ import { CellRenderer } from '@/shared/ui/CellRenderer'
 import { computed } from 'vue'
 import { resolveRowsWithSkeleton } from '@/shared/lib/table'
 import { useConfirmActions } from '@/shared/lib/hooks'
+import { TableCell } from '@/shared/ui/TableCell'
 
 const props = defineProps<{
   data: TransactionsDTO
@@ -44,12 +45,14 @@ const transactions = computed(() => {
       :header="col.header"
     >
       <template #body="{ data }">
-        <CellRenderer :row="asTransactionRow(data)" :col="col" :loading="isSkeleton" />
+        <CellRenderer :row="asTransactionRow(data)" :col="col" :loading="props.isSkeleton" />
       </template>
     </Column>
     <Column header="Actions">
       <template #body="{ data }">
-        <Button label="Delete" severity="danger" outlined @click="onDeleteHandler(data.id)" />
+        <TableCell :loading="props.isSkeleton">
+          <Button label="Delete" severity="danger" outlined @click="onDeleteHandler(data.id)" />
+        </TableCell>
       </template>
     </Column>
   </DataTable>

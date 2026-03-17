@@ -16,7 +16,7 @@ const appStore = useAppContextStore()
 const year = computed(() => appStore.date.getFullYear())
 const month = useMonth('budget', year)
 
-const { data: budget, isFetching } = useGetBudget({ year, month })
+const { data: budget, isLoading } = useGetBudget({ year, month })
 const { isDark } = useDarkMode()
 const { chartOptions } = useBudgetChartOptions(isDark)
 
@@ -68,7 +68,7 @@ const chartData = computed(() => {
     </template>
 
     <template #content>
-      <section v-if="!isFetching" :class="cls.budget_body">
+      <section v-if="!isLoading" :class="cls.budget_body">
         <template v-if="showChart">
           <h2>{{ budget?.total }} {{ budget?.currency }}</h2>
           <Chart type="doughnut" :data="chartData" :options="chartOptions" :key="String(isDark)" />

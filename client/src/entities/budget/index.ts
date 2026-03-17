@@ -6,6 +6,7 @@ import { useEditBudget } from "./model/composables/useEditBudget.ts"
 import { useGetBudgetsYearlyByMonth } from "./model/composables/useGetBudgetsYearlyByMonth.ts"
 import type { BudgetUI, BudgetsUI } from "./model/types/budget.ui.ts"
 import { createBudgetColumns } from "./model/lib/createBudgetColumns.ts"
+import { budgetQueryKeys } from "./model/api/budgetQueryKeys.ts"
 
 export {
   useGetBudget,
@@ -15,6 +16,7 @@ export {
   useEditBudget,
   useGetBudgetsYearlyByMonth,
   createBudgetColumns,
+  budgetQueryKeys,
 }
 
 export type { BudgetUI, BudgetsUI }
