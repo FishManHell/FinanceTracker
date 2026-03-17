@@ -5,7 +5,8 @@ import {register} from "./register/register.js"
 import {refresh} from "./refresh/refresh.js"
 import { logout } from './logout/logout.js'
 import { uploadAvatar } from './uploadAvatar/uploadAvatar.js'
-import { getAccounts } from './accounts/getAccounts.js'
+import { getAccounts } from './account/getAccounts.js'
+import { createAccount } from './account/createAccount.js'
 import { setTransaction } from './transactions/setTransaction.js'
 import { getBudget } from './budget/getBudget.js'
 import { getTransactions } from './transactions/getTransactions.js'
@@ -45,5 +46,6 @@ export const resolvers = {
     editBudget,
     updatedUser: editUser,
     deleteUser,
+    createAccount
   },
 }
