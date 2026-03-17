@@ -9,6 +9,17 @@ type Account {
     description: String
 }
 
+input CreateAccountInput {
+    type: String!
+    amount: Float!
+    currency: String!
+    description: String
+}
+
+extend type Mutation {
+    createAccount(params: CreateAccountInput!): Account!
+}
+
 extend type Query {
     accounts: [Account!]!
 }

@@ -6,6 +6,8 @@ import { SetBudgetResponse } from '../../../models/Budget/budget.output.js'
 import { GraphQLError } from 'graphql/index.js'
 import { requireUser } from '../../../utils/auth.js'
 import { conflict, internalServerError } from '../../../utils/errors/httpErrors.js'
+import { isMongoDuplicateError } from '../../../utils/errors/isMongoDuplicateError.js'
+
 
 export const setBudget: Resolver<SetBudgetParams, SetBudgetResponse> = async (
   _,
@@ -33,12 +35,7 @@ export const setBudget: Resolver<SetBudgetParams, SetBudgetResponse> = async (
   } catch (error) {
     console.error("Error inserting budget", error);
 
-    if (error instanceof Error
-      && 'code' in error
-      && error.code === 11000
-    ) {
-      conflict("Budget already exists")
-    }
+    if (isMongoDuplicateError(error)) conflict("Budget already exists")
 
     if (error instanceof GraphQLError) throw error;
     internalServerError()
