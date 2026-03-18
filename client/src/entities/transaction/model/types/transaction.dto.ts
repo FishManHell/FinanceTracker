@@ -1,3 +1,5 @@
+import type { Currency } from '@/shared/types'
+
 export interface AccountDTO {
   type: string
   description: string
@@ -8,7 +10,7 @@ export interface TransactionDTO {
   amount: number
   category: string
   type: string
-  currency: string
+  currency: Currency
   description: string
   account: AccountDTO
 }
@@ -16,7 +18,7 @@ export interface TransactionDTO {
 export interface TransactionMonthlyDTO {
   month: number
   total: number
-  currency: string
+  currency: Currency
 }
 
 export type TransactionBaseDTO = Omit<TransactionDTO, 'type'>

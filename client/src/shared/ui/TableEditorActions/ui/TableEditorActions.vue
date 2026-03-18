@@ -28,7 +28,7 @@ const cloneRow = <T,>(row: T): T => JSON.parse(JSON.stringify(row))
 
 <template>
   <TableCell :loading="loading">
-    <div v-if="!isEditing && (canEdit || canDelete)">
+    <div v-if="!isEditing && (canEdit || canDelete)" class="table_editor_actions">
       <Button v-if="canEdit" label="Edit" outlined @click="emit('edit', cloneRow(row))" />
 
       <Button
@@ -40,9 +40,17 @@ const cloneRow = <T,>(row: T): T => JSON.parse(JSON.stringify(row))
       />
     </div>
 
-    <div v-else-if="isEditing">
+    <div v-else-if="isEditing" class="table_editor_actions">
       <Button label="Save" outlined @click="emit('save', row)" />
       <Button label="Cancel" severity="danger" outlined @click="emit('cancel')" />
     </div>
   </TableCell>
 </template>
+
+<style lang="scss" scoped>
+.table_editor_actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+</style>

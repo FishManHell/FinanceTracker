@@ -26,3 +26,11 @@ export interface DeleteUserParams {
 export interface DeleteUserResponse {
   deleteUser: boolean
 }
+
+export interface CreateUserResponse {
+  createUser: UserDTO
+}
+
+export interface CreateUserInput extends User {
+  password: string
+}

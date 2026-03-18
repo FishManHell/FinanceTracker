@@ -1,13 +1,11 @@
 import { gql } from '@apollo/client'
+import { ADMINISTRATION_FRAGMENT } from './Fragments.graphql'
 
 export const EDIT_USER = gql`
-  mutation EditUser($params: EditUserInput!) {
+  mutation EditUser($params: UpdateUserInput!) {
     updatedUser(params: $params) {
-      id
-      username
-      email
-      role
-      avatar
+      ...AdministrationFragment
     }
   }
+  ${ADMINISTRATION_FRAGMENT}
 `

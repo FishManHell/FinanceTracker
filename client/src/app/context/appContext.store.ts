@@ -1,21 +1,22 @@
 import { defineStore } from 'pinia'
+import { CURRENCIES, type Currency } from '@/shared/types'
 
 export type DatePickerModelValue = Date | Date[] | (Date | null)[] | null | undefined
 
-export const useAppContextStore = defineStore("app", {
-  state: () => ({
+export const useAppContextStore = defineStore('app', {
+  state: (): { date: Date; currency: Currency } => ({
     date: new Date(),
-    currency: 'USD',
+    currency: CURRENCIES.USD,
   }),
 
   actions: {
     setDate(value: DatePickerModelValue) {
-      if (value instanceof Date) {
-        this.date = new Date(value)
-      }
+      if (!(value instanceof Date)) return
+
+      this.date = new Date(value)
     },
 
-    setCurrency(currency: string) {
+    setCurrency(currency: Currency) {
       this.currency = currency
     },
   },

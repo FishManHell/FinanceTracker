@@ -4,8 +4,8 @@ import { Select } from 'primevue'
 defineProps<{
   modelValue: T | null
   options: T[]
-  optionLabel?: Extract<keyof T, string>
-  optionValue?: Extract<keyof T, string>
+  optionLabel?: string
+  optionValue?: string
 }>()
 
 const emit = defineEmits<{

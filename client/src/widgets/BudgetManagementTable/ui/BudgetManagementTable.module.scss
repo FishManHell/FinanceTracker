@@ -1,4 +1,16 @@
 .budget_table {
   text-align: center;
   width: 100%;
+
+  :global(.p-datatable-column-header-content) {
+    justify-content: center;
+  }
+
+  :global(.p-datatable-tbody) {
+    tr > td {
+      text-align: center;
+      padding: 10px 7px;
+    }
+  }
 }
+

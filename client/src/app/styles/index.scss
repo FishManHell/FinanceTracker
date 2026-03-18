@@ -23,11 +23,24 @@ html:not(.my-app-dark) body {
     flex: 1;
     min-height: 0;
     width: 100%;
-    padding: 10px 10px 0 10px;
+    padding: 0 10px 0 10px;
   }
 }
 
 
 .date_panel {
   min-width: 160px;
+}
+
+.p-datatable-column-header-content {
+  justify-content: center;
+}
+
+.p-datatable-tbody {
+  .p-row-even, .p-row-odd {
+    td {
+      text-align: center;
+      padding: 12px 7px;
+    }
+  }
 }

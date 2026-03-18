@@ -1,9 +1,11 @@
+import type { Currency } from '@/shared/types'
+
 export interface BudgetDTO {
   id: string
   year: number
   month: number
   total: number
-  currency: string
+  currency: Currency
 }
 
 export interface BudgetDetailsDTO extends BudgetDTO {

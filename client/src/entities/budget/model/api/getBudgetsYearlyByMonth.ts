@@ -1,13 +1,14 @@
 import { apolloClient } from '@/shared/api/apollo'
 import { GetBudgetsYearlyByMonthGraphql } from '@/entities/budget/model/graphql/GetBudgetsYearlyByMonth.graphql.ts'
 import { stripTypename } from '@/shared/lib/graphql'
+import type { Currency } from '@/shared/types'
 
 interface GetBudgetsYearlyByMonth {
-  month: number;
-  budget: number;
-  budgetCurrency: string | null;
-  expenseCurrency: string | null;
-  expense: number;
+  month: number
+  budget: number
+  budgetCurrency: Currency | null
+  expenseCurrency: Currency | null
+  expense: number
 }
 
 interface GetBudgetsYearlyByMonthResponse {

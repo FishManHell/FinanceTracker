@@ -15,6 +15,7 @@ import {
   getPermissionRow,
   resolveRowsWithSkeleton,
 } from '@/shared/lib/table'
+import { CellRenderer } from '@/shared/ui/CellRenderer'
 
 const props = defineProps<AdministrationTableProps>()
 
@@ -67,6 +68,7 @@ const resolveEditor = (col: ColumnConfig<UserDTO>, row: UserDTO) => getEditor(co
 
 <template>
   <DataTable
+    style="width: 100%"
     v-model:editingRows="editingRows"
     :value="users"
     scrollable
@@ -81,12 +83,14 @@ const resolveEditor = (col: ColumnConfig<UserDTO>, row: UserDTO) => getEditor(co
 
     <Column v-for="col in columns" :key="col.field" :field="col.field" :header="col.header">
       <template #body="{ data }">
-        <DisplayCell :value="data[col.field]" :loading="props.isSkeleton" />
+        <CellRenderer :col="col" :row="data" :loading="props.isSkeleton" />
       </template>
       <template #editor="{ data }">
         <component
           v-if="resolveEditor(col, data)"
           :is="resolveEditor(col, data)"
+          option-label="label"
+          option-value="value"
           v-model="data[col.field]"
           :options="col.options"
           :error="validationErrors[data.id]?.[col.field]"
@@ -112,3 +116,5 @@ const resolveEditor = (col: ColumnConfig<UserDTO>, row: UserDTO) => getEditor(co
     </Column>
   </DataTable>
 </template>
+
+<style lang="scss"></style>

@@ -4,6 +4,7 @@ import { EditSelectCell } from '@/shared/ui/EditSelectCell'
 import { EditMonthCell } from '@/shared/ui/EditMonthCell'
 import  { createColumns } from '@/shared/lib/table'
 import { formatYearMonth } from '@/helpers/date.ts'
+import { currencyOptions } from '@/shared/config'
 
 export const createBudgetColumns = createColumns<BudgetUI>()([
   {
@@ -21,6 +22,6 @@ export const createBudgetColumns = createColumns<BudgetUI>()([
     field: 'currency',
     header: 'Currency',
     editor: EditSelectCell,
-    options: ['USD', 'EUR', 'ILS'] as const,
+    options: currencyOptions,
   },
 ])

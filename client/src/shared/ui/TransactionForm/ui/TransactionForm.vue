@@ -8,6 +8,8 @@ import type { InjectedProps, TransactionFormData } from '../model/types.ts'
 import { useCreateAccount, useGetAccounts } from '@/entities/account'
 import { groupForCascadeSelect } from '@/shared/lib/helpers'
 import { resolver } from '../model/resolver.ts'
+import { currencyOptions } from '@/shared/config'
+import { CURRENCIES } from '@/shared/types'
 
 const dialogRef = inject<Ref<InjectedProps>>('dialogRef')!
 const { onSubmit, initialData, mode } = dialogRef.value.data
@@ -26,11 +28,10 @@ const initialValues: TransactionFormData = {
   amount: initialData?.amount ?? 0,
   category: initialData?.category ?? '',
   account: initialData?.account ?? [],
-  currency: initialData?.currency ?? '',
+  currency: initialData?.currency ?? CURRENCIES.USD,
   description: initialData?.description ?? '',
 }
 
-const currencies = ['USD', 'EUR', 'ILS']
 const accountTypes = ['card', 'cash', 'investment']
 
 const resolveCurrency = (currency?: string) => currency?.trim() || 'USD'
@@ -103,7 +104,9 @@ const onSaveCreateAccount = async (formCurrency?: string) => {
 
       <FormField :class="cls.input_form_field" name="currency">
         <Select
-          :options="currencies"
+          optionLabel="label"
+          optionValue="value"
+          :options="currencyOptions"
           name="currency"
           placeholder="Select currency"
           :class="cls.field"

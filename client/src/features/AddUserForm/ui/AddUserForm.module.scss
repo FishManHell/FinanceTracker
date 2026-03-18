@@ -1,0 +1,19 @@
+.add_user_form {
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .add_user_form_field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .add_user_form_actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+  }
+}

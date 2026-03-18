@@ -1,30 +1,41 @@
 <script setup lang="ts">
+import cls from './AddBudgetForm.module.scss'
 import { Button, DatePicker, InputNumber, Select } from 'primevue'
 import { Form, FormField, type FormSubmitEvent } from '@primevue/forms'
 import { useSetBudget } from '@/entities/budget'
+import { currencyOptions } from '@/shared/config'
+import { CURRENCIES, type Currency } from '@/shared/types'
+import { addBudgetFormResolver } from '../model/resolver.ts'
 
 interface BudgetManagementForm {
   date: Date
   total: number
-  currency: string
+  currency: Currency
 }
 
 const initialValues: BudgetManagementForm = {
   date: new Date(),
-  total: 13000,
-  currency: 'USD',
+  total: 0,
+  currency: CURRENCIES.USD,
 }
 
-const currencies = ['USD', 'EUR', 'ILS']
+const { mutate: onMutateSetBudget, isPending } = useSetBudget()
 
-const { mutate: onMutateSetBudget } = useSetBudget()
-
-const onAddNewBudget = (e: FormSubmitEvent) => onMutateSetBudget(e.values as BudgetManagementForm)
+const onAddNewBudget = (e: FormSubmitEvent) => {
+  if (!e.valid) return
+  onMutateSetBudget(e.values as BudgetManagementForm)
+}
 </script>
 
 <template>
-  <div>
-    <Form v-slot="$form" :initialValues="initialValues" @submit="onAddNewBudget">
+  <Form
+    v-slot="$form"
+    :initialValues="initialValues"
+    @submit="onAddNewBudget"
+    :class="cls.add_budget_form"
+    :resolver="addBudgetFormResolver"
+  >
+    <div :class="cls.add_budget_form_field">
       <FormField name="date">
         <DatePicker
           name="date"
@@ -34,20 +45,41 @@ const onAddNewBudget = (e: FormSubmitEvent) => onMutateSetBudget(e.values as Bud
           :manualInput="false"
           :maxDate="new Date()"
           showIcon
+          fluid
+          :disabled="isPending"
         />
       </FormField>
-      <FormField name="total">
-        <InputNumber name="total" placeholder="Enter total" />
-      </FormField>
-      <FormField name="currency">
-        <Select :options="currencies" name="currency" placeholder="Select currency" />
-        <Message v-if="$form.currency?.invalid" severity="error" size="small" variant="simple">
-          {{ $form.currency.error?.message }}
-        </Message>
-      </FormField>
-      <Button type="submit" label="Add" />
-    </Form>
-  </div>
-</template>
+      <Message v-if="$form.date?.invalid" severity="error" size="small" variant="simple">
+        {{ $form.date.error?.message }}
+      </Message>
+    </div>
 
-<style scoped></style>
+    <div :class="cls.add_budget_form_field">
+      <FormField name="total">
+        <InputNumber name="total" placeholder="Enter total" fluid :disabled="isPending" />
+      </FormField>
+      <Message v-if="$form.total?.invalid" severity="error" size="small" variant="simple">
+        {{ $form.total.error?.message }}
+      </Message>
+    </div>
+    <div :class="cls.add_budget_form_field">
+      <FormField name="currency">
+        <Select
+          optionLabel="label"
+          optionValue="value"
+          :options="currencyOptions"
+          name="currency"
+          placeholder="Select currency"
+          fluid
+          :disabled="isPending"
+        />
+      </FormField>
+      <Message v-if="$form.currency?.invalid" severity="error" size="small" variant="simple">
+        {{ $form.currency.error?.message }}
+      </Message>
+    </div>
+    <div :class="cls.add_budget_form_actions">
+      <Button type="submit" label="Create" :disabled="isPending" :loading="isPending" />
+    </div>
+  </Form>
+</template>

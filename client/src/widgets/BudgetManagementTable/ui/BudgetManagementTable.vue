@@ -8,7 +8,12 @@ import { DisplayCell } from '@/shared/ui/DisplayCell'
 import { TableEditorActions } from '@/shared/ui/TableEditorActions'
 import { type OnSavePayload, useEditableTable } from '@/features/table-editor'
 import { useConfirmActions, useTableLoading } from '@/shared/lib/hooks'
-import { type ColumnConfig, getEditor, resolveRowsWithSkeleton, resolveValue } from '@/shared/lib/table'
+import {
+  type ColumnConfig,
+  getEditor,
+  resolveRowsWithSkeleton,
+  resolveValue,
+} from '@/shared/lib/table'
 import { useIsMutating } from '@tanstack/vue-query'
 
 const creatingBudget = useIsMutating({ mutationKey: ['setBudget'] })
@@ -86,6 +91,8 @@ const budgets = computed(() => {
           :is="resolveEditor(col, data)"
           v-model="data[col.field]"
           :options="col.options"
+          option-label="label"
+          option-value="value"
         />
 
         <DisplayCell v-else :loading="cellLoading" :value="data[col.field]" />
