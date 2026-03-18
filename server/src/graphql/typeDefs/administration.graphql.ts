@@ -7,16 +7,24 @@ type User {
     avatar: String
 }
 
-input BaseUserInput {
+input UpdateUserDataInput {
     username: String!
     email: String!
     role: String!
     avatar: String
 }
 
-input EditUserInput {
+input CreateUserInput {
+    username: String!
+    password: String!
+    email: String!
+    role: String!
+    avatar: String
+}
+
+input UpdateUserInput {
     id: ID!
-    update: BaseUserInput!
+    update: UpdateUserDataInput!
 }
 
 input DeleteUserInput {
@@ -28,7 +36,8 @@ extend type Query {
 }
 
 extend type Mutation {
-    updatedUser(params: EditUserInput!): User!
+    updatedUser(params: UpdateUserInput!): User!
     deleteUser(params: DeleteUserInput!): Boolean!
+    createUser(params: CreateUserInput!): User!
 }
 `

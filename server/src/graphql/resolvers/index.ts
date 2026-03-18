@@ -20,6 +20,7 @@ import { getUsers } from './administration/getUsers.js'
 import { editUser } from './administration/editUser.js'
 import { deleteUser } from './administration/deleteUser.js'
 import { deleteTransaction } from './transactions/deleteTransaction.js'
+import { createUser } from './administration/createUser.js'
 
 export const resolvers = {
   DateTime: GraphQLDateTime,
@@ -46,6 +47,7 @@ export const resolvers = {
     editBudget,
     updatedUser: editUser,
     deleteUser,
+    createUser,
     createAccount
   },
 }
