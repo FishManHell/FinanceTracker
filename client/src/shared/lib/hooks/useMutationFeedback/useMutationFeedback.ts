@@ -11,7 +11,7 @@ interface MutationFeedbackOptions<TData, TVariables = unknown> {
   afterSuccess?: (data: TData, variables: TVariables) => void | Promise<void>
 }
 
-export function useMutationFeedback<TData, TVariables = unknown>({
+export function useMutationFeedback<TData, TVariables = unknown, TRollbackData = TData>({
   queryClient,
   queryKey,
   toast,
@@ -24,9 +24,9 @@ export function useMutationFeedback<TData, TVariables = unknown>({
     await afterSuccess?.(data, variables)
   }
 
-  const handleError = (error: Error, previousData?: TData) => {
-    if (queryClient && queryKey && previousData) {
-      rollbackQueryData<TData>(queryClient, queryKey, previousData)
+  const handleError = (error: Error, previousData?: TRollbackData) => {
+    if (queryClient && queryKey && previousData !== undefined) {
+      rollbackQueryData<TRollbackData>(queryClient, queryKey, previousData)
     }
     showErrorToast({ toast, summary: errorSummary, error })
   }

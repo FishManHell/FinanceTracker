@@ -10,7 +10,7 @@ export function useDeleteUser() {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  const { handleError, handleSuccess: onSuccess } = useMutationFeedback<UsersDTO>({
+  const { handleError, handleSuccess: onSuccess } = useMutationFeedback<boolean, DeleteUserInput, UsersDTO>({
     queryClient,
     queryKey: ['users'],
     toast,

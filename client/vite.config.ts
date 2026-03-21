@@ -22,6 +22,7 @@ export default defineConfig({
           if (id.includes('primevue/paginator')) return 'pv-paginator'
           if (id.includes('primevue/confirmdialog')) return 'pv-confirmdialog'
           if (id.includes('primevue/cascadeselect')) return 'pv-cascadeselect'
+          if (id.includes('primevue/form')) return 'pv-form'
           if (id.includes('primevue')) return 'pv-core'
         },
       },
