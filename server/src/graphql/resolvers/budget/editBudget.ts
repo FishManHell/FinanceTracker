@@ -1,6 +1,5 @@
 import { Budget } from '../../../models/Budget/budget.db.js'
 import { ObjectId } from 'mongodb'
-import { GraphQLError } from 'graphql'
 import { Resolver } from '../../types/resolver.js'
 import { EditBudgetParams } from '../../../models/Budget/budget.input.js'
 import { EditBudgetResponse } from '../../../models/Budget/budget.output.js'

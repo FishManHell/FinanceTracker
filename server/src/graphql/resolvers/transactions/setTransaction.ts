@@ -4,9 +4,9 @@ import { Resolver } from '../../types/resolver.js'
 import { Transaction } from '../../../models/Transaction/transaction.db.js'
 import { TransactionParams } from '../../../models/Transaction/transaction.input.js'
 import { CreatedTransactionResponse } from '../../../models/Transaction/transaction.output.js'
-import { GraphQLError } from 'graphql'
 import { requireUser } from '../../../utils/auth.js'
 import { internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
 
 export const setTransaction: Resolver<TransactionParams, CreatedTransactionResponse> = async (
   _,
@@ -45,7 +45,7 @@ export const setTransaction: Resolver<TransactionParams, CreatedTransactionRespo
     };
   } catch (error) {
     console.error("Error inserting transaction:", error);
-    if (error instanceof GraphQLError) throw error;
+    rethrowGraphQLError(error)
     internalServerError()
   }
 }

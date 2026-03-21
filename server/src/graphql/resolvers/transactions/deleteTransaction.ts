@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb'
 import { Resolver } from '../../types/resolver.js'
 import { Transaction } from '../../../models/Transaction/transaction.db.js'
-import { GraphQLError } from 'graphql'
 import { requireUser } from '../../../utils/auth.js'
 import { internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
 
 export const deleteTransaction: Resolver<{ id: string }, boolean> = async (
   _,
@@ -29,7 +29,7 @@ export const deleteTransaction: Resolver<{ id: string }, boolean> = async (
 
   } catch (error) {
     console.error("Error deleting transaction:", error)
-    if (error instanceof GraphQLError) throw error
+    rethrowGraphQLError(error)
     internalServerError()
   }
 }
