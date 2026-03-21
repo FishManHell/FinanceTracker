@@ -1,4 +1,4 @@
-import { userStore } from '../model/user.store.ts'
+import { userStore } from '../model/store/user.store.ts'
 import type { UserDTO } from '@/shared/types'
 
 export function useUserPermissions() {

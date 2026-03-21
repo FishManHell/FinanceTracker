@@ -23,12 +23,6 @@ export const navbarItems: NavbarItemProps[] = [
     roles: ADMIN_ROLES,
   },
   {
-    label: 'Settings',
-    icon: 'pi pi-cog',
-    route: '/',
-    roles: ADMIN_ROLES,
-  },
-  {
     label: 'Logout',
     icon: 'pi pi-sign-out',
   },

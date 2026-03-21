@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { UserDTO } from '@/shared/types'
-import type { UserState } from '../model/storeTypes.ts'
+import type { UserState } from '../types/storeTypes.ts'
 
 export const userStore = defineStore('user', {
   state: (): UserState => ({
