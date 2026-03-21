@@ -5,6 +5,8 @@ import { UserDTO } from '../../../models/User/user.types.js'
 import { getUser } from '../../../services/user/user.js'
 import { Resolver } from '../../types/resolver.js'
 import { internalServerError, unauthorized } from '../../../utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+
 
 export const refresh: Resolver<undefined, UserDTO> = async (
   _,
@@ -31,6 +33,8 @@ export const refresh: Resolver<undefined, UserDTO> = async (
     return result;
 
   } catch (error) {
+    rethrowGraphQLError(error)
+    console.error(error)
     internalServerError()
   }
 }

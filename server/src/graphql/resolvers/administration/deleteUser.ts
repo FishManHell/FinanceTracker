@@ -8,6 +8,8 @@ import { Account } from '../../../models/Account/account.type.js'
 import { canManageUser } from '../../../utils/permissions/userPermissions.js'
 import { requireUser } from '../../../utils/auth.js'
 import { forbidden, internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+
 
 export const deleteUser: Resolver<{params: {id: string}}, boolean> = async (
   _, { params: {id} }, context
@@ -49,7 +51,7 @@ export const deleteUser: Resolver<{params: {id: string}}, boolean> = async (
 
   } catch (error) {
     console.error('Error in deleteUser', error)
-    if (error instanceof GraphQLError) throw error;
+    rethrowGraphQLError(error)
     internalServerError();
   } finally {
     await session.endSession()

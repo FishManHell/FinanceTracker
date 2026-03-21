@@ -4,6 +4,7 @@ import { requireUser } from '../../../utils/auth.js'
 import { conflict, internalServerError } from '../../../utils/errors/httpErrors.js'
 import { ObjectId } from 'mongodb'
 import { isMongoDuplicateError } from '../../../utils/errors/isMongoDuplicateError.js'
+import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
 
 export interface CreateAccountInput {
   params: {
@@ -45,6 +46,7 @@ export const createAccount: Resolver<CreateAccountInput, Account> = async (
   } catch (error) {
     if (isMongoDuplicateError(error)) conflict("Account already exists")
     console.error("Error in getAccounts", error);
+    rethrowGraphQLError(error)
     internalServerError()
   }
 }

@@ -6,6 +6,8 @@ import { validateUniqueUserFields } from '../../utils/validateUniqueUserFields.j
 import { canManageUser } from '../../../utils/permissions/userPermissions.js'
 import { requireUser } from '../../../utils/auth.js'
 import { forbidden, internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+
 
 interface EditUserInput {
   id: string;
@@ -47,7 +49,7 @@ export const editUser: Resolver<EditUserParams, UserDTO> = async (
 
   } catch (error) {
     console.error("Error in getUsers", error);
-    if (error instanceof GraphQLError) throw error;
+    rethrowGraphQLError(error)
     internalServerError()
   }
 }

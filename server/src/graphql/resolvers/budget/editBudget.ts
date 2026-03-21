@@ -6,6 +6,7 @@ import { EditBudgetParams } from '../../../models/Budget/budget.input.js'
 import { EditBudgetResponse } from '../../../models/Budget/budget.output.js'
 import { requireUser } from '../../../utils/auth.js'
 import { internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
 
 export const editBudget: Resolver<EditBudgetParams, EditBudgetResponse> = async (
   _,
@@ -37,7 +38,7 @@ export const editBudget: Resolver<EditBudgetParams, EditBudgetResponse> = async 
 
   } catch (error) {
     console.error("Error edit budget:", error);
-    if (error instanceof GraphQLError) throw error;
+    rethrowGraphQLError(error)
     internalServerError()
   }
 }

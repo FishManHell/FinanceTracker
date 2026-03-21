@@ -1,11 +1,4 @@
 export const AdministrationTypeDefs: string = `#graphql
-type User {
-    id: ID!
-    username: String!
-    email: String!
-    role: String!
-    avatar: String
-}
 
 input UpdateUserDataInput {
     username: String!

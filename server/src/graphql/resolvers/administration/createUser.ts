@@ -2,8 +2,8 @@ import { Resolver } from '../../types/resolver.js'
 import { Roles, Role, UserDocument, UserDTO } from '../../../models/User/user.types.js'
 import { conflict, internalServerError } from '../../../utils/errors/httpErrors.js'
 import { hashPassword, requireUser } from '../../../utils/auth.js'
-import { GraphQLError } from 'graphql/index.js'
 import { OptionalId } from 'mongodb'
+import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
 
 interface CreateUserPayload {
   params: {
@@ -56,7 +56,7 @@ export const createUser: Resolver<CreateUserPayload, UserDTO> = async (
     }
   } catch (error) {
     console.error('Error in create User', error)
-    if (error instanceof GraphQLError) throw error;
+    rethrowGraphQLError(error)
     internalServerError();
   }
 }
