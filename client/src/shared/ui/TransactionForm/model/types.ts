@@ -14,7 +14,7 @@ export interface TransactionFormData extends BaseTransactionFormData {
 }
 
 export interface DialogData {
-  onSubmit: (payload: TransactionFormData) => void;
+  onSubmit: (payload: TransactionFormData, onCloseForm: () => void) => void | Promise<void>
   initialData?: TransactionFormData;
   mode?: 'add' | 'edit';
 }

@@ -28,7 +28,9 @@ const { cellLoading, tableLoading } = useTableLoading<TransactionDTO>({
   actionLoading,
 })
 
-const onSetTransaction = (transaction: TransactionBaseDTO) => onMutateSetTransaction(transaction)
+const onSetTransaction = (transaction: TransactionBaseDTO, onCloseForm: () => void) => {
+  onMutateSetTransaction(transaction, { onSuccess: onCloseForm })
+}
 const onDeleteTransaction = (id: string) => onMutateDeleteTransaction(id)
 
 const openTransactionDialog = () => {

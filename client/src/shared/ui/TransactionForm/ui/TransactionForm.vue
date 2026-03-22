@@ -39,7 +39,12 @@ const resolveCurrency = (currency?: string) => currency?.trim() || 'USD'
 const accounts = computed(() => groupForCascadeSelect(selectedAccounts.value ?? []))
 
 const saveTransaction = ({ valid, values }: FormSubmitEvent) => {
-  if (valid) onSubmit(values as TransactionFormData)
+  if (valid) {
+    onSubmit(
+      values as TransactionFormData,
+      () => dialogRef.value?.close()
+    )
+  }
 }
 
 const onOpenCreateAccount = () => {

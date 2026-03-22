@@ -37,11 +37,11 @@ const chartData = computed(() => {
         data: [budget.value?.spent, budget.value?.remaining],
         backgroundColor: [
           documentStyle.getPropertyValue('--p-red-500'),
-          documentStyle.getPropertyValue('--p-gray-500'),
+          documentStyle.getPropertyValue('--p-green-600'),
         ],
         hoverBackgroundColor: [
           documentStyle.getPropertyValue('--p-red-400'),
-          documentStyle.getPropertyValue('--p-gray-400'),
+          documentStyle.getPropertyValue('--p-green-600'),
         ],
       },
     ],

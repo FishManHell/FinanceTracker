@@ -6,6 +6,7 @@ import { useSetBudget } from '@/entities/budget'
 import { currencyOptions } from '@/shared/config'
 import { CURRENCIES, type Currency } from '@/shared/types'
 import { addBudgetFormResolver } from '../model/resolver.ts'
+import { inject, type Ref } from 'vue'
 
 interface BudgetManagementForm {
   date: Date
@@ -19,11 +20,15 @@ const initialValues: BudgetManagementForm = {
   currency: CURRENCIES.USD,
 }
 
+const dialogRef = inject<Ref<{ close: () => void }>>('dialogRef')
+
 const { mutate: onMutateSetBudget, isPending } = useSetBudget()
+
+const onCloseForm = () => dialogRef?.value.close()
 
 const onAddNewBudget = (e: FormSubmitEvent) => {
   if (!e.valid) return
-  onMutateSetBudget(e.values as BudgetManagementForm)
+  onMutateSetBudget(e.values as BudgetManagementForm, { onSuccess: onCloseForm })
 }
 </script>
 
