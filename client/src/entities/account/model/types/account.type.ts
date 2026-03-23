@@ -1,10 +1,3 @@
-import type { Currency } from '@/shared/types'
+import type { AccountDTO } from '@/entities/transaction'
 
-export interface Account {
-  type: string
-  amount: number
-  currency: Currency
-  description: string
-}
-
-export type Accounts = Account[]
+export type Accounts = AccountDTO[]

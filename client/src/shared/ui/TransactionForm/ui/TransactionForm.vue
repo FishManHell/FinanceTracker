@@ -4,47 +4,47 @@ import { Form, FormField } from '@primevue/forms'
 import type { FormSubmitEvent } from '@primevue/forms'
 import { InputNumber, InputText, DatePicker, Select, Button, CascadeSelect } from 'primevue'
 import { inject, ref, computed, type Ref } from 'vue'
-import type { InjectedProps, TransactionFormData } from '../model/types.ts'
+import type { InjectedProps, TransactionFormValues } from '../model/types.ts'
 import { useCreateAccount, useGetAccounts } from '@/entities/account'
 import { groupForCascadeSelect } from '@/shared/lib/helpers'
 import { resolver } from '../model/resolver.ts'
 import { currencyOptions } from '@/shared/config'
-import { CURRENCIES } from '@/shared/types'
+import { CURRENCIES, type Currency } from '@/shared/types'
+import { type AccountDTO, type TransactionBaseDTO, useSetTransaction } from '@/entities/transaction'
 
 const dialogRef = inject<Ref<InjectedProps>>('dialogRef')!
-const { onSubmit, initialData, mode } = dialogRef.value.data
+const { initialData, mode } = dialogRef.value.data
 
-const { data: selectedAccounts, isLoading } = useGetAccounts()
+const { mutate: onMutateSetTransaction, isPending: isAdding } = useSetTransaction()
+const { data: selectedAccounts, isLoading: isLoadingAccounts } = useGetAccounts()
 const { mutate: createAccount, isPending } = useCreateAccount()
 
 const isCreateAccountMode = ref(false)
-const newAccount = ref({
+const newAccount = ref<AccountDTO>({
   type: '',
   description: '',
 })
 
-const initialValues: TransactionFormData = {
+const initialValues: TransactionFormValues = {
   date: initialData?.date ?? new Date(),
   amount: initialData?.amount ?? 0,
   category: initialData?.category ?? '',
-  account: initialData?.account ?? [],
+  account: initialData?.account ?? null,
   currency: initialData?.currency ?? CURRENCIES.USD,
   description: initialData?.description ?? '',
 }
 
 const accountTypes = ['card', 'cash', 'investment']
 
-const resolveCurrency = (currency?: string) => currency?.trim() || 'USD'
+const isAccountControlsDisabled = computed(() => isPending.value || isLoadingAccounts.value || isAdding.value)
+
+const resolveCurrency = (currency?: Currency) => currency?.trim() || CURRENCIES.USD
 
 const accounts = computed(() => groupForCascadeSelect(selectedAccounts.value ?? []))
 
 const saveTransaction = ({ valid, values }: FormSubmitEvent) => {
-  if (valid) {
-    onSubmit(
-      values as TransactionFormData,
-      () => dialogRef.value?.close()
-    )
-  }
+  if (!valid) return
+  onMutateSetTransaction(values as TransactionBaseDTO, { onSuccess: dialogRef.value.close })
 }
 
 const onOpenCreateAccount = () => {
@@ -63,7 +63,7 @@ const onCancelCreateAccount = () => {
   onResetCreateAccount()
 }
 
-const onSaveCreateAccount = async (formCurrency?: string) => {
+const onSaveCreateAccount = async (formCurrency?: Currency) => {
   if (!newAccount.value.type || !newAccount.value.description) return
   const { type, description } = newAccount.value
 
@@ -93,15 +93,26 @@ const onSaveCreateAccount = async (formCurrency?: string) => {
           :class="cls.field"
           :manualInput="false"
           showIcon
+          :disabled="isAdding"
         />
       </FormField>
 
       <FormField :class="cls.input_form_field" name="amount">
-        <InputNumber name="amount" placeholder="Enter amount" :class="cls.field" />
+        <InputNumber
+          name="amount"
+          placeholder="Enter amount"
+          :class="cls.field"
+          :disabled="isAdding"
+        />
       </FormField>
 
       <FormField :class="cls.input_form_field" name="category">
-        <InputText name="category" placeholder="Enter category" :class="cls.field" />
+        <InputText
+          name="category"
+          placeholder="Enter category"
+          :class="cls.field"
+          :disabled="isAdding"
+        />
         <Message v-if="$form.category?.invalid" severity="error" size="small" variant="simple">
           {{ $form.category.error?.message }}
         </Message>
@@ -115,6 +126,7 @@ const onSaveCreateAccount = async (formCurrency?: string) => {
           name="currency"
           placeholder="Select currency"
           :class="cls.field"
+          :disabled="isAdding"
         />
         <Message v-if="$form.currency?.invalid" severity="error" size="small" variant="simple">
           {{ $form.currency.error?.message }}
@@ -122,7 +134,12 @@ const onSaveCreateAccount = async (formCurrency?: string) => {
       </FormField>
 
       <FormField :class="cls.input_form_field" name="description">
-        <InputText name="description" placeholder="Enter description" :class="cls.field" />
+        <InputText
+          name="description"
+          placeholder="Enter description"
+          :class="cls.field"
+          :disabled="isAdding"
+        />
         <Message v-if="$form.description?.invalid" severity="error" size="small" variant="simple">
           {{ $form.description.error?.message }}
         </Message>
@@ -136,9 +153,9 @@ const onSaveCreateAccount = async (formCurrency?: string) => {
             optionLabel="description"
             optionGroupLabel="type"
             :optionGroupChildren="['items']"
-            placeholder="Select account"
-            :loading="isLoading"
-            :disabled="isCreateAccountMode"
+            placeholder="Select accounts"
+            :loading="isLoadingAccounts"
+            :disabled="isCreateAccountMode || isAccountControlsDisabled"
           />
 
           <Button
@@ -147,7 +164,7 @@ const onSaveCreateAccount = async (formCurrency?: string) => {
             variant="outlined"
             type="button"
             @click="onOpenCreateAccount"
-            :disabled="isPending"
+            :disabled="isAccountControlsDisabled"
           />
         </div>
 
@@ -193,7 +210,7 @@ const onSaveCreateAccount = async (formCurrency?: string) => {
         <Button
           type="submit"
           :label="mode === 'edit' ? 'Update Transaction' : 'Save Transaction'"
-          :disabled="isPending"
+          :disabled="isPending || isAdding"
         />
       </FormField>
     </Form>

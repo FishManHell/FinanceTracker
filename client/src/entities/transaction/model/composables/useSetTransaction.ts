@@ -8,6 +8,7 @@ export function useSetTransaction() {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ['setTransaction'],
     mutationFn: setTransaction,
     onSuccess: (result) => {
       if (result) {

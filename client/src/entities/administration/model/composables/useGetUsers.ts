@@ -6,5 +6,6 @@ export function useGetUsers() {
   return useGraphqlQuery<UsersDTO>({
     queryKey: ['users'],
     queryFn: async () => getUsers(),
+    refetchOnWindowFocus: false,
   })
 }

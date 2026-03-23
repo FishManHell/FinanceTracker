@@ -1,7 +1,7 @@
 import { apolloClient } from '@/shared/api/apollo'
-import type { Account } from '../types/account.type'
 import { stripTypename } from '@/shared/lib/graphql'
 import { CREATE_ACCOUNT } from '../graphql/CreateAccount.graphql'
+import type { AccountDTO } from '@/entities/transaction'
 
 interface CreateAccountInput {
   type: string;
@@ -10,10 +10,10 @@ interface CreateAccountInput {
   amount: number;
 }
 
-export const createAccount = async (params: CreateAccountInput): Promise<Account> => {
+export const createAccount = async (params: CreateAccountInput): Promise<AccountDTO> => {
   try {
     const { data } = await apolloClient.mutate<
-      { createAccount: Account },
+      { createAccount: AccountDTO },
       { params: CreateAccountInput }
     >({
       mutation: CREATE_ACCOUNT,

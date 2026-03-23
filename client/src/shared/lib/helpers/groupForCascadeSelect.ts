@@ -1,17 +1,44 @@
 import { capitalize } from './capitalize'
 
+// interface GroupedResult<T> {
+//   type: string
+//   items: T[]
+// }
+//
+// interface FlatItem {
+//   type: string
+//   description: string
+// }
+//
+// export function groupForCascadeSelect(array: FlatItem[]): GroupedResult<FlatItem>[] {
+//   const map = new Map<string, GroupedResult<FlatItem>>();
+//
+//   for (const item of array) {
+//     const groupLabel = capitalize(item.type)
+//
+//     if (!map.has(groupLabel)) {
+//       map.set(groupLabel, {
+//         type: groupLabel,
+//         items: [],
+//       })
+//     }
+//     map.get(groupLabel)!.items.push(item)
+//   }
+//
+//   return Array.from(map.values())
+// }
+
 interface GroupedResult<T> {
   type: string
   items: T[]
 }
 
-interface FlatItem {
+interface WithType {
   type: string
-  description: string
 }
 
-export function groupForCascadeSelect(array: FlatItem[]): GroupedResult<FlatItem>[] {
-  const map = new Map<string, GroupedResult<FlatItem>>();
+export function groupForCascadeSelect<T extends WithType>(array: T[]): GroupedResult<T>[] {
+  const map = new Map<string, GroupedResult<T>>()
 
   for (const item of array) {
     const groupLabel = capitalize(item.type)
@@ -22,6 +49,7 @@ export function groupForCascadeSelect(array: FlatItem[]): GroupedResult<FlatItem
         items: [],
       })
     }
+
     map.get(groupLabel)!.items.push(item)
   }
 
