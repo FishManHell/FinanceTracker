@@ -1,6 +1,6 @@
 {
   "name": "finance-server",
-  "version": "0.2.05",
+  "version": "0.2.06",
   "private": true,
   "type": "module",
   "imports": {
@@ -8,10 +8,7 @@
     "#models/*": "./src/models/*",
     "#services/*": "./src/services/*",
     "#graphql/*": "./src/graphql/*",
-    "#schema/*": "./src/schema/*",
-    "#cloudinary": "./src/cloudinary.js",
-    "#apollo": "./src/apollo.js",
-    "#mongodb": "./src/mongodb.js"
+    "#schema/*": "./src/schema/*"
   },
   "scripts": {
     "compile": "tsc",

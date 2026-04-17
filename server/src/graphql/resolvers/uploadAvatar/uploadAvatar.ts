@@ -1,4 +1,4 @@
-import cloudinary from '#cloudinary'
+import cloudinary from '../../../cloudinary.js'
 import { Resolver } from '#graphql/types/resolver.js'
 import { UploadAvatarArgs } from '#models/Upload/upload.input.js'
 import { UploadAvatarResponse } from '#models/Upload/upload.output.js'
