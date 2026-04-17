@@ -1,9 +1,9 @@
-import { Resolver } from '../../types/resolver.js'
-import { Roles, Role, UserDocument, UserDTO } from '../../../models/User/user.types.js'
-import { conflict, internalServerError } from '../../../utils/errors/httpErrors.js'
-import { hashPassword, requireUser } from '../../../utils/auth.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { Roles, Role, UserDocument, UserDTO } from '#models/User/user.types.js'
+import { conflict, internalServerError } from '#utils/errors/httpErrors.js'
+import { hashPassword, requireUser } from '#utils/auth.js'
 import { OptionalId } from 'mongodb'
-import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+import { rethrowGraphQLError } from '#utils/errors/rethrowGraphQLError.js'
 
 interface CreateUserPayload {
   params: {

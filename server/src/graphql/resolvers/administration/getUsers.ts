@@ -1,7 +1,7 @@
-import { Resolver } from '../../types/resolver.js'
-import { UserDocument, UsersDTO } from '../../../models/User/user.types.js'
-import { requireUser } from '../../../utils/auth.js'
-import { internalServerError } from '../../../utils/errors/httpErrors.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { UserDocument, UsersDTO } from '#models/User/user.types.js'
+import { requireUser } from '#utils/auth.js'
+import { internalServerError } from '#utils/errors/httpErrors.js'
 
 export const getUsers: Resolver<undefined, UsersDTO> = async (
   _, __, context

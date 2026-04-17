@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb";
-import { Account } from '../../../models/Account/account.type.js'
-import { Resolver } from '../../types/resolver.js'
-import { requireUser } from '../../../utils/auth.js'
-import { internalServerError } from '../../../utils/errors/httpErrors.js'
+import { Account } from '#models/Account/account.type.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { requireUser } from '#utils/auth.js'
+import { internalServerError } from '#utils/errors/httpErrors.js'
 
 export const getAccounts: Resolver<undefined, Account[]> = async (
   _,

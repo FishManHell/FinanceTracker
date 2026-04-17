@@ -1,14 +1,13 @@
-import { Resolver } from '../../types/resolver.js'
-import { UserDocument } from "../../../models/User/user.types.js"
-import { GraphQLError } from 'graphql'
+import { Resolver } from '#graphql/types/resolver.js'
+import { UserDocument } from "#models/User/user.types.js"
 import { ObjectId } from 'mongodb'
-import { Transaction } from '../../../models/Transaction/transaction.db.js'
-import { Budget } from '../../../models/Budget/budget.db.js'
-import { Account } from '../../../models/Account/account.type.js'
-import { canManageUser } from '../../../utils/permissions/userPermissions.js'
-import { requireUser } from '../../../utils/auth.js'
-import { forbidden, internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
-import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+import { Transaction } from '#models/Transaction/transaction.db.js'
+import { Budget } from '#models/Budget/budget.db.js'
+import { Account } from '#models/Account/account.type.js'
+import { canManageUser } from '#utils/permissions/userPermissions.js'
+import { requireUser } from '#utils/auth.js'
+import { forbidden, internalServerError, notFound } from '#utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '#utils/errors/rethrowGraphQLError.js'
 
 
 export const deleteUser: Resolver<{params: {id: string}}, boolean> = async (

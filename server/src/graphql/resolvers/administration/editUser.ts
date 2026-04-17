@@ -1,12 +1,11 @@
-import { Resolver } from '../../types/resolver.js'
-import { Roles, UpdateUserDTO, UserDocument, UserDTO } from '../../../models/User/user.types.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { Roles, UpdateUserDTO, UserDocument, UserDTO } from '#models/User/user.types.js'
 import { ObjectId } from 'mongodb'
-import { GraphQLError } from 'graphql'
-import { validateUniqueUserFields } from '../../utils/validateUniqueUserFields.js'
-import { canManageUser } from '../../../utils/permissions/userPermissions.js'
-import { requireUser } from '../../../utils/auth.js'
-import { forbidden, internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
-import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+import { validateUniqueUserFields } from '#graphql/utils/validateUniqueUserFields.js'
+import { canManageUser } from '#utils/permissions/userPermissions.js'
+import { requireUser } from '#utils/auth.js'
+import { forbidden, internalServerError, notFound } from '#utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '#utils/errors/rethrowGraphQLError.js'
 
 
 interface EditUserInput {

@@ -1,10 +1,10 @@
-import { Resolver } from '../../types/resolver.js'
-import { Account } from '../../../models/Account/account.type.js'
-import { requireUser } from '../../../utils/auth.js'
-import { conflict, internalServerError } from '../../../utils/errors/httpErrors.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { Account } from '#models/Account/account.type.js'
+import { requireUser } from '#utils/auth.js'
+import { conflict, internalServerError } from '#utils/errors/httpErrors.js'
 import { ObjectId } from 'mongodb'
-import { isMongoDuplicateError } from '../../../utils/errors/isMongoDuplicateError.js'
-import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+import { isMongoDuplicateError } from '#utils/errors/isMongoDuplicateError.js'
+import { rethrowGraphQLError } from '#utils/errors/rethrowGraphQLError.js'
 
 export interface CreateAccountInput {
   params: {
