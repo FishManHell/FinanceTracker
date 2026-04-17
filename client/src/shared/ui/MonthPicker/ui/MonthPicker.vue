@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useAttrs } from 'vue'
+import { computed, useAttrs, useId } from 'vue'
 import { DatePicker, IftaLabel } from 'primevue'
 import type { DatePickerModelValue } from '@/app'
 
@@ -13,6 +13,8 @@ const props = defineProps<{
 const attrs = useAttrs()
 const { class: className, ...restAttrs } = attrs
 const emit = defineEmits<{ (e: 'update:modelValue', value: number): void }>()
+
+const inputId = useId()
 
 const now = new Date()
 const currentYear = now.getFullYear()
@@ -47,10 +49,10 @@ const onSetMonth = (date: DatePickerModelValue) => {
         :minDate="minDate"
         :maxDate="maxDate"
         dateFormat="mm"
-        inputId="month"
+        :inputId="inputId"
         @update:modelValue="onSetMonth"
       />
-      <label for="month">Month</label>
+      <label :for="inputId">Month</label>
     </IftaLabel>
   </div>
 </template>

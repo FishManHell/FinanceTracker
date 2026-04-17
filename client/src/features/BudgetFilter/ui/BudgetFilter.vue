@@ -4,8 +4,12 @@ import { DatePicker, Select } from 'primevue'
 import { type DatePickerModelValue, useAppContextStore } from '@/app'
 import { currencyOptions } from '@/shared/config'
 import type { Currency } from '@/shared/types'
+import { useId } from 'vue'
 
 const appStore = useAppContextStore()
+
+const dateId = useId()
+const currencyId = useId()
 
 const onSetCurrency = (currency: Currency) => appStore.setCurrency(currency)
 const onSetDate = (date: DatePickerModelValue) => appStore.setDate(date)
@@ -14,8 +18,9 @@ const onSetDate = (date: DatePickerModelValue) => appStore.setDate(date)
 <template>
   <div :class="cls.budget_filter">
     <div :class="cls.budget_filter__group">
-      <label :class="cls.budget_filter__label">Date</label>
+      <label :class="cls.budget_filter__label" :for="dateId">Date</label>
       <DatePicker
+        :inputId="dateId"
         :modelValue="appStore.date"
         view="year"
         dateFormat="yy"
@@ -25,12 +30,12 @@ const onSetDate = (date: DatePickerModelValue) => appStore.setDate(date)
     </div>
 
     <div :class="cls.budget_filter__group">
-      <label :class="cls.budget_filter__label">Currency</label>
+      <span :class="cls.budget_filter__label" :id="currencyId">Currency</span>
       <Select
+        :aria-labelledby="currencyId"
         optionLabel="label"
         optionValue="value"
         :options="currencyOptions"
-        name="currency"
         placeholder="Select currency"
         :modelValue="appStore.currency"
         @update:modelValue="onSetCurrency"

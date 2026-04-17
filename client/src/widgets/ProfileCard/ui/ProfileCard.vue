@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import cls from './ProfileCard.module.scss'
-import { computed, ref, toRef } from 'vue'
+import { computed, ref, toRef, useId } from 'vue'
 import { Button, Image, InputText, Tag } from 'primevue'
 import { useToast } from 'primevue/usetoast'
 import { SectionCard } from '@/shared/ui/SectionCard'
@@ -12,6 +12,8 @@ import type { AvatarUploadState, ProfileCardProps } from '../model/types.ts'
 import { showErrorToast } from '@/shared/lib/helpers'
 
 const props = defineProps<ProfileCardProps>()
+
+const fieldId = useId()
 
 const toast = useToast()
 const { mutate: updateProfile, isPending: isProfileUpdating } = useUpdateProfile()
@@ -106,18 +108,23 @@ function saveProfile() {
 
       <div :class="cls.form_grid">
         <div :class="cls.field">
-          <label :class="cls.label">Username</label>
-          <InputText v-model="form.username" fluid :disabled="!isEditing || isProfileUpdating" />
+          <label :class="cls.label" :for="`${fieldId}-username`">Username</label>
+          <InputText
+            :id="`${fieldId}-username`"
+            v-model="form.username"
+            fluid
+            :disabled="!isEditing || isProfileUpdating"
+          />
         </div>
 
         <div :class="cls.field">
-          <label :class="cls.label">Email</label>
-          <InputText :modelValue="email" fluid disabled />
+          <label :class="cls.label" :for="`${fieldId}-email`">Email</label>
+          <InputText :id="`${fieldId}-email`" :modelValue="email" fluid disabled />
         </div>
 
         <div :class="cls.field">
-          <label :class="cls.label">Role</label>
-          <InputText :modelValue="getRoleLabel(role)" fluid disabled />
+          <label :class="cls.label" :for="`${fieldId}-role`">Role</label>
+          <InputText :id="`${fieldId}-role`" :modelValue="getRoleLabel(role)" fluid disabled />
         </div>
 
         <div :class="cls.field">
