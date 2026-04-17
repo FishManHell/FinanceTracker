@@ -1,8 +1,15 @@
 {
   "name": "finance-server",
-  "version": "0.2.03",
+  "version": "0.2.04",
   "private": true,
   "type": "module",
+  "imports": {
+    "#utils/*": "./src/utils/*",
+    "#models/*": "./src/models/*",
+    "#services/*": "./src/services/*",
+    "#graphql/*": "./src/graphql/*",
+    "#schema/*": "./src/schema/*"
+  },
   "scripts": {
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js",

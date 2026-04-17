@@ -1,8 +1,8 @@
-import { generateToken, setAuthCookie, verifyPassword } from '../../../utils/auth.js'
-import { getUser } from '../../../services/user/user.js';
-import { UserDTO } from '../../../models/User/user.types.js'
-import { Resolver } from '../../types/resolver.js'
-import { notFound } from '../../../utils/errors/httpErrors.js'
+import { generateToken, setAuthCookie, verifyPassword } from '#utils/auth.js'
+import { getUser } from '#services/user/user.js';
+import { UserDTO } from '#models/User/user.types.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { notFound } from '#utils/errors/httpErrors.js'
 
 interface LoginArgs {
   username: string;
