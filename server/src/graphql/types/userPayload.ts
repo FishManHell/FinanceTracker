@@ -1,4 +1,4 @@
-import { Role } from '../../models/User/user.types.js'
+import { Role } from '#models/User/user.types.js'
 
 export type UserPayload = {
   username: string;

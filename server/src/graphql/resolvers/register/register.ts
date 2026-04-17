@@ -1,8 +1,8 @@
-import { Role, Roles, UserDocument, UserDTO } from '../../../models/User/user.types.js'
-import { generateToken, hashPassword, setAuthCookie } from '../../../utils/auth.js'
+import { Role, Roles, UserDocument, UserDTO } from '#models/User/user.types.js'
+import { generateToken, hashPassword, setAuthCookie } from '#utils/auth.js'
 import {OptionalId} from "mongodb"
-import { Resolver } from '../../types/resolver.js'
-import { conflict } from '../../../utils/errors/httpErrors.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { conflict } from '#utils/errors/httpErrors.js'
 
 type RegisterArgs = Omit<UserDocument, "_id"> & { role?: Role };
 type NewUserDocument = OptionalId<UserDocument>;

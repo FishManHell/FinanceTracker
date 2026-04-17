@@ -1,6 +1,6 @@
-import { UserDocument } from "../../models/User/user.types.js";
+import { UserDocument } from "#models/User/user.types.js";
 import { Collection } from "mongodb";
-import { badRequest } from '../../utils/errors/httpErrors.js'
+import { badRequest } from '#utils/errors/httpErrors.js'
 
 export async function validateUniqueUserFields(
   users: Collection<UserDocument>,

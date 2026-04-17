@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
 import { ObjectId } from 'mongodb'
-import { UserPayload } from '../../types/userPayload.js'
-import { UserDTO } from '../../../models/User/user.types.js'
-import { getUser } from '../../../services/user/user.js'
-import { Resolver } from '../../types/resolver.js'
-import { internalServerError, unauthorized } from '../../../utils/errors/httpErrors.js'
-import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+import { UserPayload } from '#graphql/types/userPayload.js'
+import { UserDTO } from '#models/User/user.types.js'
+import { getUser } from '#services/user/user.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { internalServerError, unauthorized } from '#utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '#utils/errors/rethrowGraphQLError.js'
 
 
 export const refresh: Resolver<undefined, UserDTO> = async (

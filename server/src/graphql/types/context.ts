@@ -1,6 +1,6 @@
 import { Db } from "mongodb";
 import type { Request, Response } from "express";
-import { Role } from '../../models/User/user.types.js'
+import { Role } from '#models/User/user.types.js'
 
 export interface ContextUser {
   username: string;

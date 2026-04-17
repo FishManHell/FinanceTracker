@@ -1,10 +1,10 @@
-import { Resolver } from '../../types/resolver.js'
-import { UserDocument, UserDTO } from '../../../models/User/user.types.js'
-import { requireUser } from '../../../utils/auth.js'
-import { badRequest, internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { UserDocument, UserDTO } from '#models/User/user.types.js'
+import { requireUser } from '#utils/auth.js'
+import { badRequest, internalServerError, notFound } from '#utils/errors/httpErrors.js'
 import { ObjectId } from 'mongodb'
-import { validateUniqueUserFields } from '../../../graphql/utils/validateUniqueUserFields.js'
-import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+import { validateUniqueUserFields } from '#graphql/utils/validateUniqueUserFields.js'
+import { rethrowGraphQLError } from '#utils/errors/rethrowGraphQLError.js'
 
 interface UpdateProfileDTO {
   username: string

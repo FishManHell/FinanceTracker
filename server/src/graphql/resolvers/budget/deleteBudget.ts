@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb'
-import { Budget } from '../../../models/Budget/budget.db.js'
-import { Resolver } from '../../types/resolver.js'
-import { DeleteBudgetParams } from '../../../models/Budget/budget.input.js'
-import { requireUser } from '../../../utils/auth.js'
-import { internalServerError } from '../../../utils/errors/httpErrors.js'
+import { Budget } from '#models/Budget/budget.db.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { DeleteBudgetParams } from '#models/Budget/budget.input.js'
+import { requireUser } from '#utils/auth.js'
+import { internalServerError } from '#utils/errors/httpErrors.js'
 
 export const deleteBudget: Resolver<DeleteBudgetParams, boolean> = async (
   _,

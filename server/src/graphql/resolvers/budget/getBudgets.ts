@@ -1,9 +1,9 @@
-import { Budget } from '../../../models/Budget/budget.db.js'
+import { Budget } from '#models/Budget/budget.db.js'
 import { ObjectId } from 'mongodb'
-import { Resolver } from '../../types/resolver.js'
-import { GetBudgetsResponse } from '../../../models/Budget/budget.output.js'
-import { requireUser } from '../../../utils/auth.js'
-import { internalServerError } from '../../../utils/errors/httpErrors.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { GetBudgetsResponse } from '#models/Budget/budget.output.js'
+import { requireUser } from '#utils/auth.js'
+import { internalServerError } from '#utils/errors/httpErrors.js'
 
 export const getBudgets: Resolver<{}, GetBudgetsResponse> = async (
   _,

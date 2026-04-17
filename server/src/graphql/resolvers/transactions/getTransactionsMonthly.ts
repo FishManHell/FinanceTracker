@@ -1,9 +1,9 @@
-import { Transaction } from '../../../models/Transaction/transaction.db.js'
+import { Transaction } from '#models/Transaction/transaction.db.js'
 import { ObjectId } from 'mongodb'
-import { Resolver } from '../../types/resolver.js'
-import { MonthlyTransactionSummary } from '../../../models/Transaction/transaction.output.js'
-import { requireUser } from '../../../utils/auth.js'
-import { internalServerError } from '../../../utils/errors/httpErrors.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { MonthlyTransactionSummary } from '#models/Transaction/transaction.output.js'
+import { requireUser } from '#utils/auth.js'
+import { internalServerError } from '#utils/errors/httpErrors.js'
 
 export const getTransactionsMonthly: Resolver<{year: number}, MonthlyTransactionSummary[]> = async (
   _,

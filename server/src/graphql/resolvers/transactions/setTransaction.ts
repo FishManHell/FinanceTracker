@@ -1,12 +1,12 @@
 import { ObjectId, OptionalId } from 'mongodb';
-import { Account } from '../../../models/Account/account.type.js'
-import { Resolver } from '../../types/resolver.js'
-import { Transaction } from '../../../models/Transaction/transaction.db.js'
-import { TransactionParams } from '../../../models/Transaction/transaction.input.js'
-import { CreatedTransactionResponse } from '../../../models/Transaction/transaction.output.js'
-import { requireUser } from '../../../utils/auth.js'
-import { internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
-import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+import { Account } from '#models/Account/account.type.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { Transaction } from '#models/Transaction/transaction.db.js'
+import { TransactionParams } from '#models/Transaction/transaction.input.js'
+import { CreatedTransactionResponse } from '#models/Transaction/transaction.output.js'
+import { requireUser } from '#utils/auth.js'
+import { internalServerError, notFound } from '#utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '#utils/errors/rethrowGraphQLError.js'
 
 export const setTransaction: Resolver<TransactionParams, CreatedTransactionResponse> = async (
   _,

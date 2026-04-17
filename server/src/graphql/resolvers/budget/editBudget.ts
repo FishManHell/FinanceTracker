@@ -1,11 +1,11 @@
-import { Budget } from '../../../models/Budget/budget.db.js'
+import { Budget } from '#models/Budget/budget.db.js'
 import { ObjectId } from 'mongodb'
-import { Resolver } from '../../types/resolver.js'
-import { EditBudgetParams } from '../../../models/Budget/budget.input.js'
-import { EditBudgetResponse } from '../../../models/Budget/budget.output.js'
-import { requireUser } from '../../../utils/auth.js'
-import { internalServerError, notFound } from '../../../utils/errors/httpErrors.js'
-import { rethrowGraphQLError } from '../../../utils/errors/rethrowGraphQLError.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { EditBudgetParams } from '#models/Budget/budget.input.js'
+import { EditBudgetResponse } from '#models/Budget/budget.output.js'
+import { requireUser } from '#utils/auth.js'
+import { internalServerError, notFound } from '#utils/errors/httpErrors.js'
+import { rethrowGraphQLError } from '#utils/errors/rethrowGraphQLError.js'
 
 export const editBudget: Resolver<EditBudgetParams, EditBudgetResponse> = async (
   _,

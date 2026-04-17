@@ -1,11 +1,11 @@
 import { ObjectId } from 'mongodb'
-import { Transaction } from '../../../models/Transaction/transaction.db.js'
-import { Budget } from '../../../models/Budget/budget.db.js'
-import { Resolver } from '../../types/resolver.js'
-import { GetBudgetResponse } from '../../../models/Budget/budget.output.js'
-import { ExpenseGroup } from '../../types/aggregations/expenseGroup.types.js'
-import { requireUser } from '../../../utils/auth.js'
-import { internalServerError } from '../../../utils/errors/httpErrors.js'
+import { Transaction } from '#models/Transaction/transaction.db.js'
+import { Budget } from '#models/Budget/budget.db.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { GetBudgetResponse } from '#models/Budget/budget.output.js'
+import { ExpenseGroup } from '#graphql/types/aggregations/expenseGroup.types.js'
+import { requireUser } from '#utils/auth.js'
+import { internalServerError } from '#utils/errors/httpErrors.js'
 
 export const getBudget: Resolver<{year: number, month: number}, GetBudgetResponse> = async (
   _,

@@ -1,5 +1,5 @@
-import { Resolver } from '../../types/resolver.js'
-import { internalServerError } from '../../../utils/errors/httpErrors.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { internalServerError } from '#utils/errors/httpErrors.js'
 
 export const logout: Resolver<unknown, boolean> = async (_, __, context) => {
   try {

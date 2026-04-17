@@ -1,9 +1,9 @@
-import cloudinary from '../../../cloudinary.js'
-import { Resolver } from '../../types/resolver.js'
-import { UploadAvatarArgs } from '../../../models/Upload/upload.input.js'
-import { UploadAvatarResponse } from '../../../models/Upload/upload.output.js'
-import { internalServerError } from '../../../utils/errors/httpErrors.js'
-import { requireUser } from '../../../utils/auth.js'
+import cloudinary from '#cloudinary'
+import { Resolver } from '#graphql/types/resolver.js'
+import { UploadAvatarArgs } from '#models/Upload/upload.input.js'
+import { UploadAvatarResponse } from '#models/Upload/upload.output.js'
+import { internalServerError } from '#utils/errors/httpErrors.js'
+import { requireUser } from '#utils/auth.js'
 
 export const uploadAvatar: Resolver<UploadAvatarArgs, UploadAvatarResponse> = async (
   _,

@@ -1,11 +1,11 @@
-import { Budget } from '../../../models/Budget/budget.db.js'
+import { Budget } from '#models/Budget/budget.db.js'
 import { ObjectId, OptionalId } from 'mongodb'
-import { SetBudgetParams } from '../../../models/Budget/budget.input.js'
-import { Resolver } from '../../types/resolver.js'
-import { SetBudgetResponse } from '../../../models/Budget/budget.output.js'
-import { requireUser } from '../../../utils/auth.js'
-import { conflict, internalServerError } from '../../../utils/errors/httpErrors.js'
-import { isMongoDuplicateError } from '../../../utils/errors/isMongoDuplicateError.js'
+import { SetBudgetParams } from '#models/Budget/budget.input.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { SetBudgetResponse } from '#models/Budget/budget.output.js'
+import { requireUser } from '#utils/auth.js'
+import { conflict, internalServerError } from '#utils/errors/httpErrors.js'
+import { isMongoDuplicateError } from '#utils/errors/isMongoDuplicateError.js'
 
 
 export const setBudget: Resolver<SetBudgetParams, SetBudgetResponse> = async (

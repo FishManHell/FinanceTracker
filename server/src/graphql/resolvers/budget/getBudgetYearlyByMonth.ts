@@ -1,9 +1,9 @@
-import { Resolver } from '../../types/resolver.js'
-import { Budget } from '../../../models/Budget/budget.db.js'
-import { Transaction } from '../../../models/Transaction/transaction.db.js'
+import { Resolver } from '#graphql/types/resolver.js'
+import { Budget } from '#models/Budget/budget.db.js'
+import { Transaction } from '#models/Transaction/transaction.db.js'
 import { ObjectId } from 'mongodb'
-import { requireUser } from '../../../utils/auth.js'
-import { internalServerError } from '../../../utils/errors/httpErrors.js'
+import { requireUser } from '#utils/auth.js'
+import { internalServerError } from '#utils/errors/httpErrors.js'
 
 interface GetBudgetYearlyByMonthResponse {
   month: number;

@@ -1,5 +1,5 @@
-import { Roles, UserDocument } from '../../models/User/user.types.js'
-import { ContextUser } from '../../graphql/types/context.js'
+import { Roles, UserDocument } from '#models/User/user.types.js'
+import { ContextUser } from '#graphql/types/context.js'
 
 export function canManageUser(currentUser: ContextUser, targetUser: UserDocument) {
   if (currentUser.id === targetUser._id.toString()) return false
