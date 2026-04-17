@@ -8,19 +8,14 @@ interface GetUsersResponse {
 }
 
 export const getUsers = async () => {
- try {
-   const { data } = await apolloClient.query<GetUsersResponse>({
-     query: GET_USERS,
-   })
+  const { data } = await apolloClient.query<GetUsersResponse>({
+    query: GET_USERS,
+  })
 
-   const users = data?.users
-   if (!users) {
-     throw new Error('No users found.')
-   }
+  const users = data?.users
+  if (!users) {
+    throw new Error('No users found.')
+  }
 
-   return stripTypename(users)
- } catch (error) {
-   console.error('getUsers', error)
-   throw error
- }
+  return stripTypename(users)
 }

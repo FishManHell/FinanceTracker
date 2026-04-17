@@ -12,19 +12,13 @@ interface SetBudgetParams {
 }
 
 export const setBudget = async (params: CreateBudgetDTO): Promise<BudgetDTO> => {
-  try {
-    const { data } = await apolloClient.mutate<SetBudgetResponse, SetBudgetParams>({
-      mutation: SET_BUDGET,
-      variables: { params },
-    })
+  const { data } = await apolloClient.mutate<SetBudgetResponse, SetBudgetParams>({
+    mutation: SET_BUDGET,
+    variables: { params },
+  })
 
-    if (!data?.newBudget) {
-      throw new Error('Failed to get new budget')
-    }
-
-    return stripTypename(data.newBudget)
-  } catch (error) {
-    console.error('Error in setBudget:', error)
-    throw error
+  if (!data?.newBudget) {
+    throw new Error('Failed to get new budget')
   }
+  return stripTypename(data.newBudget)
 }

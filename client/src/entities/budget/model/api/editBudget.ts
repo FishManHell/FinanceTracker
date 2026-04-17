@@ -7,18 +7,13 @@ import type {
 } from '../types/budget.mutation.ts'
 
 export const editBudget = async (params: EditBudgetInputDTO) => {
-  try {
-    const { data } = await apolloClient.mutate<EditBudgetResponse, EditBudgetParamsDTO>({
-      mutation: EDIT_BUDGET,
-      variables: { params },
-    })
-    if (!data) {
-      throw new Error('No data returned from editBudget')
-    }
-
-    return data
-  } catch (error) {
-    console.error(error)
-    throw error
+  const { data } = await apolloClient.mutate<EditBudgetResponse, EditBudgetParamsDTO>({
+    mutation: EDIT_BUDGET,
+    variables: { params },
+  })
+  if (!data) {
+    throw new Error('No data returned from editBudget')
   }
+
+  return data
 }

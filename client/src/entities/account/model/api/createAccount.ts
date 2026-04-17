@@ -11,20 +11,14 @@ interface CreateAccountInput {
 }
 
 export const createAccount = async (params: CreateAccountInput): Promise<AccountDTO> => {
-  try {
-    const { data } = await apolloClient.mutate<
-      { createAccount: AccountDTO },
-      { params: CreateAccountInput }
-    >({
-      mutation: CREATE_ACCOUNT,
-      variables: { params },
-    })
+  const { data } = await apolloClient.mutate<
+    { createAccount: AccountDTO },
+    { params: CreateAccountInput }
+  >({
+    mutation: CREATE_ACCOUNT,
+    variables: { params },
+  })
 
-    if (!data) throw new Error('Account not found')
-
-    return stripTypename(data.createAccount)
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
+  if (!data) throw new Error('Account not found')
+  return stripTypename(data.createAccount)
 }

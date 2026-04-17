@@ -8,19 +8,14 @@ import type {
 import { stripTypename } from '@/shared/lib/graphql'
 
 export const updateProfile = async (params: UpdateProfileInput) => {
-  try {
-    const { data } = await apolloClient.mutate<UpdateProfileResponse, UpdateProfileParams>({
-      mutation: UPDATE_PROFILE,
-      variables: { params },
-    })
+  const { data } = await apolloClient.mutate<UpdateProfileResponse, UpdateProfileParams>({
+    mutation: UPDATE_PROFILE,
+    variables: { params },
+  })
 
-    if (!data) {
-      throw new Error('Failed to update profile')
-    }
-
-    return stripTypename(data.updateProfile)
-  } catch (error) {
-    console.log(error)
-    throw error
+  if (!data) {
+    throw new Error('Failed to update profile')
   }
+
+  return stripTypename(data.updateProfile)
 }

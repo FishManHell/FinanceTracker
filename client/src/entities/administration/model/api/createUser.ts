@@ -5,19 +5,14 @@ import type { CreateUserInput, CreateUserResponse } from '../types/administratio
 import { stripTypename } from '@/shared/lib/graphql'
 
 export const createUser = async (params: CreateUserInput): Promise<UserDTO> => {
-  try {
-    const { data } = await apolloClient.mutate<CreateUserResponse, { params: CreateUserInput }>({
-      mutation: CREATE_USER,
-      variables: {params}
-    })
+  const { data } = await apolloClient.mutate<CreateUserResponse, { params: CreateUserInput }>({
+    mutation: CREATE_USER,
+    variables: { params },
+  })
 
-    if (!data) {
-      throw new Error('No data returned from create user')
-    }
-
-    return stripTypename(data.createUser)
-  } catch (error) {
-    console.error(error)
-    throw error
+  if (!data) {
+    throw new Error('No data returned from create user')
   }
+
+  return stripTypename(data.createUser)
 }

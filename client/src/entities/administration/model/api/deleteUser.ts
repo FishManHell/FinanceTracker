@@ -7,19 +7,14 @@ import type {
 } from '../types/administration.mutation'
 
 export const deleteUser = async (params: DeleteUserInput) => {
-  try {
-    const { data } = await apolloClient.mutate<DeleteUserResponse, DeleteUserParams>({
-      mutation: DELETE_USER,
-      variables: { params },
-    })
+  const { data } = await apolloClient.mutate<DeleteUserResponse, DeleteUserParams>({
+    mutation: DELETE_USER,
+    variables: { params },
+  })
 
-    if (!data) {
-      throw new Error('No data returned from delete user')
-    }
-
-    return data.deleteUser
-  } catch (error) {
-    console.error(error)
-    throw error
+  if (!data) {
+    throw new Error('No data returned from delete user')
   }
+
+  return data.deleteUser
 }

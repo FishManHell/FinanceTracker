@@ -14,20 +14,15 @@ interface GetBudgetVariables {
 
 
 export const getBudget = async (params: GetBudgetVariables) => {
-  try {
-    const { data } = await apolloClient.query<GetBudgetResponse, GetBudgetVariables>({
-      query: GET_BUDGET,
-      variables: params,
-      fetchPolicy: 'network-only',
-    })
+  const { data } = await apolloClient.query<GetBudgetResponse, GetBudgetVariables>({
+    query: GET_BUDGET,
+    variables: params,
+    fetchPolicy: 'network-only',
+  })
 
-    if (!data?.budget) {
-      throw new Error('Failed to get budget')
-    }
-
-    return stripTypename(data.budget)
-  } catch (error) {
-    console.error('Error in getBudget:', error)
-    throw error
+  if (!data?.budget) {
+    throw new Error('Failed to get budget')
   }
+
+  return stripTypename(data.budget)
 }

@@ -16,18 +16,14 @@ interface GetBudgetsYearlyByMonthResponse {
 }
 
 export const getBudgetsYearlyByMonth = async (year: number) => {
-  try {
-    const { data } = await apolloClient.query<GetBudgetsYearlyByMonthResponse, { year: number }>({
-      query: GetBudgetsYearlyByMonthGraphql,
-      variables: { year },
-    })
+  const { data } = await apolloClient.query<GetBudgetsYearlyByMonthResponse, { year: number }>({
+    query: GetBudgetsYearlyByMonthGraphql,
+    variables: { year },
+  })
 
-    if (!data?.budgetsYearlyByMonth) {
-      throw new Error('Failed to get budget')
-    }
-
-    return stripTypename(data.budgetsYearlyByMonth)
-  } catch (error) {
-    console.log(error)
+  if (!data?.budgetsYearlyByMonth) {
+    throw new Error('Failed to get budgets yearly by month')
   }
+
+  return stripTypename(data.budgetsYearlyByMonth)
 }

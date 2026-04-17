@@ -7,19 +7,13 @@ import type {
 } from '../types/administration.mutation'
 
 export const editUser = async (params: EditUserInput) => {
-  try {
-    const { data } = await apolloClient.mutate<EditUserResponse, EditUserParams>({
-      mutation: EDIT_USER,
-      variables: { params }
-    })
+  const { data } = await apolloClient.mutate<EditUserResponse, EditUserParams>({
+    mutation: EDIT_USER,
+    variables: { params },
+  })
 
-    if (!data) {
-      throw new Error('No data returned from editUser')
-    }
-
-    return data
-  } catch (error) {
-    console.error(error)
-    throw error
+  if (!data) {
+    throw new Error('No data returned from editUser')
   }
+  return data
 }

@@ -11,18 +11,13 @@ interface SetTransactionVariables {
 }
 
 export const setTransaction = async (transaction: TransactionBaseDTO) => {
-  try {
-    const { data } = await apolloClient.mutate<SetTransactionResponse, SetTransactionVariables>({
-      mutation: SET_TRANSACTION,
-      variables: { params: transaction },
-    })
+  const { data } = await apolloClient.mutate<SetTransactionResponse, SetTransactionVariables>({
+    mutation: SET_TRANSACTION,
+    variables: { params: transaction },
+  })
 
-    if (!data?.transaction) {
-      throw new Error('Failed to set transaction')
-    }
-
-    return data.transaction
-  } catch (error) {
-    throw error
+  if (!data?.transaction) {
+    throw new Error('Failed to set transaction')
   }
+  return data.transaction
 }

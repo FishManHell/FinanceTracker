@@ -8,21 +8,16 @@ interface GetTransactionsMonthlyResponse {
 }
 
 export const getTransactionsMonthly = async (year: number) => {
-  try {
-    const { data } = await apolloClient.query<GetTransactionsMonthlyResponse, { year: number }>({
-      query: GET_TRANSACTIONS_MONTHLY,
-      variables: { year },
-    })
+  const { data } = await apolloClient.query<GetTransactionsMonthlyResponse, { year: number }>({
+    query: GET_TRANSACTIONS_MONTHLY,
+    variables: { year },
+  })
 
-    const transactionsMonthly = data?.transactionsMonthly
+  const transactionsMonthly = data?.transactionsMonthly
 
-    if (!transactionsMonthly) {
-      throw new Error('TransactionsMonthly not found')
-    }
-
-    return stripTypename(transactionsMonthly)
-  } catch (error) {
-    console.error("Error in getTransactionsMonthly", error)
-    throw error
+  if (!transactionsMonthly) {
+    throw new Error('TransactionsMonthly not found')
   }
+
+  return stripTypename(transactionsMonthly)
 }

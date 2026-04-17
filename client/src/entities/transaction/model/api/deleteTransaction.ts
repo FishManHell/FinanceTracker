@@ -6,16 +6,12 @@ import type {
 
 
 export const deleteTransaction = async (id: string) => {
-  try {
-    const { data } = await apolloClient.mutate<DeleteTransactionResponse, { id: string }>({
-      mutation: DELETE_TRANSACTION,
-      variables: { id },
-    })
-    if (!data) {
-      throw new Error('No data returned from delete transaction')
-    }
-    return data.deleteTransaction
-  } catch (error) {
-    throw error
+  const { data } = await apolloClient.mutate<DeleteTransactionResponse, { id: string }>({
+    mutation: DELETE_TRANSACTION,
+    variables: { id },
+  })
+  if (!data) {
+    throw new Error('No data returned from delete transaction')
   }
+  return data.deleteTransaction
 }
