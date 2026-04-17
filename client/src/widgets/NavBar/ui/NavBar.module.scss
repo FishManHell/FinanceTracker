@@ -1,6 +1,8 @@
+@use "@/app/styles/utility" as utility;
+@use "@/app/styles/breakpoints" as bp;
+
 .navbar {
-  display: flex;
-  flex-direction: column;
+  @include utility.flex-column;
   justify-content: space-between;
   width: 200px;
   height: calc(100vh - 30px);
@@ -9,24 +11,51 @@
   :global(.p-menu-list) {
     flex: 1;
   }
+
+  @include bp.tablet {
+    width: 64px !important;
+    min-width: 0 !important;
+
+    :global(.p-menu-item-content),
+    :global(.p-menuitem-content) {
+      justify-content: center;
+    }
+
+    :global(.p-menu-item-link) {
+      justify-content: center;
+      padding: 10px;
+    }
+  }
+}
+
+.expanded_only {
+  @include bp.tablet {
+    display: none !important;
+  }
+}
+
+.item_label {
+  margin-left: 0.5rem;
 }
 
 .navbar_header {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-}
 
-
-.btn_logout {
-  margin-top: auto;
+  @include bp.tablet {
+    justify-content: center;
+  }
 }
 
 .navbar_footer {
   margin-top: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @include utility.flex-between;
+
+  @include bp.tablet {
+    flex-direction: column;
+    gap: 10px;
+  }
 
   .avatar_wrapper {
     display: flex;
@@ -38,8 +67,7 @@
     }
 
     .user_meta {
-      display: flex;
-      flex-direction: column;
+      @include utility.flex-column;
       margin-left: 5px;
 
       span {
@@ -52,6 +80,4 @@
       }
     }
   }
-
-
 }

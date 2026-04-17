@@ -1,14 +1,12 @@
+@use "@/app/styles/utility" as utility;
+
 .transaction_form {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
+  @include utility.flex-column(25px);
 }
 
 .input_form_field {
-  display: flex;
-  flex-direction: column;
+  @include utility.flex-column(5px);
   align-items: center;
-  gap: 5px;
 }
 
 .field {
@@ -40,10 +38,8 @@
 }
 
 .create_account_block {
-  display: flex;
-  flex-direction: column;
+  @include utility.flex-column(12px);
   align-items: center;
-  gap: 12px;
   margin-top: 12px;
 }
 

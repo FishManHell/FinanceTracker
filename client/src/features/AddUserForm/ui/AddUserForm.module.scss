@@ -1,14 +1,12 @@
+@use "@/app/styles/utility" as utility;
+
 .add_user_form {
+  @include utility.flex-column(16px);
   width: 70%;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 
   .add_user_form_field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    @include utility.flex-column(6px);
   }
 
   .add_user_form_actions {

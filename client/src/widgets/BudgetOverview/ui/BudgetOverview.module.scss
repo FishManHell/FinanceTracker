@@ -1,14 +1,22 @@
+@use "@/app/styles/utility" as utility;
+@use "@/app/styles/breakpoints" as bp;
+
 .budget_container {
   text-align: center;
-  display: flex;
-  flex-direction: column;
+  @include utility.flex-column;
   justify-content: center;
   width: 34%;
+  min-width: 0;
   padding: 10px;
 
+  @include bp.tablet {
+    width: 100%;
+  }
+
   .header {
-    display: flex;
-    justify-content: space-between;
+    @include utility.flex-between;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .month_picker {
@@ -26,9 +34,7 @@
 
   .budget_body {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include utility.flex-center;
 
     h2, h3 {
       position: absolute;
@@ -47,5 +53,9 @@
     height: 300px;
     display: flex;
     justify-content: center;
+
+    @include bp.mobile {
+      height: 200px;
+    }
   }
 }

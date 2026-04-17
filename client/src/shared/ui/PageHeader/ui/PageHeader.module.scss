@@ -1,12 +1,25 @@
+@use "@/app/styles/utility" as utility;
+@use "@/app/styles/breakpoints" as bp;
+
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @include utility.flex-between;
+  gap: 10px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
+
+  @include bp.mobile {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 .right {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+
+  @include bp.mobile {
+    justify-content: flex-start;
+  }
 }
