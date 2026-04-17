@@ -21,8 +21,8 @@ html:not(.my-app-dark) body {
   .app_layout_content {
     display: flex;
     flex: 1;
+    min-width: 0;
     min-height: 0;
-    width: 100%;
     padding: 0 10px 0 10px;
   }
 }

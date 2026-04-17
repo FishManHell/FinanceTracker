@@ -1,6 +1,10 @@
 .transaction_table {
   text-align: center;
   width: 100%;
+
+  :global(.p-datatable-table-container) {
+    min-width: 0;
+  }
 }
 
 .empty_block {

@@ -1,4 +1,5 @@
 @use "@/app/styles/utility" as utility;
+@use "@/app/styles/breakpoints" as bp;
 
 .section_card {
   @include utility.flex-col-fill;
@@ -22,6 +23,16 @@
     }
     :global(.p-toolbar-end) {
       gap: 10px;
+    }
+
+    @include bp.mobile {
+      flex-wrap: wrap;
+      gap: 10px;
+
+      :global(.p-toolbar-start),
+      :global(.p-toolbar-end) {
+        flex-wrap: wrap;
+      }
     }
   }
 

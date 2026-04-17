@@ -47,26 +47,48 @@ onUnmounted(() => {
 <template>
   <div class="administration_page">
     <PageHeader title="Administration" />
-    <SectionCard
-      title="Users"
-      buttonLabel="New User"
-      buttonIcon="pi pi-plus"
-      :on-button-click="openAddNewUserFormDialog"
-    >
-      <AdministrationTable
-        :isSkeleton="cellLoading"
-        :loading="tableLoading"
-        :data="data ?? []"
-        :validators="validators"
-        :on-save="onSave"
-        :on-delete="onDelete"
-      />
-    </SectionCard>
+    <div class="table_section">
+      <SectionCard
+        title="Users"
+        buttonLabel="New User"
+        buttonIcon="pi pi-plus"
+        :on-button-click="openAddNewUserFormDialog"
+      >
+        <AdministrationTable
+          :isSkeleton="cellLoading"
+          :loading="tableLoading"
+          :data="data ?? []"
+          :validators="validators"
+          :on-save="onSave"
+          :on-delete="onDelete"
+        />
+      </SectionCard>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+@use "@/app/styles/breakpoints" as bp;
+
 .administration_page {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.table_section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 600px;
+
+  @include bp.tablet {
+    height: 520px;
+  }
+
+  @include bp.mobile {
+    height: 440px;
+  }
 }
 </style>

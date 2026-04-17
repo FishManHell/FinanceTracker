@@ -1,15 +1,43 @@
+@use "@/app/styles/breakpoints" as bp;
+
 .add_transaction_panel_container {
   margin: 10px 0;
   display: flex;
   justify-content: center;
   gap: 0 50px;
+  flex-wrap: wrap;
 
+  @include bp.tablet {
+    gap: 10px 20px;
+  }
+
+  @include bp.mobile {
+    gap: 8px;
+  }
 
   .status {
     span {
       font-size: 3rem;
+
+      @include bp.tablet {
+        font-size: 2rem;
+      }
+
+      @media (max-width: 780px) {
+        font-size: 1.4rem;
+      }
+    }
+
+    :global(.p-skeleton) {
+      @include bp.tablet {
+        height: 2.3rem !important;
+        width: 7rem !important;
+      }
+
+      @media (max-width: 780px) {
+        height: 1.6rem !important;
+        width: 5rem !important;
+      }
     }
   }
 }
-
-
