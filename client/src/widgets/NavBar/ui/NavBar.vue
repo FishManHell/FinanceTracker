@@ -2,6 +2,8 @@
 import cls from './NavBar.module.scss'
 import FinanceIcon from '@/shared/assets/icons/finance.svg'
 import { Menu } from 'primevue'
+import vRipple from 'primevue/ripple'
+import type { MenuItem } from 'primevue/menuitem'
 import { computed } from 'vue'
 import { userStore } from '@/entities/user'
 import { navbarItems } from '../model/navbarItems.ts'
@@ -19,6 +21,9 @@ const filteredItems = computed(() => {
     return user_store.user && item.roles.includes(user_store.user.role)
   })
 })
+
+const itemLabel = (item: MenuItem): string =>
+  typeof item.label === 'function' ? item.label() : (item.label ?? '')
 </script>
 
 <template>
@@ -26,7 +31,7 @@ const filteredItems = computed(() => {
     <template #start>
       <div :class="cls.navbar_header">
         <FinanceIcon />
-        <div :class="cls.navbar_header_text">
+        <div :class="[cls.navbar_header_text, cls.expanded_only]">
           <span>Finance</span>
           <span>Tracker</span>
         </div>
@@ -34,15 +39,21 @@ const filteredItems = computed(() => {
     </template>
     <template #item="{ item, props }">
       <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-        <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+        <a v-ripple :href="href" v-bind="props.action" :title="itemLabel(item)" @click="navigate">
           <span :class="item.icon" />
-          <span class="ml-2">{{ item.label }}</span>
+          <span :class="[cls.item_label, cls.expanded_only]">{{ item.label }}</span>
         </a>
       </router-link>
 
-      <a v-else v-ripple v-bind="props.action" @click="item.label === 'Logout' ? onLogout() : null">
+      <a
+        v-else
+        v-ripple
+        v-bind="props.action"
+        :title="itemLabel(item)"
+        @click="item.label === 'Logout' ? onLogout() : null"
+      >
         <span :class="item.icon" />
-        <span class="ml-2">{{ item.label }}</span>
+        <span :class="[cls.item_label, cls.expanded_only]">{{ item.label }}</span>
       </a>
     </template>
     <template #end>
@@ -51,7 +62,7 @@ const filteredItems = computed(() => {
           <router-link :class="cls.avatar_link" :to="RoutePaths[AppRouters.PROFILE]">
             <UserAvatar :image="user_store.user?.avatar" />
           </router-link>
-          <div :class="cls.user_meta">
+          <div :class="[cls.user_meta, cls.expanded_only]">
             <span>{{ user_store.user?.username }}</span>
             <span>{{ user_store.user?.role }}</span>
           </div>

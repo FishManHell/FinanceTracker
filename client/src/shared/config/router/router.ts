@@ -92,12 +92,12 @@ router.beforeEach(async (to) => {
   const session_store = sessionStore();
   const user_store = userStore();
 
-  if (to.meta.requiresAuth) {
-    if (!session_store.isAuthenticated) {
-      await refresh()
-    }
-
-    if (!session_store.isAuthenticated) {
+  if (to.meta.requiresAuth && !session_store.isAuthenticated) {
+    try {
+      const user = await refresh()
+      user_store.setUser(user)
+      session_store.setAuthenticated(true)
+    } catch {
       return { name: AppRouters.SIGN_IN }
     }
   }

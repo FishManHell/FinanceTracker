@@ -7,8 +7,11 @@ import { logout } from './api/logout.ts'
 let isLoggingOut = false
 
 const cleanupClient = async () => {
-  apolloClient.stop()
-  await apolloClient.clearStore()
+  try {
+    await apolloClient.clearStore()
+  } catch {
+    // in-flight queries reject with Invariant on clearStore — expected during logout
+  }
   resetAllStores()
 
   await router.replace({
@@ -17,7 +20,7 @@ const cleanupClient = async () => {
   })
 }
 
-export const onLogout = async  () => {
+export const onLogout = async () => {
   try {
     await logout()
   } catch (e) {
@@ -27,12 +30,16 @@ export const onLogout = async  () => {
   await cleanupClient()
 }
 
-export const logoutOnUnauthorized = async () => {
+export const logoutOnUnauthorized = () => {
   if (isLoggingOut) return
   isLoggingOut = true
-  try {
-    await cleanupClient()
-  } catch (e) {
-    console.warn('Unauthorized logout warning:', e)
-  }
+  queueMicrotask(async () => {
+    try {
+      await cleanupClient()
+    } catch (e) {
+      console.warn('Unauthorized logout warning:', e)
+    } finally {
+      isLoggingOut = false
+    }
+  })
 }
